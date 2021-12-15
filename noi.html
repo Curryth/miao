@@ -177,10 +177,15 @@
     var x3 = Number(prompt(" x3 "))
     var y3 = Number(prompt(" y3 "))
 
-    var d = Math.abs((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1))
-    var S = ((1 / 2) * d).toFixed(2)
+    var a = Math.sqrt(Math.pow((x1-x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2))
+    var b = Math.sqrt(Math.pow((x1 - x3), 2)) + Math.sqrt(Math.pow((y1 - y3), 2))
+    var c = Math.sqrt(Math.pow((x2 - x3), 2)) + Math.sqrt(Math.pow((y2 - y3), 2))
+    
+    var p = (a + b + c) / 2
+   
+    var S = Math.sqrt(p * (p - a) * (p -b) * (p - c))
 
-    console.log(S)
+    console.log(S.toFixed(3))
     
 </script>
     
@@ -268,7 +273,7 @@
 
 </script>
 
-<script id="ch010/08">
+<script id="ch0104/08">
 
     var n = Number(prompt('n'))
 
@@ -476,5 +481,43 @@
 
     else if (c !== '+' && c !== '-' && c !== '*' && c !== '/')
         console.log('Invalid operator!')
+
+</script>
+
+<script id="ch0104/21">
+
+    var a = Number(prompt('a'))
+    var b = Number(prompt('b'))
+    var c = Number(prompt('c'))
+
+    var delta = b * b - 4 * a * c
+    if (delta < 0) {
+        var shibu = (-b) / (2 * a)
+        var xubu = Math.sqrt(-delta) / (2 * a)
+
+        console.log('x1 =' + shibu.toFixed(5), '+', xubu.toFixed(5) + 'i')
+        console.log('x2 =' + shibu.toFixed(5), '-', xubu.toFixed(5) + 'i')
+
+    } else if (delta == 0) {
+        var x = -b / (2 * a)
+
+        console.log('x1 = x2 =' + x.toFixed(5))
+    }
+    else {
+            var sqrtDelta = Math.sqrt(delta)
+
+            var x1 = (-b + sqrtDelta) / (2 * a)
+            var x2 = (-b - sqrtDelta) / (2 * a)
+
+            if( x1 > x2){
+
+                        console.log('x1 =' + x1.toFixed(5))
+                        console.log('x2 =' + x2.toFixed(5))
+        
+            }else {
+                    console.log('x1 =' + x2.toFixed(5))
+                    console.log('x2 =' + x1.toFixed(5))
+                 }
+         }
 
 </script>
