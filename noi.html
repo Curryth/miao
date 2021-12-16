@@ -538,19 +538,20 @@
     var delta = b * b - 4 * a * c
 
     if (delta == 0) {
-            var x = -b / (2 * a)
+        var x = -b / (2 * a)
 
-            console.log('x1 = x2 =' + x.toFixed(5))
-        }
+        console.log('x1 = x2 =' + x.toFixed(5))
+    }
 
     if (delta < 0) {
         var shibu = (-b) / (2 * a)
         var xubu = Math.sqrt(-delta) / (2 * a)
 
-        console.log('x1 =' + shibu.toFixed(5), '+', xubu.toFixed(5) + 'i')
-        console.log('x2 =' + shibu.toFixed(5), '-', xubu.toFixed(5) + 'i')
+        console.log('x1 =' + shibu.toFixed(5), '+', xubu.toFixed(5) + 'i', 
+        ';x2 =' + shibu.toFixed(5), '-', xubu.toFixed(5) + 'i')
 
-    } 
+
+    }
     else {
         var sqrtDelta = Math.sqrt(delta)
 
@@ -560,10 +561,9 @@
         x1 = Math.max(x1, x2)
         x2 = Math.min(x1, x2)
 
-        console.log('x1 =' + x1.toFixed(5))
-        console.log('x2 =' + x2.toFixed(5))
+        console.log('x1 =' + x1.toFixed(5), ';x2 =' + x2.toFixed(5))
+       
 
-        
     }
     
         
