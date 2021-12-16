@@ -616,3 +616,52 @@
 
 
 </script>
+<script id="ch0105/03">
+     var n = Number(prompt('n'))
+
+     var aSum = 0
+     var counter = 0
+
+     while(counter < n){
+         var a = Number(prompt('a'))
+         aSum =aSum + a
+         counter = counter + 1
+     }    
+   
+    var aAverage = aSum  / n
+    console.log(aAverage.toFixed(4))
+
+</script>
+
+<script id="ch0105/04">
+     var n = Number(prompt('n'))
+
+     var aSum = 0
+     var counter = 0
+
+     while(counter < n){
+         var a = Number(prompt('a'))
+         aSum =aSum + a
+         counter = counter + 1
+     }    
+   
+    var aAverage = aSum  / n
+    console.log(aSum, aAverage.toFixed(5))
+
+
+</script>
+
+<script id="ch0105/05">
+
+    var n = Number(prompt('n'))
+     var maxscore = 0
+     var counter = 0
+
+     while(counter < n){
+         var score = Number(prompt('score'))
+         if(score > maxscore){
+             maxscore = score
+             counter = counter + 1
+         }
+        } 
+    console.log(maxscore)
