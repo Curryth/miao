@@ -54,17 +54,12 @@
 </script>
 
 <script id = "ch0103/06">
-    var r = Number(prompt('r'))
+    var a = Number(prompt(" a "))
+    var b = Number(prompt(" b "))
 
-    var pi = 3.14159
-
-    var R = 2 * r
-    var L = 2 * r * pi
-    var S = pi * r * r
-
-    console.log(R.toFixed(4))
-    console.log(L.toFixed(4))
-    console.log(S.toFixed(4))
+    var c = ( b / a ) * 100
+    
+    console.log(c.toFixed(3) + '%')
 
 </script>
 
@@ -118,6 +113,11 @@
 </script>
 
 <script id="ch0103/11">
+    var a = Number(prompt(" a "))
+    var b = Number(prompt(" b "))
+    
+    var c = a % b
+    console.log(c)
 
 </script>
 
@@ -187,13 +187,13 @@
     var x3 = Number(prompt(" x3 "))
     var y3 = Number(prompt(" y3 "))
 
-    var a = Math.sqrt(Math.pow((x1 - x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2))
-    var b = Math.sqrt(Math.pow((x1 - x3), 2)) + Math.sqrt(Math.pow((y1 - y3), 2))
-    var c = Math.sqrt(Math.pow((x2 - x3), 2)) + Math.sqrt(Math.pow((y2 - y3), 2))
+    var a = Math.sqrt(Math.pow((x1 - x2), 2) + Math.sqrt(Math.pow((y1 - y2), 2))
+    var b = Math.sqrt(Math.pow((x1 - x3), 2) + Math.sqrt(Math.pow((y1 - y3), 2))
+    var c = Math.sqrt(Math.pow((x2 - x3), 2) + Math.sqrt(Math.pow((y2 - y3), 2))
 
     var p = (a + b + c) / 2
 
-    var S = Math.sqrt(p * (p - a) * (p - b) * (p - c))
+    var S = Math.sqrt( p * (p - a) * (p - b) * (p - c) )
 
     console.log(S.toFixed(3))
     
@@ -231,6 +231,30 @@
     console.log(y)
 
 </script>
+
+<script id="ch0104/01">
+    
+    var N = Number(prompt(" N "))
+    
+    if( N > 0 )
+        console.log('positive')
+    if(N == 0)
+        console.log('zero')
+    if(N < 0)
+        cnsole.log('negative')
+    
+</script>
+
+<script id="ch0104/02">
+    var n = Number(prompt(" n "))
+    
+    if(n > 0)
+        console.log(n)
+    else
+        console.log(-n)
+    
+</script>
+
 
 <script id="ch0104/03">
 
@@ -542,3 +566,16 @@
          }
 
 </script>
+
+<script id="ch0104/21">
+
+    var n = Number(prompt('a'))
+    var x = Number(prompt('x'))
+    var y = Number(prompt('y'))
+    
+    var left = n - Math.ceil(y / x)
+    
+    console.log(left)
+</script>
+    
+
