@@ -584,7 +584,7 @@
      
      var n = Number(prompt('n'))
      
-     var agesume = 0
+     var agesum = 0
      var counter = 0
 
      while(counter < n){
@@ -593,18 +593,17 @@
          counter = counter + 1
      }    
    
-    var ageAverage = agesum + age
+    var ageAverage = agesum  / n
     console.log(ageAverage.toFixed(2))
 </script>
 
 <script id="ch0105/02">
 
-    var money = Number(prompt('money'))
-
     var moneysum = 0
     var counter = 0
 
     while(counter <= 12){
+        var money = Number(prompt('money'))
         moneysum = moneysum +money
         counter = counter + 1
     }
