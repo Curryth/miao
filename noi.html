@@ -54,14 +54,18 @@
 </script>
 
 <script id = "ch0103/06">
-    var a = Number(prompt(" a "))
-    var b = Number(prompt(" b "))
+    var r = Number(prompt('r'))
 
-    var x = (a / b)*100
-    var y = x.toFixed(3)
-    
-    console.log(y,'%')
-    
+    var pi = 3.14159
+
+    var R = 2 * r
+    var L = 2 * r * pi
+    var S = pi * r * r
+
+    console.log(R.toFixed(4))
+    console.log(L.toFixed(4))
+    console.log(S.toFixed(4))
+
 </script>
 
 <script id = "ch0103/07">
@@ -88,13 +92,18 @@
 </script>
 
 <script id="ch0103/09">
-    var r = Number(prompt(" r "))
+    var r = Number(prompt('r'))
 
-    var R = (2 * r).toFixed(4)
-    var L = (Math.PI * 2 * r).toFixed(4)
-    var S = (Math.PI * r * r).toFixed(4)
+    var pi = 3.14159
 
-    console.log(R, L, S)
+    var R = 2 * r
+    var L = 2 * r * pi
+    var S = pi * r * r
+
+    console.log(R.toFixed(4))
+    console.log(L.toFixed(4))
+    console.log(S.toFixed(4))
+
 
 </script>
 
@@ -123,12 +132,13 @@
 <script id="ch0103/13">
     var n = Number(prompt(" n "))
 
-    var a = Math.floor(n / 100)
-    var c = n % 10
+    var geiwei = n % 10
+    var shiwei = ((n - geiwei) / 10) % 10
+    var baiwei = (n - shiwei * 10 - geiwei) / 100 % 10
 
-    var N = n - 99 * a + 99 * c
+    result = String(geiwei) + String(shiwei) + String(baiwei)
 
-    console.log(N)
+    console.log(result)
 
 </script>
 
@@ -177,13 +187,13 @@
     var x3 = Number(prompt(" x3 "))
     var y3 = Number(prompt(" y3 "))
 
-    var a = Math.sqrt(Math.pow((x1-x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2))
+    var a = Math.sqrt(Math.pow((x1 - x2), 2)) + Math.sqrt(Math.pow((y1 - y2), 2))
     var b = Math.sqrt(Math.pow((x1 - x3), 2)) + Math.sqrt(Math.pow((y1 - y3), 2))
     var c = Math.sqrt(Math.pow((x2 - x3), 2)) + Math.sqrt(Math.pow((y2 - y3), 2))
-    
+
     var p = (a + b + c) / 2
-   
-    var S = Math.sqrt(p * (p - a) * (p -b) * (p - c))
+
+    var S = Math.sqrt(p * (p - a) * (p - b) * (p - c))
 
     console.log(S.toFixed(3))
     
@@ -255,14 +265,14 @@
 
     if (x > y)
         console.log('>')
-    else if (x = y)
+    else if (x == y)
         console.log('=')
     else
         console.log('<')
 
 </script>
 
-<script id="ch0104/6">
+<script id="ch0104/06">
 
     var n = Number(prompt('n'))
 
@@ -275,7 +285,7 @@
 
 </script>
 
-<script id="ch0104/7">
+<script id="ch0104/07">
 
     var x = Number(prompt('x'))
     var y = Number(prompt('y'))
@@ -298,25 +308,21 @@
 
 </script>
 
-<script id="ch0104/9">
+<script id="ch0104/09">
 
     var n = Number(prompt('n'))
 
-    if (n % 3 == 0 && n % 5 == 0 && n % 7 == 0)
-        console.log('3', '5', '7')
-    else if (n % 3 == 0 && n % 5 == 0 && n % 7 != 0)
-        console.log('3', '5')
-    else if (n % 3 == 0 && n % 5 != 0 && n % 7 == 0)
-        console.log('3', '7')
-    else if (n % 3 != 0 && n % 5 == 0 && n % 7 == 0)
-        console.log('5', '7')
-    else if (n % 3 == 0 && n % 5 != 0 && n % 7 != 0)
-        cosole.log('3')
-    else if (n % 3 != 0 && n % 5 == 0 && n % 7 != 0)
-        cosole.log('5')
-    else if (n % 3 != 0 && n % 5 != 0 && n % 7 == 0)
-        cosole.log('7')
-    else
+    if (n % 3 == 0 || n % 5 == 0 || n % 7 == 0){
+        if (n % 3 == 0){
+            console.log(3)
+        }
+        if (n % 5 == 0) {
+            console.log(5)
+        }
+        if (n % 7 == 0) {
+            console.log(7)
+        }
+    } else
         console.log('n')
 
 </script>
@@ -434,7 +440,7 @@
 
 </script>
 
-<script id="ch0103/16">
+<script id="ch0104/16">
 
     var a = Number(prompt('a'))
     var b = Number(prompt('b'))
@@ -452,6 +458,7 @@
         console.log('no')
 
 </script>
+
 <script id="ch0104/17">
 
     var a = Number(prompt('a'))
@@ -498,7 +505,7 @@
 
 </script>
 
-<script id="ch0104/21">
+<script id="ch0104/20">
 
     var a = Number(prompt('a'))
     var b = Number(prompt('b'))
