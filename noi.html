@@ -117,7 +117,7 @@
     var b = Number(prompt(" b "))
     
     var c = a % b
-    console.log(c)
+    console.log(y.toFixed(4))
 
 </script>
 
@@ -190,13 +190,13 @@
 
     var a = Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2))
     var b = Math.sqrt(Math.pow((x1 - x3), 2) + Math.pow((y1 - y3), 2))
-    var c = Math.sqrt(Math.pow((x2 - x3), 2) + Math.pow((y2 - y3), 2))
+    var c = Math.sqrt(Math.pow((x3 - x2), 2) + Math.pow((y3 - y2), 2))
 
     var p = (a + b + c) / 2
 
     var S = Math.sqrt(p * (p - a) * (p - b) * (p - c))
 
-    console.log(S.toFixed(3))
+    console.log(S.toFixed(2))
 </script>
     
 <script id="ch0103/18">
