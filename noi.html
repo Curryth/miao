@@ -610,7 +610,7 @@
 
     var moneyAverage = moneysum / 12
  
-    console.log($ + moneyAverage.toFixed(2))
+    console.log('$' + moneyAverage.toFixed(2))
 
 </script>
 
@@ -645,7 +645,8 @@
    
     var aAverage = aSum  / n
     console.log(aSum, aAverage.toFixed(5))
-
+    
+</script>
 
 <script id="ch0105/05">
 
@@ -677,7 +678,6 @@
             max = a
         }else(min = a)
 
-        if9
         } 
     console.log(maxscore)
 
@@ -715,7 +715,7 @@
      var aSum = 0
      var counter = 0
 
-     while(counter < ({
+     while(counter < (n - 1)){
          var a = Number(prompt('a'))
          aSum =aSum + a
          counter = counter + 1
@@ -750,24 +750,25 @@
 
     var k = Number(prompt('k'))
     var n1 = 0
-    var n5 = 0
-    var n7 = 0
+    var n2 = 0
+    var n3 = 0
     counter = 0
 
     while(counter  < k){
-        var n = Num(prompt('n'))
+        var n = Number(prompt('n'))
         counter = counter + 1
         if(n == 1){
-            n1 = n1 + 1
-        }
+                n1 = n1 + 1
+            }
         if(n == 5){
-            n5 = n5 + 1
-        }
-        if(n == 7){
-            n7 = n7 + 1
-        }
+                n2 = n2 + 1
+            }
+        if(n == 10){
+                n3 = n3 + 1
+            }
     }
-    console.log(n1, n5, n7)
+    console.log(n1, n2, n3)
+    
 </script>
 
 <script id="ch0105/12">
@@ -795,7 +796,7 @@
 
 
 
-<script id="ch0105/13">  NO
+<script id="ch0105/13">  
 
      var a = Number(prompt('a'))
      var n = Number(prompt('n'))
@@ -805,7 +806,7 @@
 
      while(counter < n){
 
-            result = result * a 
+       result = result * a 
        counter = counter + 1
 
      }
@@ -872,26 +873,27 @@
 </script>
 
 <script id="ch0105/17">
+    
     var k = Number(prompt('k'))
     
-    var Aresult = 1
+    var result = 1
+    var resulta = 0
+    var resultb = 1
 
     var counter = 0
-    var n = 0
-    while(counter < k){
+
+    while(counter < (k - 1)){
        
-        var Bresult = Aresult
+        result = resulta + resultb
         
-        Aresult = Bresult + Aresult
+        resulta = resultb
 
-        result = Aresult + Bresult
-
+        resultb = result
 
         counter = counter + 1
 
-
-
     }
+    console.log(result)
 
 </script>
 <script id="ch0105/18">
@@ -902,7 +904,7 @@
     var x = b / a
     var counter = 0
 
-    while(counter < n){
+    while(counter < (n - 1)){
         var c = Number(prompt('c'))
         var d = Number(prompt('d'))
 
