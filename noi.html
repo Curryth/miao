@@ -1098,3 +1098,91 @@
 
 
 </script>
+
+<script id="ch0105/28">
+    
+    var n =Number(prompt('n'))
+
+    for(var m = 0; ; m++ ){
+        var a = Math.pow(10, m)
+        if( n / a >= 1){
+            var result = Math.trunc( (n / a) % 10)
+            console.log(result)
+        }
+    }
+
+
+
+</script>
+<script id="ch0105/29">
+
+
+
+</script>
+
+<script id="ch0105/30">
+    var m =Number(prompt('m'))
+    var k =Number(prompt('k'))
+
+    var n =0
+
+    if(m % 19 == 0){
+        for(var i = 0; ; i++ ){
+            var j = Math.pow(10, i)
+            
+            if( m / j >= 1){
+                var result = Math.trunc( (m / j ) % 10)
+                if( result == 3){
+                     n++
+                }
+             }
+            if(n == k){
+            console.log('YES')
+             }
+        }
+    }else{
+         console.log('NO')
+            }
+
+
+</script>
+<script id="ch0105/32">
+
+    var n =Number(prompt('n'))
+    var qi= 2
+    var pi = 1
+    var Sn = 0
+    var m = 0
+    
+    for(var i = 0; i < n ; i++){
+        Sn = Sn + qi / pi
+        m = qi
+        qi = qi + pi
+        pi = m 
+    }
+    console.log(Sn.toFixed(4))
+
+
+</script>
+<script id="ch0105/33">
+    var n =Number(prompt('n'))
+    var Sn = 0
+
+    for(var i = 1;i <= n ; i++){
+        Sn = Sn + Math.pow( (-1),(i- 1) ) * 1 / i
+    }
+    console.log(Sn.toFixed(4))
+
+</script>
+<script id="ch0105/34">
+    var n =Number(prompt('n'))
+    var j = 1
+    var Sn = 0
+
+    for(var i = 1 ; i < n; i++){
+        Sn = Sn + i
+        i = j * i
+    }
+    console.log(Sn)
+
+</script>
