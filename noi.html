@@ -1186,3 +1186,18 @@
     console.log(Sn)
 
 </script>
+
+<script id="ch0105/39">
+    var n =Number(prompt('n'))
+    var Sn = 0
+
+    for(var i = 1; i <(n + 1) ; i++){
+        var gewei = Math.trunc(i % 10 )
+        var shiwei = Math.trunc((i / 10) % 10 )
+        if(i % 7 != 0 && gewei != 7 && shiwei != 7){
+            Sn = Sn + i * i
+        }
+    }
+    console.log(Sn)
+
+</script>
