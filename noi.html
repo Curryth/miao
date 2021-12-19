@@ -543,11 +543,11 @@
         var x1 = (-b + sqrtDelta) / (2 * a)
         var x2 = (-b - sqrtDelta) / (2 * a)
 
-        console.log('x1 =' + x1.toFixed(5) + ';x2 =' + x2.toFixed(5))
+        console.log('x1=' + x1.toFixed(5) + ';x2=' + x2.toFixed(5))
     }else if (delta == 0) {
 
         var x = -b / (2 * a)
-        console.log('x1 = x2 =' + x.toFixed(5)) 
+        console.log('x1=x2 =' + x.toFixed(5)) 
 
     }else if (delta < 0) {
         var sDelta = Math.sqrt(-delta)
@@ -562,7 +562,7 @@
             var x2 = m1.toFixed(5) + '-' +m2.toFixed(5) +'i'
         }  
 
-           console.log('x1 =' + x1, ';x2 =' + x2)
+           console.log('x1=' + x1, ';x2=' + x2)
 
     }
     
@@ -665,21 +665,24 @@
 
 </script>
 <script id="ch0105/06">
-    var n = Number(prompt('n'))
+    var n = Number(prompt())
 
+    var max = 0
+    var min = 1000
     var counter = 0
 
     while(counter < n){
-        var a = Number(prompt('a'))
-        var max = a
-        var min = a
-        counter = counter + 1
-        if(a > max){
-            max = a
-        }else(min = a)
-
-        } 
-    console.log(maxscore)
+        var score = Number(prompt())
+       
+        if(score > max){
+            max = score
+         }
+        if(score < min){
+            min = score
+        }  
+        counter = counter + 1 
+    } 
+    console.log(max - min)
 
 </script>
 <script id="ch0105/07">
