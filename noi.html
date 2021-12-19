@@ -1010,3 +1010,91 @@
     
 
 </script>
+
+<script id="ch0105/23">
+    
+    var m =Number(prompt('m'))
+    var n =Number(prompt('n'))
+    var Sum = m
+    var nodrug = 0
+
+    for(var counter =0;counter < n; counter ++){
+        var N = Number(prompt('N'))
+        if(Sum >= N){
+            Sum = Sum - N
+        }else{
+           nodrug ++
+        } 
+        
+    }
+    console.log(nodrug)
+
+
+</script>
+<script id="ch0105/24">
+
+    var n =Number(prompt('n'))
+
+    for(counter = 0; counter < n; counter ++){
+        var a =Number(prompt('a'))
+        var b =Number(prompt('b'))
+
+        if(a >= 90 && a<== 140 && b >= 60 && b <= 90){
+
+        }
+    }
+
+</script>
+<script id="ch0105/25">
+
+    for(var c = 0; c < 7; c ++){
+        for(var b = 0; b < 7; b ++){
+            var a = (80 * c + 2 * b) / 48
+            if(a % 1 == 0 && a < 7 && a != 0){
+                var 十进制表示 = a * 7 * 2 + b * 7 + c
+                var 七进制表示 = String(a) + String(b) + String(c)
+                var 九进制表示 = String(c) + String(b) + String(a)
+                console.log(十进制表示)
+                console.log(七进制表示)
+                console.log(九进制表示)
+            }
+        }
+    }
+
+</script>
+
+<script id="ch0105/26">
+     
+     var n =Number(prompt('n'))
+     var m = 0
+
+     for(var counter = 0; counter < n; counter++){
+         var N = Number(prompt('N'))
+         var gewei = N % 10
+         var shiwei = ( (N - gewei) / 10 ) % 10
+         var baiwei = ( (N - gewei - shiwei * 10) / 100 ) % 10
+         var qianwei = ( (N - gewei - shiwei * 10 - baiwei * 100) / 1000 ) % 10
+         
+         var result = gewei - qianwei - baiwei - shiwei
+         if(result > 0){
+             var m = m + 1 
+         }
+     }
+     console.log(m)
+
+</script>
+
+<script id="ch0105/27">
+    
+    var k =Number(prompt('k'))
+    var n = 1
+    var Sn = 0
+    for(var n = 1; ; n++){
+        var Sn = Sn + 1 / n
+        if(Sn > k)
+        break;
+    }
+    console.log(n)
+
+
+</script>
