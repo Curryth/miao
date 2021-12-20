@@ -970,15 +970,14 @@
 
      var h = Number(prompt('h'))
 
-     var s = h
-     var counter = 0
+     var Sum = -h
 
-     while(counter < 10){
+     for(var i = 0; i < 10; i++){
+         var Sum += h * 2
          var h = (1 / 2) *h
-         var s = s + h * 2
-         counter = counter +1
      }
-     console.log(s, h)
+     console.log(Sum, h)
+
 
 
 </script>
@@ -1034,24 +1033,30 @@
 <script id="ch0105/24">
 
     var n =Number(prompt('n'))
-
-    for(counter = 0; counter < n; counter ++){
+    var max = 0       
+    var c = 0          
+    for(i = 0; i < n; i ++){
         var a =Number(prompt('a'))
         var b =Number(prompt('b'))
 
         if(a >= 90 && a<== 140 && b >= 60 && b <= 90){
-
+           c++
+           if(c > max){      
+               max = c
+           }
+        }else {
+            c = 0
         }
     }
 
 </script>
 <script id="ch0105/25">
-
+    
     for(var c = 0; c < 7; c ++){
         for(var b = 0; b < 7; b ++){
             var a = (80 * c + 2 * b) / 48
             if(a % 1 == 0 && a < 7 && a != 0){
-                var 十进制表示 = a * 7 * 2 + b * 7 + c
+                var 十进制表示 = a * 7 * 7  + b * 7 + c
                 var 七进制表示 = String(a) + String(b) + String(c)
                 var 九进制表示 = String(c) + String(b) + String(a)
                 console.log(十进制表示)
@@ -1060,7 +1065,6 @@
             }
         }
     }
-
 </script>
 
 <script id="ch0105/26">
