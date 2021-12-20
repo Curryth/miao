@@ -1105,20 +1105,39 @@
 
 <script id="ch0105/28">
     
-    var n =Number(prompt('n'))
-
-    for(var m = 0; ; m++ ){
-        var a = Math.pow(10, m)
-        if( n / a >= 1){
-            var result = Math.trunc( (n / a) % 10)
-            console.log(result)
-        }
-    }
+   var n =Number(prompt('n'))
+   
+   while (n > 0) {
+       d = n % 10
+       console.log(d)
+       n = (n - d ) / 10
+   }
 
 
 
 </script>
 <script id="ch0105/29">
+      var n = Number(prompt('n'))
+      var sign = 0
+      var r = 0
+
+      if(n > 0){
+          sign = 1
+      }else{
+          sign = -1
+          n = - n
+      }
+      
+      while (n > 0) {
+          
+      d = n % 10
+      n = (n - d ) / 10
+      r = r * 10 + d
+     
+      }
+      console.log(r * sign)
+
+
 
 
 
