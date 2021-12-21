@@ -1454,6 +1454,24 @@
 
 </script>
 
+<script id="ch0105/40">
+    var n = Number(prompt())
+    var count = 0
+
+    for (var i = 1; i <= n; i++) {
+        var m = i 
+        while (m > 0) {
+            var d = m % 10
+            if ( d == 1){
+                count++
+            }
+            m = (m - d) / 10
+        }
+    }
+    console.log(count)
+
+</script>
+
 <script id="ch0105/42">
    
     var h = Number(prompt())
