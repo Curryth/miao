@@ -1425,17 +1425,32 @@
 
 
 <script id="ch0105/39">
-    var n =Number(prompt('n'))
-    var Sn = 0
+    var n = Number(prompt())
+    var sum = 0
 
-    for(var i = 1; i <(n + 1) ; i++){
-        var gewei = Math.trunc(i % 10 )
-        var shiwei = Math.trunc((i / 10) % 10 )
-        if(i % 7 != 0 && gewei != 7 && shiwei != 7){
-            Sn = Sn + i * i
+    for(var i = 1; i <= n; i++){
+        var i与7有关 = false
+
+        if ( i % 7 == 0){
+            i与7有关 = true
+        } else{
+            var m = i
+            while (m > 0) {
+                var d = m % 10 
+                if (d == 7){
+                    i与7有关 = true
+                    break
+                }
+                m = (m - d) / 10   
+            }
         }
-    }
-    console.log(Sn)
+
+        if(!i与7有关){
+            sum += i * i
+        }
+    }   
+    
+    console.log(sum)
 
 </script>
 
