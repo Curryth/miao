@@ -1,3 +1,53 @@
+<script id="narcissistics">
+
+    for(var i = 0;i < 10000; i++){
+       if(i <=9){ 
+            if( i == i * 1){
+                console.log(i)
+            }
+        }
+
+        if(i >= 10 && i <= 99){
+            var a = i % 10
+            var b = (i - a) / 10 % 10
+
+            var result = a * a + b * b 
+            
+            if( i == result){
+                console.log(i)
+            }
+        }
+
+
+        if(i >= 100 && i <= 999){
+            var a = i % 10
+            var b = (i - a) / 10 % 10
+            var c = (i - a - b * 10) / 100 % 10
+
+            var result = Math.pow(a,3) + Math.pow(b,3)+ Math.pow(c,3) 
+            
+            if( i == result){
+                console.log(i)
+            }
+        }
+
+        if(i >= 1000 && i <= 9999){
+            var a = i % 10
+            var b = ( (i - a) / 10) % 10
+            var c = (i - a - b * 10) / 100 % 10
+            var d = (i - a - b * 10 - c * 100) / 1000 % 10
+            var result = Math.pow(a,4) + Math.pow(b,4)+ Math.pow(c,4) +Math.pow(d,4)
+
+            if( i == result){
+                console.log(i)
+            }
+        }
+
+        
+    }
+
+
+</script>
 <script id="ch0103/01">
 
     var A = Number(prompt(" A "))
@@ -1201,18 +1251,26 @@
     var n =Number(prompt('n'))
     var m =Number(prompt('m'))
     
-    for(var i = 1; i <= n; i++){     
-        var light = true             
-        for (var j = 1; j <=m; j++){  
-          if(i % j == 0){            
+    var lights = ''
+    var isFirst = true
+    for(var i = 1; i <= n; i++){     //i为灯的编号
+        var light = true             //
+        for (var j = 1; j <=m; j++){  //j表示人的编号
+          if(i % j == 0){            //用灯模人的编号
               light = !light
           }
         }
         if(!light){
-            console.log(i)
+            if(isFirst){
+                lights += i 
+            }else{
+                lights += ',' + i
+            }
+            isFirst = false
         }
     }
 
+    console.log(lights)
 
 
 
