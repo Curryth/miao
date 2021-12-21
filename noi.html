@@ -979,9 +979,7 @@
      console.log(Sum, h)
 
 
-
 </script>
-
 <script id="ch0105/21">
 
     var n = Number(prompt())
@@ -1010,6 +1008,34 @@
 
 </script>
 
+
+
+<script id="ch0105/22">
+  
+    var moneyInHand = 0
+    var stock = 0
+
+   for(var i = 1; i < 12){
+      moneyInHand += 300
+      var spent = Number(prompt('spent'))
+      var 钱不够用 = fasle
+
+      if(moneyInHand < spend){
+          console.log(-i)
+          钱不够用 = ture
+          break
+        }
+
+      if(moneyInHand > spent){
+          moneyInHand -=spent
+          if(moneyInHand >= 100){
+              stock += moneyInHand - moneyInHand % 100
+              moneyInHand = moneyInHand % 100
+          }else
+        }
+     }
+
+</script>
 <script id="ch0105/23">
     
     var m =Number(prompt('m'))
@@ -1169,6 +1195,28 @@
 
 
 </script>
+
+<script id="ch0105/31">
+  
+    var n =Number(prompt('n'))
+    var m =Number(prompt('m'))
+    
+    for(var i = 1; i <= n; i++){     
+        var light = true             
+        for (var j = 1; j <=; j++){  
+          if(i % j == 0){            
+              light = !light
+          }
+        }
+        if(!light){
+            console.log(i)
+        }
+    }
+
+
+
+
+</script>
 <script id="ch0105/32">
 
     var n =Number(prompt('n'))
@@ -1244,6 +1292,22 @@
 
 </script>
 
+<script id="ch0105/38">
+    var m = Number(prompt())
+
+    for (var i = 0 ; i < m;  i++){
+        var n = Number(prompt())
+        if(n == 0){       
+            console.log(0)
+        }else {
+        for (var j = n; j >= 0; j--){
+            var c = Number(prompt())
+            if()
+            console.log(c * j)
+        }
+        }
+    }
+
 <script id="ch0105/39">
     var n =Number(prompt('n'))
     var Sn = 0
@@ -1258,3 +1322,75 @@
     console.log(Sn)
 
 </script>
+
+<script id="ch0105/42">
+   
+    var h = Number(prompt())
+    var w = Number(prompt())
+    var char = prompt()
+    var fill = Number(prompt())
+
+    var edgeLine = ''
+    for(var j = 0; j < w; j++){
+        edgeLine += char
+    }
+
+    var midLine = char
+    for(var j = 0; j < w - 2; j++){
+        if(fill){
+            midLine += char
+        }else{
+            midLine += ' '
+        }
+    }   
+    midLine += char
+
+    var result = edgeLine + '\n'
+
+    for(var i = 0; i < h - 2; i++){
+        result += midLine + '\n'
+    }
+    result += edgeLine
+
+    console.log(result)
+    
+
+</script>
+
+
+<script id="ch0105/43">
+    var n = Number(prompt())
+
+    for(var i = 2; i < n; i++){
+        if(n % i == 0){
+            console.log(n / i)
+            break
+        }
+    }
+
+
+</script>
+
+<script id="ch0105/45">
+   
+   var n = Number(prompt())
+
+   var sum = 0
+   var 面额 = 1
+   var 天数 = 1
+   var 当前面额已收天数 = 0
+
+   for (var i = 1; i <= n; i++){
+       sum += 面额
+       当前面额已收天数++
+       if(当前已收天数 == 天数){
+           面额++
+           天数++
+           当前面额已收天数 = 0
+       }
+   }
+
+   console.log(sum)
+
+</script>
+
