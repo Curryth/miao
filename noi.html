@@ -1,3 +1,21 @@
+<script id="narcissistic">
+
+    var n = Number(prompt())
+
+    var a = n % 10
+    var b = ( (n - a) / 10) % 10
+    var c = (n - a - b * 10) % 10
+
+    var result = a * a * a + b * b * b + c * c * c 
+    
+    if(n == result){
+        console.log('YES')
+    }else{
+        console.log('NO')
+    }
+
+</script>
+
 <script id="narcissistics">
 
     for(var i = 0;i < 10000; i++){
@@ -48,6 +66,43 @@
 
 
 </script>
+<script id="prime">
+    var n = Number(prompt())
+    var isPrimeNumber = true
+    for(var i = 2; i < n; i++){
+        if(n % i == 0){
+            isPrimeNumber = false
+            console.log('NO')
+            break
+        }
+    }
+    if(isPrimeNumber){
+        console.log('YES')
+    }
+
+</script>
+<script id="primes">
+        
+        for(var i = 2; i < 100; i++){
+           
+          iIsPrime = true
+
+          for(var j = 2; j < i ; j++){
+
+              if(i % j == 0){
+                  iIsPrime = false
+                  break
+                }    
+            }
+
+            if(iIsPrime){
+                console.log(i)
+            }
+        }
+    
+    
+</script>
+
 <script id="ch0103/01">
 
     var A = Number(prompt(" A "))
@@ -1355,16 +1410,19 @@
 
     for (var i = 0 ; i < m;  i++){
         var n = Number(prompt())
-        if(n == 0){       
+        if(n == 0){       //只有常数项，直接输出0， 但要将输入接住，否则会混入
+            var c = Number(prompt())
             console.log(0)
         }else {
-        for (var j = n; j >= 0; j--){
-            var c = Number(prompt())
-            if()
-            console.log(c * j)
-        }
+            for (var j = n; j >= 0; j--){
+                var c = Number(prompt())
+                if(j != 0){
+                    console.log(c * j)
+                }
+            }
         }
     }
+
 
 <script id="ch0105/39">
     var n =Number(prompt('n'))
@@ -1428,6 +1486,32 @@
 
 
 </script>
+
+<script id="ch0105/44">
+    
+    var n = Number(prompt())
+    var count = 0
+
+    for (var i = 2; ; i++){
+        var iIsPrime = true
+        for (var j = 2; j < i; j++){
+            if (i % j == 0){
+                iIsPrime = false
+                break
+            }
+        }
+
+        if (iIsPrime) {
+            count++
+            if (count == n) {
+                console.log(i)
+                break
+            }
+        }
+    }
+
+</script>
+
 
 <script id="ch0105/45">
    
