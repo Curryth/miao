@@ -82,13 +82,13 @@
     return sum == n
  }
 
-    for (var i = 1; i <= 10000; i++) {
+    for (var i = 1; i <= 1000; i++) {
          if(isNarcissistic(i)) {
             console.log(i)
          }
     }
 </script>
-<script id="isCompleteNumber">
+<script id="complete-number">
 
 function isCompleteNumber(n) {
     var sum = 1
@@ -109,7 +109,7 @@ function isCompleteNumber(n) {
 
 
 </script>
-<script id="isCompleteNumbers">
+<script id="complete-numbers">
 
 
     function isCompleteNumber(n) {
@@ -140,6 +140,7 @@ function isCompleteNumber(n) {
     var isPrimeNumber = true
 
     if(n == 1){
+        isPrimeNumber = false
         console.log('NO')
     }
     for(var i = 2; i < n; i++){
@@ -195,8 +196,8 @@ function sqrt(n) {
     return mid
 }
 
-  var n = 2
-  console.log(sqrt(2))
+  var n 
+  console.log(sqrt(n).toFixed(3))
 </script>
 
 <script id="ch0103/01">
