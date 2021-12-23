@@ -1,71 +1,100 @@
 <script id="narcissistic">
 
-    var n = Number(prompt())
+  function digitWidth(m) {              
+    var width = 0
 
-    var a = n % 10
-    var b = ( (n - a) / 10) % 10
-    var c = (n - a - b * 10) % 10
+    do {
+        width++
+        var 个位 = m % 10
+        m = (m - 个位) / 10
+    } while(m > 0 )
 
-    var result = a * a * a + b * b * b + c * c * c 
-    
-    if(n == result){
-        console.log('YES')
-    }else{
-        console.log('NO')
+    return width
     }
 
-</script>
-
-<script id="narcissistics">
-
-    for(var i = 0;i < 10000; i++){
-       if(i <=9){ 
-            if( i == i * 1){
-                console.log(i)
-            }
-        }
-
-        if(i >= 10 && i <= 99){
-            var a = i % 10
-            var b = (i - a) / 10 % 10
-
-            var result = a * a + b * b 
-            
-            if( i == result){
-                console.log(i)
-            }
-        }
-
-
-        if(i >= 100 && i <= 999){
-            var a = i % 10
-            var b = (i - a) / 10 % 10
-            var c = (i - a - b * 10) / 100 % 10
-
-            var result = Math.pow(a,3) + Math.pow(b,3)+ Math.pow(c,3) 
-            
-            if( i == result){
-                console.log(i)
-            }
-        }
-
-        if(i >= 1000 && i <= 9999){
-            var a = i % 10
-            var b = ( (i - a) / 10) % 10
-            var c = (i - a - b * 10) / 100 % 10
-            var d = (i - a - b * 10 - c * 100) / 1000 % 10
-            var result = Math.pow(a,4) + Math.pow(b,4)+ Math.pow(c,4) +Math.pow(d,4)
-
-            if( i == result){
-                console.log(i)
-            }
-        }
-
+  function power(x, n) {
+      var result = 1
         
+      for (var i = 0; i < n; i++) {
+            result *= x 
+      }
+        return result
+      }
+
+
+  function isNarcissistic(n) { 
+    var w = digitWidth(n)
+
+    var sum = 0
+    var m = n
+    do {
+        var 个位 = m % 10
+        sum += power(个位, w)
+        m = (m - 个位) / 10
+    } while (m > 0)
+    
+
+    return sum == n
     }
 
+ var n = Number(prompt())
+
+ console.log(isNarcissistic(n) ? 'YES' : 'NO')
+
+ </script>
+
+
+
+ <script id="outputNarcissistics">
+
+  function digitWidth(m) {              
+    var width = 0
+
+    do {
+        width++
+        var 个位 = m % 10
+        m = (m - 个位) / 10
+    } while(m > 0 )
+
+    return width
+  }
+
+  function power(x, n) {
+      var result = 1
+      for (var i = 0; i < n; i++) {
+          result *= x 
+      }
+      return result
+  }
+
+
+  function isNarcissistic(n) { 
+    var w = digitWidth(n)
+    
+    var sum = 0
+    var m = n
+    do {
+        var 个位 = m % 10
+        sum += power(个位, w)
+        m = (m - 个位) / 10
+    } while (m > 0)
+    
+    return sum == n
+ }
+
+  function outputNarcissistics() {
+    for (var i = 1; i <= 10000; i++) {
+         if(isNarcissistic(i)) {
+            console.log(i)
+         }
+    }
+        
+  }
+
+  console.log(outputNarcissistics())
 
 </script>
+
 <script id="prime">
     var n = Number(prompt())
     var isPrimeNumber = true
