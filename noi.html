@@ -46,6 +46,7 @@
 
 <script id="narcissistics">
 
+
   function digitWidth(m) {              
     var width = 0
 
@@ -81,22 +82,66 @@
     return sum == n
  }
 
-  function outputNarcissistics() {
     for (var i = 1; i <= 10000; i++) {
          if(isNarcissistic(i)) {
             console.log(i)
          }
     }
-        
-  }
- 
-  console.log(outputNarcissistics())
+</script>
+<script id="isCompleteNumber">
+
+function isCompleteNumber(n) {
+    var sum = 1
+    
+    for(var i = 2; i < n; i++){
+        if(n % i == 0){
+            sum += i 
+        }
+    }
+
+    return sum == n
+
+}
+
+  var n = Number(prompt())
+
+  console.log(isCompleteNumber(n) ? 'YES' : 'NO')
+
 
 </script>
+<script id="isCompleteNumbers">
 
+
+    function isCompleteNumber(n) {
+    var sum = 1
+    
+    for(var i = 2; i < n; i++){
+        if(n % i == 0){
+            sum += i 
+        }
+    }
+
+    return sum == n
+
+}
+
+ for(var i = 1; i < 1000; i++){
+
+        if(isCompleteNumber(i)){
+            console.log(i)
+        }
+    }
+        
+
+</script>
 <script id="prime">
-    var n = Number(prompt())
+   var n = Number(prompt())
+
     var isPrimeNumber = true
+
+    if(n == 1){
+        console.log('NO')
+    }
     for(var i = 2; i < n; i++){
         if(n % i == 0){
             isPrimeNumber = false
@@ -107,7 +152,6 @@
     if(isPrimeNumber){
         console.log('YES')
     }
-
 </script>
 <script id="primes">
         
@@ -151,6 +195,8 @@ function sqrt(n) {
     return mid
 }
 
+  var n = 2
+  console.log(sqrt(2))
 </script>
 
 <script id="ch0103/01">
@@ -1123,16 +1169,16 @@ function sqrt(n) {
 </script>
 <script id="ch0105/20">
 
-     var h = Number(prompt('h'))
+    var h = 20
 
-     var Sum = -h
+     var Sum = h
 
-     for(var i = 0; i < 10; i++){
-         Sum = Sum + h * 2
-         h = (1 / 2) *h
+     for(var i = 1; i <= 10; i++){
+        h = h / 2
+        Sum += h * 2
+        
      }
-     console.log(Sum, h)
-
+     console.log(Sum, h / 2)
 
 </script>
 <script id="ch0105/21">
