@@ -131,6 +131,28 @@
     
 </script>
 
+<script id="sqrt">
+
+function sqrt(n) {
+    var left = 0
+    var right = n
+    var mid = (left + right) / 2
+
+    while (Math.abs(mid * mid - n) > 0.0000001 ) {
+        var mid = (left + right) / 2
+        if (mid * mid < n) {
+            left = mid
+        }else if (mid * mid > n) {
+            right = mid
+        }else {
+            return mid
+        }
+    }
+    return mid
+}
+
+</script>
+
 <script id="ch0103/01">
 
     var A = Number(prompt(" A "))
