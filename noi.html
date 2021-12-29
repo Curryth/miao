@@ -119,75 +119,14 @@ function isPalindrom(n) {
         }
     } 
 }
-  
+ var n = Number(prompt())
+
+ console.log(isPalindrom(n) ? 'YES' : 'NO')
   
 
 </script>
 
-<script id="itoa">
-    
-function  itoa(n) {
 
-    function digitWidth(n) {              
-        var width = 0
-
-        do {
-            width++
-            var digit = n % 10
-            n = (n - digit) / 10
-        } while(n > 0 )
-
-        return width
-    }
-
-    for(var i = 0; i < digitWidth(n); i++) {
-
-        var result = ''
-
-        while (n > 0) {
-            var d = n % 10
-
-            if (d == 0) {
-                result = d + result
-            }
-
-            if (d == 1) {
-                result = d + result
-            }
-            if (d == 2) {
-                result = d + result
-            }
-            if (d == 3) {
-                result = d + result
-            }
-            if (d == 4) {
-                result = d + result
-            }
-            if (d == 5) {
-                result = d + result
-            }
-            if (d == 6) {
-                result = d + result
-            }
-            if (d == 7) {
-                result = d + result
-            }
-            if (d == 8) {
-                result = d + result
-            }
-            if (d == 9) {
-                result = d + result
-            }
-
-            n = (n - d) / 10
-        }
-        return result
-    }
-
-
-}
-
-</script>
 
 
 <script id="weekday">
@@ -243,6 +182,11 @@ function  itoa(n) {
         day = (day + 1 ) % 7
         return day
      }
+  
+  var year = Number(prompt())
+  var month = Number(prompt())
+  
+  console.log(weekday(year,month))
 </script>
 <script id="complete-number">
 
@@ -330,6 +274,71 @@ function isCompleteNumber(n) {
         }
     
     
+</script>
+
+<script id="itoa">
+    
+function  itoa(n) {
+
+    function digitWidth(n) {              
+        var width = 0
+
+        do {
+            width++
+            var digit = n % 10
+            n = (n - digit) / 10
+        } while(n > 0 )
+
+        return width
+    }
+
+    for(var i = 0; i < digitWidth(n); i++) {
+
+        var result = ''
+
+        while (n > 0) {
+            var d = n % 10
+
+            if (d == 0) {
+                result = d + result
+            }
+
+            if (d == 1) {
+                result = d + result
+            }
+            if (d == 2) {
+                result = d + result
+            }
+            if (d == 3) {
+                result = d + result
+            }
+            if (d == 4) {
+                result = d + result
+            }
+            if (d == 5) {
+                result = d + result
+            }
+            if (d == 6) {
+                result = d + result
+            }
+            if (d == 7) {
+                result = d + result
+            }
+            if (d == 8) {
+                result = d + result
+            }
+            if (d == 9) {
+                result = d + result
+            }
+
+            n = (n - d) / 10
+        }
+        return result
+    }
+}
+  var n = Number(prompt())
+  console.log(itoa(n))
+
 </script>
 
 <script id="sqrt">
