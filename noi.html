@@ -91,7 +91,7 @@
 
 
 <script id="palindrom">
- 
+
 function isPalindrom(n) {
     function digitWidth(n) {              
         var width = 0
@@ -106,17 +106,20 @@ function isPalindrom(n) {
     }
 
     var width = digitWidth(n)
+    var mid = width / 2
    
-    for (var i = 1; i <= width; i++) {
+    for (var i = 1; i <= mid; i++) {
         var a = Math.trunc( n / Math.pow(10, i - 1) % 10 )
 
         var j = (width - i + 1)
         var b = Math.trunc( n / Math.pow(10, j - 1) % 10 )
 
-        if (a == b) {
-            return true
+        if (a != b) {
+            return false
         }
     } 
+
+
 }
  var n = Number(prompt())
 
@@ -290,6 +293,18 @@ function  itoa(n) {
 
         return width
     }
+    
+    var isNegetive = false
+
+
+    if (n == 0) {
+        return '0'
+    }
+
+    if (n < 0) {
+        n = - n
+        isNegetive = true
+    }
 
     for(var i = 0; i < digitWidth(n); i++) {
 
@@ -334,8 +349,12 @@ function  itoa(n) {
         }
         return result
     }
+    
+    if (isNegetive) {
+        result = '-' + result
+    }
+
 }
-  
   var n = Number(prompt())
   console.log(itoa(n))
 
