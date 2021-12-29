@@ -1353,13 +1353,14 @@ function sqrt(n) {
 </script>
 <script id="ch0105/20">
 
-    var h = 20
+     var h = 20
 
      var Sum = - h
 
      for(var i = 1; i <= 10; i++){
-        h = h / 2
-        Sum += h * 2
+       Sum += h * 2
+       h = h / 2
+        
         
      }
      console.log(Sum.toFixed(4))
