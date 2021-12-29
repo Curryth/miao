@@ -106,9 +106,8 @@ function isPalindrom(n) {
     }
 
     var width = digitWidth(n)
-    var mid = n / 2
    
-    for (var i = 0; i <= mid; i++) {
+    for (var i = 1; i <= width; i++) {
         var a = Math.trunc( n / Math.pow(10, i - 1) % 10 )
 
         var j = (width - i + 1)
@@ -276,9 +275,9 @@ function isCompleteNumber(n) {
     
 </script>
 
-<script id="itob">
+<script id="itoa">
     
-function  itob(n) {
+function  itoa(n) {
 
     function digitWidth(n) {              
         var width = 0
@@ -336,8 +335,9 @@ function  itob(n) {
         return result
     }
 }
+  
   var n = Number(prompt())
-  console.log(itob(n))
+  console.log(itoa(n))
 
 </script>
 
