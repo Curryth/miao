@@ -1362,7 +1362,8 @@ function sqrt(n) {
         Sum += h * 2
         
      }
-     console.log(Sum, h / 2)
+     console.log(Sum.toFixed(4))
+     console.log(Sum.toFixed(7))
 
 </script>
 <script id="ch0105/21">
@@ -1397,28 +1398,36 @@ function sqrt(n) {
 
 <script id="ch0105/22">
   
-    var moneyInHand = 0
-    var stock = 0
+  var b = 0
+  var c = 0
+  var t = 0
+  for (var a = 0; a <= 12 - 1; a++) {
+    var k = +prompt()
+    b = b + 300
+    if (k > b) {
 
-   for(var i = 1; i < 12){
-      moneyInHand += 300
-      var spent = Number(prompt('spent'))
-      var 钱不够用 = fasle
+      if (t == 0) {
+        t = -1 * (a + 1)
+      }
+    }
 
-      if(moneyInHand < spend){
-          console.log(-i)
-          钱不够用 = ture
-          break
-        }
+    else {
+      b = b - k
+      if (b >= 100) {
+        c = c + (b - b % 100)
+        b = b - (b - b % 100)
+      }
+    }
 
-      if(moneyInHand > spent){
-          moneyInHand -=spent
-          if(moneyInHand >= 100){
-              stock += moneyInHand - moneyInHand % 100
-              moneyInHand = moneyInHand % 100
-          }else
-        }
-     }
+  }
+  if (t < 0) {
+    console.log(t)
+  }
+  else {
+    c = c * (1 + 0.2)
+    console.log(c + b)
+  }
+
 
 </script>
 <script id="ch0105/23">
@@ -1559,25 +1568,24 @@ function sqrt(n) {
     var m =Number(prompt('m'))
     var k =Number(prompt('k'))
 
-    var n =0
-
-    if(m % 19 == 0){
-        for(var i = 0; ; i++ ){
-            var j = Math.pow(10, i)
-            
-            if( m / j >= 1){
-                var result = Math.trunc( (m / j ) % 10)
-                if( result == 3){
-                     n++
-                }
-             }
-            if(n == k){
-            console.log('YES')
-             }
-        }
-    }else{
-         console.log('NO')
+    if (m % 19 == 0) {
+        var n = m
+        var count = 0
+        while (n > 0) {
+            var digit = n % 10
+            if (digit == 3) {
+                count++
             }
+            n = (n - digit) / 10
+        }
+
+    }
+
+    if (count == k) {
+        console.log('YES')
+    } else {
+        console.log('NO')
+    }
 
 
 </script>
@@ -1641,12 +1649,12 @@ function sqrt(n) {
 </script>
 <script id="ch0105/34">
     var n =Number(prompt('n'))
-    var j = 1
+    var m = 1
     var Sn = 0
 
     for(var i = 1 ; i < n; i++){
-        Sn = Sn + i
-        i = j * i
+         m *= i
+         Sn +=  m
     }
     console.log(Sn)
 
