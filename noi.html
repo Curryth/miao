@@ -1685,8 +1685,30 @@ function sqrt(n) {
     console.log(Sn.toFixed(2))
 
 </script>
-<script id="ch0105/37">
- </script>
+  <script id="ch0105/37"> 
+    var M = Number(prompt('M'))
+    var N = Number(prompt('N'))
+    var X = Number(prompt('X'))
+    var m = 0
+    var xPower = N
+    var countX = X - Math.ceil(M / N)
+    for (var i = 0; i < M; i++) {
+      if(i+1 == N) {
+        N = N + 1
+      }
+    }
+    while(countX > 0) {
+      var countD = 0
+      for (var i = 0; i < M; i++) {
+        countD = countD + 1
+        if (countD % N == 0) {
+          N = N + 1
+        }
+      }
+      countX = countX - Math.ceil(M / N)
+    }
+    console.log(N)
+  </script>
 <script id="ch0105/38">
     var m = Number(prompt())
 
@@ -1755,6 +1777,29 @@ function sqrt(n) {
 
 </script>
 
+<script id="ch0105/41">
+
+    var L = Number(prompt('L'))
+    var R = Number(prompt('R'))
+    var count = 0
+
+    for (var i = L; i <= R; i++) {
+        var m = i
+        
+        while (m > 0) {
+            var digit = m % 10
+            if (digit == 2) {
+                count++
+            }
+            m = (m - digit) / 10
+        }
+
+    }
+
+    console.log(count)
+
+
+</script>
 <script id="ch0105/42">
    
     var h = Number(prompt())
