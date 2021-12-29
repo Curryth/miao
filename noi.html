@@ -295,8 +295,8 @@ function  itoa(n) {
     }
     
     var isNegetive = false
-
-
+    var result = ''
+    
     if (n == 0) {
         return '0'
     }
@@ -307,8 +307,6 @@ function  itoa(n) {
     }
 
     for(var i = 0; i < digitWidth(n); i++) {
-
-        var result = ''
 
         while (n > 0) {
             var d = n % 10
@@ -347,13 +345,14 @@ function  itoa(n) {
 
             n = (n - d) / 10
         }
-        return result
+       
     }
     
     if (isNegetive) {
         result = '-' + result
     }
-
+    
+    return result
 }
   var n = Number(prompt())
   console.log(itoa(n))
