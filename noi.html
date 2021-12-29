@@ -92,6 +92,8 @@
 
 <script id="palindrom">
 
+function isPalindrom(n) {
+
     var reverse = 0
     var m = n
 
@@ -101,7 +103,9 @@
         reverse = reverse * 10 + digit
     }
 
-    return Number(result) == n
+    return reverse == n
+
+}
 
  var n = Number(prompt())
 
