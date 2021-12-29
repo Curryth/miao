@@ -93,19 +93,33 @@
 <script id="palindrom">
 
 function isPalindrom(n) {
+    function digitWidth(n) {              
+        var width = 0
 
-    var reverse = 0
-    var m = n
+        do {
+            width++
+            var digit = n % 10
+            n = (n - digit) / 10
+        } while(n > 0 )
 
-    while (m > 0) {
-        digit = m % 10
-        m = ( m - digit) / 10
-        reverse = reverse * 10 + digit
+        return width
     }
 
-    return reverse == n
+    var width = digitWidth(n)
+    var mid = width / 2
+   
+    for (var i = 1; i <= mid; i++) {
+        var a = Math.trunc( n / Math.pow(10, i - 1) % 10 )
 
+        var j = (width - i + 1)
+        var b = Math.trunc( n / Math.pow(10, j - 1) % 10 )
+
+        
+            return a == b
+        
+    } 
 }
+
 
  var n = Number(prompt())
 
