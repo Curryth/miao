@@ -1355,7 +1355,7 @@ function sqrt(n) {
 
     var h = 20
 
-     var Sum = h
+     var Sum = - h
 
      for(var i = 1; i <= 10; i++){
         h = h / 2
@@ -1363,7 +1363,7 @@ function sqrt(n) {
         
      }
      console.log(Sum.toFixed(4))
-     console.log(Sum.toFixed(7))
+     console.log(h.toFixed(7))
 
 </script>
 <script id="ch0105/21">
@@ -1647,15 +1647,18 @@ function sqrt(n) {
     console.log(Sn.toFixed(4))
 
 </script>
+
 <script id="ch0105/34">
-    var n =Number(prompt('n'))
+  
+    var n = Number(prompt('n'))
     var m = 1
     var Sn = 0
 
-    for(var i = 1 ; i < n; i++){
+    for(var i = 1 ; i <= n; i++){
          m *= i
-         Sn +=  m
+         Sn += m
     }
+  
     console.log(Sn)
 
 </script>
