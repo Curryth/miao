@@ -1,0 +1,2324 @@
+<script>
+// 输入n个数，并反向输出，用数组方式实现。
+
+var n = Number(prompt())               
+
+var a = []  // 或者 var a = Array(n)  Array用于单个变量储存多个值
+
+for (var i = 0; i < n; i++) {
+    var number = Number(prompt())
+    a.push(number)   // 或者 a[i] = number
+}
+
+for(var i = n - 1; i >= 0 ; i--) {
+    console.log(a[i])
+}
+
+
+
+a = Array(8)
+
+
+
+// 数组是值的有序集合
+
+var a = [] // 创建空数组
+var a = [1,2,3,4] // 创建非空数组
+console.log(a[0])  // 取出数组的第一项，即下标/索引为0的项
+console.log(a[1])  // 取出数组的第二项，即下标/索引为1的项
+a[2] = 888  // 数组下标2号元素赋值
+
+a.length = 3  // 让数组的长度变为3，扔掉可能存在的后续项
+
+a.push(5)  // 向数组尾增加元素，并返回新的长度
+a.push(5,6)  // 可以一次性增加多个元素
+a.length  // 得到数组长度
+a.pop()  // 删除数组最后一项，一次只能删一项
+
+a.unshift(5)  // 向数组前面增加元素，并返回新的长度
+a.unshift(5,6)  // 可以一次性增加多个元素
+
+a.shift()  //删除并返回数组第一项，一次只能删一项
+
+
+
+// 幂运算
+
+function power(a, n) {
+    if (n == 0) {
+        return 1
+    } else {
+        return a * power(a, n - 1)
+    }
+    
+}
+
+// 阶乘
+
+function factorial(x) {
+    if (x == 0) {
+        return 1
+    } else {
+        return  factorial(x - 1) * x
+    }
+}
+
+// 斐波那契数列
+
+function fibb(n) {
+    if (n < 3) {
+        return 1
+    } else {
+        return fibb(n - 1) + fibb(n - 2)
+    } 
+    
+}
+
+// 输入n个数并反向输出
+// 输入一个数，输入n - 1 个数并反向输出，输出x
+
+function inputAndReverse(n) {
+    if ( n == 0) {
+        return 
+    }
+    var x = Number(prompt())
+    inputAndReverse(n - 1)
+    console.log(x)
+}
+
+
+var target = 150
+
+function find(start, history) {
+    if (start == target) {
+        return history
+    }
+    if (start > target) {
+        return null
+    }
+    return  find(start * 3, '(' + history + ') * 3')           // 每次返回两次不同的值
+        || find(start + 5, history + ' + 5')
+}
+
+
+
+// 找到并输出所有的可能
+
+function findSolution(target) {
+
+// var target = 151      
+
+function find(start, history) {
+    if (start == target) {
+        console.log(history)
+        return
+    }
+    if (start > target) {
+        return null
+    }
+    return find(start * 3, '(' + history + ') * 3')
+        || find(start + 5, history + ' + 5')
+}
+
+return find(1, '1')
+}
+
+
+// 找到并返回第一个可能
+
+    function findSolution(target) {
+
+    // var target = 151
+
+        function find(start, history) {
+            if (start == target) {
+                return history
+            }
+            if (start > target) {
+                return null
+            }
+            return find(start * 3, '(' + history + ') * 3')
+                || find(start + 5, history + ' + 5')
+        }
+
+        return find(1, '1')
+    }
+
+
+
+// 找到并返回（放在数组里）所有的可能
+
+    function findSolution(target) {
+
+    // var target = 151
+    var array = []
+
+    function find(start, history) {
+        if (start == target) {
+            array.push(history)
+            return
+        }
+        if (start > target) {
+            return
+        }
+        find(start * 3, '(' + history + ') * 3')
+        find(start + 5, history + ' + 5')
+    }
+
+    find(1, '1')
+    return array
+    }
+
+
+
+// 棋盘格
+
+    function findSolution(targetX, targetY) {
+
+    // var target = 151
+    var array = []
+
+    function find(x, y, history) {
+        if (x == targetX && y == targetY) {
+            array.push(history)
+            return
+        }
+        if (x > targetX || y > targetY) {
+            return
+        }
+        find(x + 1, y,  history + '>')
+        find(x, y + 1, history + '^')
+    }
+
+    find(0, 0, '')
+    return array
+    }
+
+// 走楼梯
+function findSolution(target) {
+    var array = []
+
+    function find(start, history) {
+        if (start == target) {
+            array.push(history)
+            return
+        }
+        if (start > target) {
+            return
+        }
+        find(start+ 1,  history + ' > ')
+        find(start + 2, history + ' >> ')
+    }
+
+    find(0, '')
+    return array
+    }
+
+
+// 递归的用法 Example of Recurision
+// 求从坐标某点，向下走，选择一条路径经过的数字之和最大值，maxSum
+var numbers = [                         // 数组里面套数组
+      [2], 
+     [3, 1],
+    [9, 8, 4],
+   [7, 1, 5, 6],
+  [3, 0, 4, 9, 8],
+]                                     // numbers[2][1] = 8 表示大数组里的第3排，第2个
+
+function maxSum(x, y) {
+    if (x == numbers.length - 1) {      // 如果起始位置在最底下一排
+        return numbers[x][y]
+    }
+    return numbers[x][y] + Math.max( maxSum(x + 1, y), maxSum(x + 1, y + 1) )
+} 
+
+
+
+function findSolution(numbers) {
+  var max = 0
+  var maxHistory = null
+
+  function find(x, y, sum, history) {
+    if (x == numbers.length - 1){  //已经走到最后一行
+
+        if (sum + numbers[x][y] > max) {
+            max = sum + numbers[x][y]
+            maxHistory = history
+        }
+        return
+    }
+        find(x + 1, y,     sum + numbers[x][y],  history + ' 左 ')
+        find(x + 1, y + 1, sum + numbers[x][y], history + ' 右 ')
+    }
+
+    find(0, 0, 0, '')
+    return [max, maxHistory]
+}
+
+
+//自己敲一遍理解一下
+
+var numbers = [
+            [2],
+          [3, 1],
+        [9, 8, 4],
+      [7, 1, 5, 6],
+    [3, 0, 4, 9 ,8],
+  [10, 0, 0, 0, 0, 0],
+[10, 0, 0, 300, 0, 0, 200],
+]
+
+
+function maxSum(x, y) {
+    if (x == numbers.length - 1) {
+        return numbers[x][y]
+    }
+    return numbers[x][y] + Math.max( maxSum(x + 1, y), maxSum(x + 1, y + 1))
+    
+} 
+
+maxSum(0,0)
+
+
+
+var minimumTotal = function(triangle) {
+   var min = 10 * 10 * 10 * 10
+
+  function find(x, y, sum) {
+    if (x == triangle.length - 1){  //已经走到最后一行
+
+        if (sum + triangle[x][y] < min) {
+            min = sum + triangle[x][y]
+        }
+        return
+    }
+        find(x + 1, y,     sum + triangle[x][y], )
+        find(x + 1, y + 1, sum + triangle[x][y], )
+    }
+
+    find(0, 0, 0)
+    return min
+
+    
+};
+
+
+var minimumTotal = function(triangle) {
+    var min = 10 * 10 * 10 * 10
+
+    function find(x, y, sum) {
+    if (x == 0){  //已经走到最后一行
+
+        if (sum - triangle[x][y] < min) {
+            min = sum - triangle[x][y]
+        }
+        return
+    }
+        find(x - 1, y - 1, sum - triangle[x][y] )
+        find(x - 1, y,     sum - triangle[x][y] )
+    }
+
+    find(0, 0, 0)
+    return min
+
+
+}
+
+
+function countBs(str) {
+    var count = 0
+    for(var i = 0; i < str.length; i++) {
+        if (str[i] == 'B') {
+            count++
+        }
+    }
+    return count
+    
+}
+
+
+function countChar(str, char) {
+    var count = 0
+    for(var i = 0; i < str.length; i++) {
+        if (str[i] == 'char') {
+            count++
+        }
+    }
+    return count
+    
+}
+
+function countChar(str) {
+    return countChar(str, 'B')
+} 
+
+
+
+
+function countBs(str) {
+  var count = 0
+  for (var i = 0; i < str.length; i++) {
+    if (str[i] === 'B') {
+      count++
+    }
+  }
+  return count
+}
+
+function countChar(str, char) {
+  var count = 0
+  for (var i = 0; i < str.length; i++) {
+    if (str[i] === char) {
+      count++
+    }
+  }
+  return count
+}
+
+function countBs(str) {
+  return countChar(str, 'B')
+}
+
+function isEven(n) {
+    if (n == 0) {
+        return true
+    } else (n == 1) {
+        return false
+    } else {
+        return isEven(n - 2)      
+        }
+    }
+    
+}
+
+
+
+</script>
+
+
+<div>aaaa</div>
+<script>
+  for (var i = 0; i< 10; i++) {
+      document.write('<span style="color;hsl(' + i * 10 + ',70%,80%)')
+  }
+
+
+
+</script>
+
+
+<script>
+
+  function indexOf(array, value, formIndex = 0) {
+
+      for (var i = fromIndex; i < array.length; i++) {
+          if (arry[i] === value) {
+              return i
+          }
+
+      }
+
+      return -1
+  }
+
+
+
+</script>
+
+
+<script>
+    var joural = []
+
+    function addEntry(events, didTurn) {
+        var entry = {
+            events: events,
+            squirrel: didTurn,
+        }
+
+        joural.push(entry)
+    }
+  
+  //  addEntry(['eat', 'touch tree','work','tv'],true)
+
+  function phi(table) {
+      return (table[3] * table[0] - table[1] * table [2]) /
+        Math.sqrt(
+            (table[2 + table[3]]) *
+            (table[0] + table[1]) *
+            (table[0] + table[2]) *
+            (table[3] + table[1])
+        )
+
+  }
+
+  var JOURNAL = [
+    {
+      "events": ["carrot", "exercise", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["bread", "pudding", "brushed teeth", "weekend", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "nachos", "brushed teeth", "cycling", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["brussel sprouts", "ice cream", "brushed teeth", "computer", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "candy", "brushed teeth", "exercise", "weekend", "dentist"],
+      "squirrel": false
+    }, {
+      "events": ["brussel sprouts", "pudding", "brushed teeth", "running", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "brushed teeth", "computer", "work", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["bread", "beer", "brushed teeth", "cycling", "work"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "brushed teeth", "cycling", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "nachos", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["brushed teeth", "weekend", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["lettuce", "brushed teeth", "television", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["brushed teeth", "computer", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lettuce", "nachos", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "reading", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["bread", "brushed teeth", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "brushed teeth", "exercise", "work"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "brushed teeth", "reading", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "ice cream", "brushed teeth", "television", "work"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "nachos", "work"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "ice cream", "brushed teeth", "cycling", "work"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "peanuts", "computer", "weekend"],
+      "squirrel": true
+    }, {
+      "events": ["potatoes", "ice cream", "brushed teeth", "computer", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "ice cream", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["peanuts", "brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "exercise", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "ice cream", "computer", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "ice cream", "work"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "candy", "reading", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "nachos", "brushed teeth", "running", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "beer", "work", "dentist"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "pudding", "cycling", "work"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "brushed teeth", "reading", "work"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "pudding", "television", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["bread", "brushed teeth", "exercise", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "peanuts", "work"],
+      "squirrel": true
+    }, {
+      "events": ["pizza", "work"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "exercise", "work"],
+      "squirrel": false
+    }, {
+      "events": ["brushed teeth", "exercise", "work"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "brushed teeth", "television", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "cycling", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "brushed teeth", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "beer", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "peanuts", "candy", "work"],
+      "squirrel": true
+    }, {
+      "events": ["carrot", "peanuts", "brushed teeth", "reading", "work"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "peanuts", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "nachos", "brushed teeth", "exercise", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "peanuts", "brushed teeth", "television", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "brushed teeth", "cycling", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "peanuts", "brushed teeth", "computer", "work", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["lettuce", "brushed teeth", "television", "work"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "brushed teeth", "computer", "work"],
+      "squirrel": false
+    }, {
+      "events": ["bread", "candy", "work"],
+      "squirrel": false
+    }, {
+      "events": ["potatoes", "nachos", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "pudding", "brushed teeth", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "brushed teeth", "exercise", "weekend", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["brussel sprouts", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lettuce", "brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["candy", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["brussel sprouts", "brushed teeth", "computer", "work"],
+      "squirrel": false
+    }, {
+      "events": ["bread", "brushed teeth", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "brushed teeth", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "candy", "television", "work", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "pudding", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lettuce", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "ice cream", "brushed teeth", "cycling", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["spaghetti", "peanuts", "exercise", "weekend"],
+      "squirrel": true
+    }, {
+      "events": ["bread", "beer", "computer", "weekend", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lettuce", "peanuts", "brushed teeth", "work", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "brushed teeth", "television", "work"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "reading", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["carrot", "peanuts", "reading", "weekend"],
+      "squirrel": true
+    }, {
+      "events": ["potatoes", "brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lasagna", "ice cream", "work", "touched tree"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "peanuts", "brushed teeth", "cycling", "work"],
+      "squirrel": false
+    }, {
+      "events": ["pizza", "brushed teeth", "running", "work"],
+      "squirrel": false
+    }, {
+      "events": ["lettuce", "brushed teeth", "work"],
+      "squirrel": false
+    }, {
+      "events": ["bread", "brushed teeth", "television", "weekend"],
+      "squirrel": false
+    }, {
+      "events": ["cauliflower", "peanuts", "brushed teeth", "weekend"],
+      "squirrel": false
+    }
+  ]
+
+    function hasEvent(event, entry) {
+      //  return entry.events.indexOf(event) >= 0
+        return entry.events.include(event) >= 0
+    }
+
+// 从统计数据中得到某时间与变松鼠之间的表格
+
+
+    function tableFor(event, joural) {
+        var table = [0, 0, 0, 0]
+        for (var i = 0; i < joural.length; i++) {
+            var entry = joural[i]
+            var index = 0  // 高低位都为0
+            if (hasEvent(event, entry)) index += 1  // 低位变1,低位表示是否发生了某事
+            if（entry.squirrel) index += 2  // 高位变为1，高位表示是否变成了松鼠
+            table[index]++
+        }
+        return table   
+    }
+
+
+
+var ps = []
+var obj = {}
+
+    debugger
+    for （var i = 0; i < JOURNAL.length; i++）{
+        var entry = JOURNAL[i]
+        var event = entry.eventsfor 
+        for (var j = 0; j < events.length; j++) {
+            var event = events [j] 
+
+            if (!(event in obj) {
+                var table = tableFor(event, JOURNAL)
+                var p = phi(table)
+                
+                obj[event] = p
+                ps.push(  {
+                    name: event,
+                    value: p
+                }  )
+
+            }
+
+        }
+    }
+
+  console.log(ps)
+  console.log(obj)
+ 
+
+
+
+
+
+
+// function getPhi(event) {
+//    for (var i = 0; i < ps.length; i++) {
+//        if (ps[i].name == event) {
+//            return ps[i].value
+//        }
+//    }
+//    return 0
+// }
+
+//phis = {
+//   work: -0.03
+
+// }
+
+
+
+
+for (var key in obj) {
+
+}
+
+
+
+function push(array ,vavl) {
+    array[array.length] = val 
+    return array.length
+
+}
+
+function pop(array) {
+    var t = array[array.length - 1]
+    array.length - 1
+}
+
+a.slice(3,7)
+
+
+function slice(array, start, end) {
+    var result = []
+    for (var i = start; i < end; i++) {
+        result.push(array[i])
+    }
+    return result
+}
+
+contat 
+
+b = a contact(5, 5, 5, 5)
+
+
+a.slice()
+
+a.splice(a.length,0,'555')
+
+a.splice(-2,1)
+a.at(-1)
+
+a[3] = 888
+a.splice(3,1,888)
+
+a.fill(0)
+
+a[0].foo = 8
+
+function fill(array, val) {
+    for (var i = 0; i < array.length; i++) {
+       array[i] = val
+    }
+    return array
+}
+
+array.
+
+a.reverse
+
+function reverse 
+
+foo.toString() {
+    return 8 * 8
+}
+
+// JS里一切皆对象，能读出属性的东西都是对象
+
+// number，string，boolean不是真正的对象，这里的对象指真正的对象
+
+xo = obj {}
+
+x = 2
+
+x.toFixed()
+
+Object(x).toFixed()
+
+
+Object('djkahdj')
+
+String('kjhjhl')
+
+Boolean()   //包装对象
+
+new String/Number/Boolean 
+
+indexOf 
+
+s.trim()
+s.trimStart()
+s.tirmEnd()
+
+s.at()
+
+
+s.contact
+
+s.endsWith()
+s.starsWith()
+
+s.fixed 
+
+s.fontcolor('red')
+
+s.plit('')
+
+s.substring(5,8)
+
+function foo() {
+    console.log(arguments)
+}
+// 类数组对象
+
+
+function sum() {
+    var result = 0
+    for (var i = 0; i < arguments; i++) {
+        result += arguments(i)
+    }
+    return result
+}
+
+sum(1,5,8,1,0,0,8)
+
+
+function f(a, b , ...c)
+
+//剩余数组
+
+// 命名空间
+
+// 全局对象是全局作用域的属性
+// 局部对象是局部作用域的属性
+
+delete 
+
+
+
+
+// 2021/12/31 PM
+
+// 数据与算法导论-C语言版  Mark Allen   （我们会学习里面三分之一的算法部分）
+
+// 
+
+// 什么是递归，递归不是循环逻辑，不是闭环的，如同电影《恐怖游轮》里一样首位衔接无限循环。
+// 递归应该是从函数F(5)➡️F(4)➡️F(3)➡️F(2)➡️F(1)➡️F(0)，
+// 而不是F(5)➡️F(5)无限循环
+
+
+// unsigned int N 输入无符号整数N
+
+// 1.Base case 基准情形
+// 2.Making Progress 不断推进。对于需要递归求解的情形，递归调用必须朝着产生基准情形的方向推进
+// 3.假设所有递归都能正确运行
+// 4. 
+
+
+// 汉诺塔                 没想明白这个和递归有啥关系？？？
+
+  function hanoi(n, from, to) {
+      var mid = 6 - from - to  // 空闲杆号
+      if (n == 1) {
+          console.log(from, '➡️'， to)
+      } else {
+          hanoi (n - 1,) from, mid)
+          console.log(from, '➡️'， to)
+          hanoi(n - 1, mid, to)
+      }
+  }
+
+  hanoi(4, 1, 3-)
+
+
+// 递归版斐波那契
+
+var computed = []
+
+function fibb(n) {
+    if (n < 3) {
+        return 1
+    } else {
+        if (computed[n]) {
+            return computed[n]
+        }
+        var result = fibb(n - 1) + fibb(n - 2)
+        computed[n] = result               
+        return result
+    }
+}
+// 把数组做映射，由第n项的编号映射到其结果。
+// 如果算过了存在于数组内，即返回这个值。否则就算出来再返回这个结果。
+
+//缓存，把每次算出来的结果存起来，下次遇见直接输出。
+// obj.['2/7'] = 45   把45存在2/7的位置，方便下次输出。
+
+
+
+
+
+
+// 最大的子序列的问题
+
+// 求数组第i项到第j项之和的最大值
+
+
+// 解1  时间复杂度为N的三次方（因为有三个for循环嵌套）
+    function maxSubArray(array) {
+        var max = -Infinity
+        for (var i = 0; i < array.length; i++) {
+            for (var j = i; j < array.length; j++) {
+                var sum = 0
+                for (var k = i; k <= j; k++) {
+                    sum += array[k]
+                }
+                if (sum > max) {
+                    max = sum
+                }
+            }
+        }
+        return max
+    }
+
+// 解2  时间复杂度为N的二次方（只有两个for循环嵌套）
+    function maxSubArray(array) {
+        var max = -Infinity
+        for (var i = 0; i < array.length; i++) {
+            var sum = 0
+            for (var j = i; j < array.length; j++) {
+                sum += array[j]
+                if (sum > max) {
+                    max = sum
+                }
+            }
+        }
+        return max
+    }
+
+
+
+
+// 解3   递归算法
+// 时间复杂度为大O(N*logN) 
+// 空间复杂度logN+N, logN很小，即空间复杂度为O(N).
+    function maxSubArray(array) {
+        if (array.length == 0) {
+            return 0
+        }
+        if (array.length == 1) {
+          if (array[0] < 0) {
+            return 0
+          } else{
+            return array[0]
+          }
+        }      
+        
+
+        var mid = array.length >> 1 // 位运算，右移一位，右边移去的若是0则为除2，移去的是1则为除二取整。
+        var left = array.slice(0, mid)
+        var right = array.slice(mid)
+
+        var leftMax = maxSubArray(left)  // 左边数组的最大子串和
+        var rightMax = maxSubArray(right)  // 右边数组的最大子串和
+
+        var leftSpanMax = 0
+        var sum = 0
+        for (var i = mid - 1; i >= 0; i--) {
+          sum += array[i]
+          if (sum > leftSpanMax) {
+            leftSpanMax = sum
+          }
+        }
+
+        var rightSpanMax = 0
+        var sum = 0
+        for (var i = mid; i < array.length; i++) {
+          sum += array[i]
+          if (sum > rightSpanMax) {
+            rightSpanMax = sum 
+          }
+        }
+
+        var spanMax = leftSpanMax + rightSpanMax
+        return Math.max(spanMax, leftMax, rightMax)
+    }
+
+
+// 解4 单层循环，只对数据进行一次扫描，且不需要记住数据，只需要读出当前的数和当前的状态
+
+function maxSubArray(array) {
+
+    var ThisSum = 0
+    var MaxSum = 0
+
+    for (var i = 0; i < array.length; i++) {
+        ThisSum += array[i]
+
+        if (ThisSum > MaxSum) {
+            MaxSum = ThisSum
+        } else if (ThisSum < 0) {
+          ThisSum = 0
+        }
+    }
+    return MaxSum
+}
+
+
+
+
+var distributeCandies = function(candyType) {
+    var types = {}
+
+    for(var i = 0; i < candyType.length; i++) {
+        var type = candyType[i]
+        types[type] = 1
+    }
+
+    var size = 0
+    for (var candy in types) {
+        size++
+    }
+
+    if ( size > candyType.length / 2) {
+      return size
+    } else {
+      return candyType.length / 2
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 有些用到 var a = undefined   可以写成 var a = void 0   避免undefined被转换，以及节省了几个字节（哈？这么省）
+
+
+// 时间复杂度 O       
+// O(N三次方)   mean 时间最后只和N的三次方有相关性，和其他的没有关系
+
+
+// 空间复杂度
+
+
+function maxSubArray(array) {
+    var max = - Infinity
+    for (var i = 0; i < array.length; i++) {
+        for (var )
+    }
+}
+
+
+
+
+2022/01/04
+
+function sum(numbers) {
+  var result = 0
+  for (var i = 0; i < numbers.length; i++) {
+    result += numbers[i]
+  }
+  return result
+}
+
+
+function range(start. end, step = 1 ) {
+  var result = []
+  for (var i = start; i <= end; i += step) {
+    return .push(i)
+  }
+  return result
+}
+
+
+Reversing an array 倒序数组
+
+    function reverseArray(array) {
+      var len = array.length
+      var result = Array(len)
+
+      for (var i = array.length - 1; i >=0; i--) {
+        result[len - i - 1](array[i])
+      }
+
+      return result
+    }
+
+
+    function reverseArrayInPlace(array) {
+      var i = 0
+      var j = array.length - 1
+
+
+        while (i <= j ) {
+          var temp = array[i]
+          array[i] = array[j]
+          array[j] = temp
+          i++
+          j--
+        }
+        return array
+
+    }
+
+
+for (var index in array) {
+}
+console.log(index)
+
+
+稀疏数组，带empty项的
+
+以下的函数都会作用于稀疏数组里的稀疏项empty项
+
+array.reverse
+
+array.slice(2, 5)
+array.splice()
+array.sort()
+
+
+// 面试题
+// DeapEqual 深度对比  
+
+
+deepEqual(NaN, NaN)  
+
+function deepEqual(a, b) {               // 不仅可以判断对象的相等，值相等也会返回true
+  if (a === b) {            // 原始类型相同
+    return true
+  } 
+  if (a !== a && b !== b) {    // 如果一个数不等于自己，说明它是NaN
+    return true
+  }
+    // 两个都是数组
+  if (Array.isArray(a) && Array.isArray(b)) { // Array.isArray()函数来判定一个数是不是数组
+    if (a.length !== b.length) {
+      return false
+    } else {
+      for (var i = 0; i < a.length; i++) {
+        if ( !deepEqual(a[i], b[i]) ) {    // 用递归来判定数组是不是完全相等
+          return false
+        }
+      }
+      return true
+    }
+  }
+
+  // 两个都是对象
+  if (!Array.isArray(a) && !Array.isArray(b) && a && b typeof a === 'object' && typeof b === 'object') {
+      for (var key in a) {
+        if (!(key in b)) {   // a的每个属性都要在b里
+          return false       // 否则返回false
+        }
+      }
+      for (var key in b) {  
+        if (!(key in a)) {  // b的每个属性都要在a里
+          return false    // 否则返回false
+        }
+      }
+     // 上方两个循环确定a和b的属性集合相同
+
+    for (var key in a ) {
+      if (!deepEqual(a[key], b[key])) {
+          return false
+      }
+    }
+    for (var key in b ) {
+      if (!deepEqual(a[key], b[key])) {
+          return false
+      }
+    }
+    return true
+  }
+
+  return false
+}
+
+
+
+a = {
+    x1:1, y:2
+}
+b = {
+    x1:1, y:2
+}
+
+
+
+
+
+链表 ：
+难查找（必须通过头部顺着链表的指针找到目标结点）
+易增删（只需要调整修改位置的结点指针）
+使用一小段一小段的内存，需要多少用多少
+
+
+数组：
+易查找（通过下表直接就找到某一项）
+难增删（增删位置后续的元素都要挪动位置）
+使用连续的内存，而且长度一般不能变
+
+
+
+
+  var node = {
+
+    var: 1,
+    next: {
+      value: 2,
+      next: 
+    }
+
+
+    var: 2,
+    next: null
+
+
+
+
+  }
+
+  // 将数组转变成链表
+
+  function arrayToList(array) {
+      if (array.length == 0) {
+        return null
+      }
+
+      var nodes = []
+      for (var i = 0; i < array.length; i++) {
+        // 对于数组的每个值，创建一个链表结点
+          var node = {
+              val: array[i],
+              next: null,
+          }
+          nodes.push(node)
+
+      }
+
+      for (var i = 0; i < array.length - 1; i++) {       // 最后一项没得值，只有null
+        // 把每个结点的next指向后一个结点
+          nodes[i].next = nodes[i + 1]
+      }
+
+      return nodes[0]
+
+  }
+
+
+
+  function arrayToList2(array) {
+    if (array.length == 0) {
+        return null
+      }
+
+      var head = {           // 创建头结点，方便创建第一个prev的next
+        val: array[0],
+        next: null
+      }
+      var prev = head
+
+      for (var i = 1; i < array.length; i++) {
+      var node = {
+          val: array[i],
+          next: null,
+      }
+      prev.next = node
+      prev = node
+    }
+
+    return head         // 最后返回头结点
+    
+  }
+
+
+
+  function arrayToList3(array) {
+
+    var dummy = {             // dummy：假结点
+      val: 0,                // 不需要写数组长度为0的情况，因为for循环不会运行，直接输出null
+      next: null
+    }
+    
+    var prev = dummy
+
+    for (var i = 0; i < array.length; i++) {  // 数组第0项创建出第一个结点挂到dummy假结点上
+      var node = {
+          val: array[i],
+          next: null,
+      }
+      prev.next = node
+      prev = node
+    }
+
+    return dummy.next
+
+  }
+
+
+// 倒序的方式写出，从后往前写链表
+
+  function arrayToList4(array){
+      var prev = null
+
+      for (var i = array.length - 1; i >= 0; i--) {  
+        var node = {
+            val: array[i],
+            next: null,
+        }
+        node.next = prev
+        prev = node
+      }
+      return pre
+    }
+  }
+
+
+  // 以递归方式
+
+
+  function arrayToListR2(array, start = 0) {  // 将数组array从start开始到结束转为链表
+    if (start == array.length) {
+      return null
+    }
+
+    var head = {      // 先把头结点单独拎出来
+      val: array[start],
+      next: null
+    }
+
+    var tail = arrayToListR2(array, start + 1)  // 后面所有的项成为一个单独的f(x),这样不断递归下去
+    head.next = tail             // 数组有多少项，递归就有多少层
+    return head
+  }
+
+
+// 把链表转成数组
+  function listToArray(head) {
+    
+    if (head == null) {
+      return []
+    }
+
+    var result = []
+
+    while(head) {
+      result.push(head.val)
+      head = head.next
+    }
+
+    return result
+
+  }
+
+
+  // 写成递归形式
+  function listToArrayR(head) {
+      if (head == null) {
+        return []
+      }
+      var array = listToArrayR(head.next)
+ 
+      return [head.val].concat(array) // 将头结点的值与后面递归的部分连接起来
+  }
+
+
+
+
+  // 把一个结点加到链表的前面
+  function prepend(val, head) {
+    return {
+      val: val,
+      next: head
+    }
+  }
+
+  // 把一个结点添加到链表的后面
+
+    function append(val, head) {
+      var node = {
+        val: val,
+        next: null,
+      }
+      if (head == null) {
+        return node
+      }
+
+      var p = head
+      while (p.next) {
+        p = p.next
+      }
+    }
+    p.next = node
+    return head
+  }
+
+
+  // 寻找链表的第二项
+  function nth(list, n) {
+    if (list == null) {
+      return undefined
+    }
+    var p = list
+    var c = 0
+
+    while (p && c < n) {
+      c++
+      p = p.next
+    }
+    
+    if(p) {
+      return p.val
+    } else {
+      return undefined
+    }
+  }
+
+
+
+
+  function nth(list, n) {
+    if (list == null || n < 0) {
+      return undefined
+    }
+    if (n == 0) {
+      return list.val
+    }
+    return nth(list.next, n - 1)
+
+  }
+
+
+  function insert(list, n, val) {
+    var node = {
+      val: val,
+      next: null
+    }
+    var p = list
+    var c = 0
+
+    if (n == 0) {
+      node.next = list
+      return node
+    }
+
+    while (p && c < n - 1) {
+      c++
+      p = p.next
+    }
+
+ //   var q = p.next
+ //   p.next = node
+ //  node.next = q
+
+  node.next = p.next
+  p.next = node
+  return list
+  
+  }
+  
+
+
+//创建一个链表结点
+
+var node = new ListNode(3, head)
+return node
+
+
+
+
+2022/01/06
+
+// 插入排序
+
+// 生成n个由n以内整数组成的随机数组
+function randomAry(n) {
+    var ary = []
+    var rands = []
+    for (var i = 0; i < n; i++) {
+        var rand = Math.random()
+        rands.push(rand)
+        ary.push(  Math.trunc(rand * n)  )    // 若n为100，则取的是100以内的随机整数
+               // 位运算，或上0都可以
+    }
+    console.log(rands)
+    return ary
+}
+
+function insertSort(ary) {
+
+    for (var i = 1; i < ary.length; i++) {
+        var t = ary[i]
+        for (var j = i - 1; j >= 0; j--) {
+            if (ary[j] > t) {
+                ary[j + 1] = ary[j]
+            } else {  
+                break
+            }
+        }
+        ary[j + 1] = t
+    }
+    return ary
+}
+
+function isSorted(ary) {
+    for (var i = 0; i < ary.length - 1; i++) {
+        if (ary[i + 1] < ary[i]) {
+            return false
+            break
+        }
+    }
+    return true
+}
+
+
+// 冒泡排序
+
+function swap(ary, i, j) {
+    var t = ary [i] 
+    ary[i] = ary[j]
+    ary[j] = t
+}
+
+function bubbleSort(ary) {
+  // 遍历交换的结束位置
+    for (var i = ary.length - 2; i >= 0 ; i--) {
+        var swapped = false
+        for (var j = 0; j <= i; j++) {   // 从第0道第i个元素分别跟右边的元素对比交换
+            if (ary[j] > ary[j + 1]) {
+                swapped = true
+                var t = ary [j] 
+                ary[j] = ary[j + 1]
+                ary[j + 1] = t
+            }
+        }
+        if (!swapped) {         // 如果某次遍历没有交换过，说明数组已经有序，结束
+            break
+         } 
+    }
+    return ary
+}
+
+
+function bubbleSort(ary) {
+
+    function swap(ary, i, j) {
+        var temp = ary[j]
+        ary[j] = ary[i] 
+        ary[i] = temp
+    }
+
+    for (var i = ary.length - 2; i >= 0; i--) {
+        var swapped = false
+        for (var j = 0; j <= i; j++) {
+            if (ary[j] < ary[j + 1]) {
+                swapped = true
+                swap(ary, j, j + 1)
+            }
+        }
+        if (!swapped) {
+            break
+        }
+    }
+    return ary
+
+};
+
+// 选择排序
+
+function selectSort(ary) {
+    for (var i = 0; i < ary.length - 1; i++) {
+        // 找出剩下元素最小的放入位置
+        var minIdx = i // 假设查找范围的第一项即为最小的
+        for (var j = i + 1; j < ary.length; j++) {
+            if (ary[j] < ary[minIdx]) {
+                minIdx = j
+            }
+        }
+        // 将最小的元素放在i位置，并把i原来的值放到最小元素的位置
+        swap(ary, i, minIdx)
+    }
+    return ary
+}
+
+
+function selectSort(ary) {
+    for (var i = 0; i < ary.length - 1; i++) {
+        var minIdx = i
+        for (var j = i + 1; j < ary.length; j++) {
+            if (ary[j] < ary[minIdx]) {
+                minIdx = j
+            }
+        }
+        swap(ary, i, minIdx) 
+    }
+    return ary
+}
+
+
+// 归并排序，时间复杂度空间复杂度都比较大
+// 递归写法
+// 时间复杂度:N*logN
+// 空间复杂度: N + logN
+
+
+
+function mergeSort(ary) {
+    if (ary.length < 2) {
+      return ary
+    }
+    // 把数组一分为二
+    var mid = Math.floor(ary.length / 2)
+    var left = ary.slice(0,mid) 
+    var right = ary.slice(mid)
+    // 左边排
+    mergeSort(left) 
+    // 右边排
+    mergeSort(right)
+
+    // 合起来
+    var i = 0  // 指向left数组
+    var j = 0  // 指向right数组
+    var k = 0  // 指向结果数组
+    while (i < left.length && j < right.length) {
+        if (left[i] < right[j]) {
+            ary[k++] = left[i++]
+        } else {
+            ary[k++] = right[i++]
+        }
+    }
+    while (i < left.length) {
+        ary[k++] = left[i++]
+    }
+    while (i < right,length) {
+        ary[k++] = right[j++]
+    }
+
+    return ary
+
+}
+
+
+
+// 对数组ary从start到end防伪内到元素进行就地归并排序
+// 就地：不创建新的数组。所有的元素在原数组中进行操作
+
+
+// 快速排序，快排 
+// 不及格写法,专门生成3个数组来存储，从而占用了更多的存储空间（增加了空间复杂度）
+function quickSort(ary) {
+  if (ary.length < 2) {
+    return ary.slice()  // .slice取出数组的一段值并返回
+  }
+
+  var randomIdx = Math.floor(Math.random() * ary.length)  // 从数组随机取一个数的下标，做哨兵
+  var pivot = ary[randomIdx] 
+  var left = []
+  var mid = []
+  var right = []
+
+  for (var i = 0; i < ary.length; i++) {
+    if (ary[i] < pivot) {
+      left.push(ary[i])
+    } else if (ary[i] > pivot) {
+      right.push(ary[i])
+    } else {
+      mid.push(ary[i])
+    }
+  }
+  left =  quickSort(left)    // 这里递归写法
+  right =  quickSort(right)   // 看这里是否需要返回新数组，
+
+  return [...left, ...mid, ...right]    // ...代表什么？需要搞清楚
+  // 这里也可以重新遍历left，mid,right三个数组覆盖到原数组中去，最后返回原数组。
+}
+
+
+// 真正的快排
+function qSort(ary, start = 0, end = ary.length) {
+  if (start >= end) {
+    return ary
+  }
+  var pivotIdx = Math.floor(Math.random() * (end - start) + start)
+  var pivotElt = ary[pivotIdx]
+
+  swap(ary, pivotIdx, end - 1)
+
+  var i = start
+  for (var j = start; j < end; j++) { // 不遍历放在最好的哨兵元素
+    if (ary[j] < pivot) {
+      swap(ary, i++, j)
+    }
+  }
+  swap(ary, i, end) // 将哨兵元素换回中间
+
+
+  // 此时，i位置
+  // 此时，i到j之间是[大于等于]哨兵元素
+  // start到i-1是[小于]哨兵元素
+  // i
+  qSort(ary, start, i - 1)
+  qSort(ary, i, end)
+
+  return ary
+
+}
+
+function() {
+
+    while(true) {
+      while ()
+
+    }
+}
+
+
+// 快排 b站写法
+
+1.左边放个指针 i = 0，并把第一个数作为基准数 temp
+2.右边放个指针 j = arry.length - 1
+3.如果ary[j] > temp, j--
+4.如果ary[j] < temp, 把ary[j]复制到ary[i]的位置, i++
+5.如果ary[i] > temp, 把ary[i]复制到ary[j]的位置， j--
+6.如果 i = j , 就把temp挪到相遇的位置，ary[i] = temp。 第一次遍历结束
+7.后面继续用递归
+
+function quickSort(ary) {
+  var i = 0
+  var j = ary.length - 1
+  var pivot = ary[i]
+
+  while (i < j) {
+
+    if (ary[j] > pivot) {
+      j--
+    } else if (ary[j] < pivot) {
+      ary[i] = ary[j] 
+      i++
+    }
+    if (ary[i] > pivot) {
+      ary[j] = ary[i]
+      j--
+    }
+    
+  }
+
+
+
+
+}
+
+
+2022/01/07
+
+function logEach(arry，func) { // func可以是alert,ary.push,等各种函数，可以对arry进行任何操作。
+  for(var i = 0; i < array.length; i++) {
+    func(arry[i])
+  }
+  
+}
+
+
+
+var a = 2
+var a = function () {}    //函数不仅是一个值value,而且可以调用
+
+f(a)
+f(2)
+f(function () { })
+
+// for example
+  var p = alert()   // 这样p就有了alert的函数作用，可以当作函数调用
+  
+
+
+function forEach(array, func) {         // forEach函数，用来遍历数组
+    for (var i = 0; i < array.length; i++) {
+      // 当迭代函数返回false表示不再继续迭代
+      if (func(array[i], i) === 'false'){
+        break
+       } 
+     }
+}
+  var ary = [1, 2, 3, 4, 5, 6, 7]
+
+  forEach(ary, function(item, i, ary)  {
+    console.log(item)
+    if (i > 2) {
+      return 'fasle'
+    }
+  })
+
+
+  function(item, i, ary) {    // 这边整个function是要加到forEach的整个小括号里的
+                            //这样上面的forEach函数才能调用道console.log这个功能
+    console.log(item)
+  }
+
+  forEach([1,2,3,4,5,6,7]，         )
+
+
+
+function isGreaterThan(n) {  // 函数不仅可以返回一个值，还可以返回一个函数
+  return function (m) {     // 这里返回一个布尔值 m > n, 
+    return m > n           // 可以在操作台输入 isGreaterThan(10)(11),
+  }             // 后面括号里的11就是m的值，11 > 10,函数返回true
+}
+
+// 函数运行时创建的作用域与函数自身所在的作用域相同   上面的返回的m值就是函数创建的作用域
+// 如函数自身在全局作用域（注意是函数自身在全局，不是指向函数的变量在全局），则其运行时所创建的作用域就包含在全局作用域里面
+// 变量作用域的访问是逐层从内向外找的，这就是作用域链，scope chain
+// 闭包：把三个函数isGreaterThan5/10/100返回的函数的m，分别作为各自的作用域。虽然外面的函数执行完毕了，但是里面的函数和m值必须得一直保存着准备对比输入的值，作用域并没有消失，这就叫闭包。
+// 执行上下文，只在有闭包的函数里有，就是执行作用域链
+// 调用栈
+// 词法作用域lexical scoping，在内部函数的函数体能访问外部的变量。
+
+
+    function unless(test, then) {
+        if (!test) then()
+    }
+
+    var sum = 8
+    var x = 1
+
+    unless( x > 2, function () {
+        sum++
+      
+    })
+
+    console.log(sum)
+
+
+function repeat(times, body) {
+    for (var i = 0; i < times; i++) {
+        body(i)
+    }  
+}
+repeat(5, function (i) {
+    console.log(i * i)
+})
+
+// 剩余参数 rest parameter
+// 展开运算符spread operator，f(...[1, 2, 3])   ...接多个参数，现在先当其只接数组
+// f.apply(null, [1, 2, 3])
+
+var a = [1, 2, 3]
+var b = [5, 6, 7]
+f(...a,...b)
+
+
+
+// 用Excel表格保存文件为CSV格式，用记事本打开就可以得到这样的字符串
+
+str = `num,name,score
+1,张三,78
+2,李四,89
+3,五王,87
+4,赵六,67`
+
+// 但是我们希望得到的是最好用数组分开排列好的对象形式
+
+var scoreList = [{nums:1,name: '张三', score: 78}, {num:2,name: '李四', score: 89}, {num:3,name: '王五', score: 87}, {num:4,name: '赵六', score: 67}]
+
+
+// 面试题，将Csv格式字符串转化为字符串数组输出
+function parseCsv(csvStr) {
+     var lines = csvStr.split('\n')       // split把字符串拆分成字符串数组
+     var firstLine = lines.shift()       // 把第一行弹出来
+     var headers = firstLine.split(',')   // 把第一行用逗号分开
+
+     var result = []
+     lines.forEach(function (line) {
+       var values = line.split(',')
+       var obj = {}
+
+       for (var i = 0; i < headers.length; i++) {
+         var h = headers[i]
+         var v = values[i]
+         obj[h] = v
+       }
+
+       result.push(obj)   // 压制出若干个对象，塞入result中
+       //headers中的num,name,score作为每个对象的key,每组key的值分批赋予
+     })
+
+     return result
+    
+}
+
+
+
+结构化数据：有着特定的严格格式，并且该格式非常容易被程序处理。即数据都是数组或者对象形式。
+
+用花括号表示对象，中括号表示数组。
+
+
+// 面试题，手动封装，把URL后面的参数解析成对象
+// decodeURIComponent() 函数可对 encodeURIComponent() 函数编码的 URI 进行解码
+
+const parseUrl = (url) => {
+  const { log } = console;     // 后面就可以直接log出对象
+  const [, seachStr] = url.split('?')  // 将url中？后面的部分定义为searchStr
+  let obj = {};
+  for (const str of seachStr.split('&')) {    // for of遍历数组的值
+    const [name, value] = str.split('=');
+    obj[name] = decodeURIComponent(value)    // obj[name] = value 也可以 但是因为为了可能出现的汉字，需要用到decode
+  }
+  log(obj);
+  return obj;
+}
+parseUrl("https://www.baidu.com/s?rtt=1&bsst=1&cl=2&tn=news")
+
+
+
+var url = "https://www.baidu.com/s?rtt=1&bsst=1&cl=2&tn=news"
+
+url.split('?') = ['https://www.baidu.com/s', 'rtt=1&bsst=1&cl=2&tn=news']
+// 以?号为间隔。将url分成字符串数组的形式
+
+
+
+
+function parseQueryString(str) {
+    var pairs = str.split('&')
+    var obj = {}
+    pairs.forEach(function(pair) {  // forEach 遍历pairs数组的每一个元素，pair代表每一个元素
+        var parts = pair.split('=')  // 这里是每一个元素pair.split
+        var key = parts[0]
+        var val = parts[1]
+        obj[key] = val       // 每一次循环给一个key属性赋值
+    })
+    return obj
+}
+
+
+
+
+
+var jsonStr = `
+    {
+        "cpu": "i9",
+        "ram": "16G",
+        "brand": "alienware",
+        "phones": ["iPhone6", "iPhone7", "iPhone8", "iPhoneXSMAX"]
+    }
+
+`
+  function filter(array,test) {
+    var result = []
+
+    for (var i = 0; i < array.length; i++) {
+        var item = array[i]
+        if (  test(item)  ) {
+          result.push(item)
+        }
+    }
+    return result
+  }
+
+  filter(ancestry, function (person) {
+    return person.born >= 1800
+    
+  })
+
+
+
+2022/01/10
+
+
+  function map(array, f) {
+    var result = []
+  
+    for (var i = 0; i < array.length; i++) {
+      result.push(    f(array[i], i, array)    ) 
+    }
+    return result
+  }
+
+
+  function string(value) {
+    if (typeof value == 'number' || typeof value == 'boolean') {
+      return value + ''
+    }
+    if (Array.isArray(value)) {
+      var str = '['
+      value.forEach(it => {
+        if (typeof it == 'number' || typeof it == 'string' || typeof it == 'boolean' || it == null) {
+            str += it
+        } else {
+          str += stringify(it)
+        }
+        str += ','
+      })
+      str += ']'
+      return str
+      //  "[1,2,3,4]"
+    } else if (value && typeof value == 'object') { // `{"key1":"value1", "key2":"value2", ...}`
+      var str = '{'
+      for (var key in value) {
+        var it = value[key]
+        if (typeof it == 'number' || typeof it == 'string' || typeof it == 'boolean' || it == null) {
+          str += "" + key + '":' + it
+        } else {
+          str += "" + key + '":' + stringify(it)
+        }
+      }
+    }
+    
+  }
+
+
+
+
+  // 面试题
+  // reduce 高阶函数 ,用于单一的数组或者对象
+  // 用到了递归
+  function reduce(ary, reducer, initial) {
+    for (var i = 0; i < ary.length; i++ ) {
+      initial = reducer(initial,ary[i])
+    } 
+    return initial
+  }
+
+  reduce([1,2,3,4,5,6,7], (sum, current) => {return sum + current}, 0)
+  // 箭头函数
+
+  reduce([1,2,3,4,5,6,7], (max, current) => Math.max(max,current), -Infinity)
+
+  
+  // 当ruduce函数遍历的数组或对象去除第一项影响不大时可以这样写
+  function reduce(ary, reducer, initial) {
+    if (arguments.length == 2) {      // atguments参数函数长度为一
+      initial = ary[0]
+      start = 1
+    }
+    for (var i = 0; i < ary.length; i++ ) {
+      initial = reducer(initial,ary[i])
+    } 
+    return initial
+  }
+  reduce([2,3,4,5,6,7], (max, current) => max > current ? max : current, 1)
+
+
+  youtube 写法
+
+  const numbers = [1, -1, 2, 3];
+  const sum = numbers.reduce(
+      (accumulator, currentValue) => {return accumulator + currentValue;}, 0);
+
+  console.log(sum)
+
+  或者initial不用从0开始，直接从numbers的第一项1开始
+  const numbers = [1, -1, 2, 3];
+  const sum = numbers.reduce(
+      (accumulator, currentValue) => accumulator + currentValue);
+
+  console.log(sum)
+
+
+
+
+  Lodash
+
+
+NaN === NaN false
+
+
+
+var obj = {}
+
+ancestry.forEach(person => {
+     obj[person.name] = person
+})
+
+
+function keyBy (array, propName) {
+  var obj = {}
+  for (var i = 0; i < array.length; i++) {
+    var item = array[i]
+    obj[  item[propName]  ] =   array[i]
+//    obj = (obj[array[i][proName]] = array[i], onj)     reduce的形式
+//    (obj[array[i][propName] = array[i], boj)
+  }
+  return obj
+}
+
+
+
+
+
+// 在对象中插入新的key和值
+// 阿里外包面试题
+
+  ancestry.forEach(person => {
+    var fatherName = person.fatherName
+    var motherName = person.motherName
+  })
+
+
+  var array = [
+    {
+      id: 1,
+      parent: 0,
+      name: 'foo',
+    }
+    {
+      id: 2,
+      parent: 1,
+      name: 'foo',
+    }
+    {
+      id: 2,
+      parent: 1,
+      name: 'foo',
+    }
+    {
+      id: 4,
+      parent: 3,
+      name: 'foo',
+    }
+    {
+      id: 5,
+      parent: 3,
+      name: 'foo',
+    }
+    {
+      id: 6,
+      parent: 1,
+      name: 'foo',
+    }
+  ]
+ 
+
+// 计算某个人有多少基因来自于Puwals van Heverbeck
+// 先得到其父母分别有多少基因来自PvH, 然后求和除以2
+// 如果这个人就是Pvh本人，则直接返回1
+// 如果这个人在数据集不存在，则返回0
+
+  function gene(name) {
+    if (name === 'Pauwel van Haverbeke') {
+        return 1
+    }
+    var person = byName[name]
+    if ()
+  }
+
+
+  function reduceAncerstor(name,f,defaultValue) {
+    function valueFor(name) { // 计算某人某维度的值
+      if (name === 'Pauwel van Haverbeke') {
+        return 1
+      }
+      var person = byName[name]
+      if (!person) {
+        return defaultValue
+      }
+    }
+  }
+
+
+
+
+  函数绑定   偏函数 /部分调用/par
+
+  function f(a,b,c) {
+    return a * b +c
+  }
+
+  f1 = f.bind(null,3) 
+
+  f1 = function f(b,c) {
+    var a = 3
+    return a * b + c
+  }
+
+
+
+  var set = ["Carel Haverbeke","Maria van Brussel", "Donald Duck"]
+
+
+  isInSet2 = isInSet.bind(null, set)
+
+  isInset2 = function isInSet(person) {
+      var set = ["Carel Haverbeke", ]
+      return set.includes(person.name)
+  }
+
+  ancerstry.filter(person => isInSet2(person))
+  ancestry.filter(isInSet2)
+
+  ancestry.filter(   isInSet.bind(null, set)   )
+
+
+  // 把函数的前若干个参数固定为fixedArgs
+  //又他妈是曾经的必考题，没听懂
+
+  function bind(f, ...fixedArgs) {
+      return function(...args) {
+          return f(...fixedArgs, ...args)
+      }
+
+  }
+
+
+  把一个数组深层次展平
+
+
+
+
+
+
+
+
+</script>
+
+ 

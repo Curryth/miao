@@ -1,0 +1,362 @@
+
+<script>
+
+var plusOne = function (digits) {
+
+    digits[digits.length - 1]++
+
+    for (var i = digits.length - 1; i > 0 ; i--) {
+        
+        if (digits[i] == 10) {
+            digits[i] = 0
+            digits[i - 1]++
+        }else {
+            return digits
+        }
+    }
+        if (digits[0] == 10) {
+            digits[0] = 0
+            digits.unshift(1)
+        }
+        return digits
+   
+}
+
+
+var isHappy = function(n) {
+    
+    var appeared = []
+
+    while (true) {
+        var sum = 0
+        while (n > 0) {
+            var digits = n % 10
+            sum += digits * digits
+            n = (n - digits) / 10
+        }
+
+        if (sum == 1) {
+            return true
+        } else {
+            for (var i = 0; i < appeared.length; i++){
+                if (sum == appeared[i]) {
+                    return false
+                } 
+            } 
+                appeared.push(sum) 
+                n = sum
+            
+           }
+
+    }
+
+
+function isLeapYear(n) {
+    if (n % 400 == 0) {
+        return true
+    }
+    if (n % 100 == 0) {
+        return false
+    }
+    if (n % 4 == 0) {
+        return true
+    }
+
+    return false
+}
+
+function getMonthDay(month) {
+    switch (month) {
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
+
+            return 31
+
+        case 2:
+            if(isLeapYear) {
+                return 29
+            } else {
+                return 28
+            } 
+ 
+        default :
+            return 30
+        
+    }
+  
+}
+
+
+function weekday(year, month) {
+    var day = 0
+
+    for (var y = 1; y < year; y++) {
+        if (isLeapYear(y)) {
+            day += 366
+        } else {
+            day += 365
+        }
+    }
+
+    for (var m = 1; m < month; m++) {
+        day += getMonthDay(year,m)
+    }
+
+    day = (day + 1) % 7
+
+    return day
+    
+}
+
+function chessBoard(size) {
+    var result = ''
+
+    for (var row = 0; row < size; row++) {
+        for (var col = 0; col < size; col++) {
+            if ( (row + col) % 2 == 0) {
+                result += ' '
+            } else {
+                result += '#'
+            }
+        }
+        
+        result += '\n'
+    
+    }
+
+    return result 
+    
+} 
+
+function countBs(str) {
+    var count = 0
+    for (var i = 0; i < str.length; i++) {
+        if (str[i] === B){
+            count++
+        }
+    }
+    return count
+    
+}
+
+
+
+};
+
+// 计数质数
+// 饿啦多塞解法
+var countPrimes = function(n) {
+
+    var isPrime = Array(n).fill(true)
+
+    for (var i = 2; i * i < n; i++) {
+        if (isPrime[i]) {
+            for (var j = 2 * i; j < n; j += i) {
+                isPrime[j] = false
+            }
+        }
+    }
+
+    var count = 0
+
+    for (var i = 0; i < n; i++) {
+        if(isPrime[i]) {
+            count++
+        }
+    }
+
+    return count
+}
+
+// 遍历已知素数解法
+
+var countPrimes = function(n) {
+
+var knownPrime = [2]
+
+if (n <= 2) {
+    return 0
+}
+
+var count = 1
+
+for (var i = 3; i < n; i += 2) {
+    if (isPrime(i)) {
+        if (i > knownPrime[knownPrime.length - 1]) {
+            knownPrime.push(i)
+            count++
+        }
+    }
+}
+
+function isPrime(n) {
+    
+    if (n <= 2) {
+        return false
+    }
+
+    var isPrime = true
+    var sn = Math.sqrt(n)
+    var prime
+
+    for (var i = 0; (prime = knownPrime[i]) <= sn; i++) {
+        if (n % prime == 0) {
+            return false
+        }
+    }
+
+    return isPrime
+
+}
+
+return count
+}
+
+
+function selectSort(ary) {
+    for (var i = 0; i < ary.length - 1; i++) {
+        var minIdx = i
+        for (var j = i + 1; j < ary.length; j++) {
+            if (ary[j] < ary[minIdx]) {
+                minIdx = j
+            }
+        }
+        swap(ary, i, minIdx) 
+    }
+    return ary
+}
+
+
+
+function mergeSort(ary) {
+    if (ary.length < 2) {
+        return ary
+    }
+
+    var mid = Math.floor(ary.length / 2)
+    var left = ary.slice(0, mid)
+    var right = ary.slice(mid)
+
+    mergeSort(left)
+    mergeSort(right)
+
+    var i = 0
+    var j = 0
+    var k = 0
+
+    while (i < left.length && j < right.length) {
+        if (left[i] < right[j]) {
+            ary[k++] = left[i++]
+        } else {
+            ary[k++] = right[j++]
+        }
+    }
+
+    while (i < left.length) {
+        ary[k++] = left[i++]
+    }
+    while (j < right.length) {
+        ary[k++] = right[j++]
+    }
+
+    return ary
+
+}
+
+
+var n = prompt('刘主任是渣男吗？')
+if (n === '是') {
+    alert('看来大家都是这么认为的！！！')
+}
+
+var m = prompt('周老师温柔纯良吗？')
+if (m === '温柔' ) {
+    alert('周老师YYDS！！！')
+}
+
+
+var l =  prompt('那你喜欢嫂子吗？')
+if (l === '喜欢') {
+    alert('永远爱嫂子！！！')
+}
+
+
+将URL中的参数解析成对象
+
+  const parseUrl = (url) => {
+    const {log} = console
+    const [, seachStr] = url.split('?')
+
+    let obj = {}
+    for (const str of seachStr.split('&')) {
+        const [name, val] = str.split('=')
+        obj[name] = val
+    }
+    log(obj)
+    return obj
+  }
+
+  parseUrl()
+
+
+
+  老谢的写法
+
+  function  parseQueryString(str) {
+      var pairs = str.split('&')
+      var obj = {}
+
+      pairs.forEach(function (pair) {
+          var part = pair.split('=')
+          var key = part[0]
+          var val = part[1]
+          obj[key] = val
+      })
+
+      return obj
+      
+  }
+
+
+  将Csv格式中的表格输出为字符串数组输出
+
+csvString = `num,name,score
+1,张三,78
+2,李四,89
+3,五王,87
+4,赵六,67`
+
+
+function parsecsvString(csvString) {
+    // 把字符串转化成字符串数组
+    var lines = csvString.split('\n')
+    // 把数组的第一个数据弹出来做对象的key
+    var firstLine = lines.shift()
+    var headers = firstLine.split(',')   //  header是firstLine去掉逗号的一个数组
+    
+    // 把剩下的每一个数组的每个值拎出来做headers中几个key的值
+    // 用forEach遍历数组读取数据
+    
+    var result = []
+    lines.forEach( function (line) {
+        var values = line.split(',')  // values是除去firstLine的每一行去除逗号的一个数组
+        var obj = {}
+
+        for (var i = 0; i < headers.length; i++) {
+            var h = headers[i]
+            var v = values[i]
+            obj[h] = v
+        }
+
+        result.push(obj)
+        
+    })
+
+    return result
+    
+}

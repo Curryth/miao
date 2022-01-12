@@ -1,0 +1,1244 @@
+LeetCode
+
+<script>
+
+
+1. Two Sum
+
+var twoSum = function(nums, target) {
+    for (var i = 0;i < nums.length - 1; i++) {
+
+        for (var j = i + 1; j < nums.length; j++) {
+            if (nums[i] + nums[j] == target) {
+                return [i, j]
+            }
+        }
+    }
+}
+
+//我们不能一个一个去看所需要的那个数need在nums中存不存在（除非一遍一遍的比较need和数组中每个值的大小），即看nums[x] = need存不存在，
+//但是可以把这个问题转化成need这个数在新数组a中的标号存不存在，即看a[need] 是否是undefined.
+//而把nums[x] = need是否存在 ➡️a[need]是否为undefined，这样只需要循环一遍就可以找出需要的两个数
+//公示的关键就是 a[nums[i]] = i ，即数组可以给任意下标赋值  
+var twoSum = function(nums, target) {                    //这个方法没看懂，不会啊？？？？
+    var a = []             // 本数组记录某个数载原数组中的第几位
+    for (var i = 0； i < nums.length; i++) {
+        var need = target - nums[i]
+        if (a[need] !== undefined) {              
+            return [a[need], i ]                  // need这个数在原数组的位置
+           
+        } esle {              // 到目前为止还没有记录need在原数组的位置
+            a[nums[i]] = i      // 记录当前数在原数组中的位置
+        }
+        
+    }
+}
+
+7. Reverse Integer
+
+var reverse = function(x) {
+    
+};
+
+167. Two Sum II - Input Array Is Sorted
+
+var twoSum = function(nums, target) {
+    var i = 0 
+    var j = numbers.length - 1
+
+    while (i < j) {                          //双指针，从首位两端同时逼近target值
+        var sum = numbers[i] + numbers[j]
+        if (sum > target) {
+            j -- 
+        }else if (sum < target) {
+            i ++
+        }else {
+            return [i + 1 , j + 1]
+        }
+    }
+}
+
+
+
+26. Remove Duplicates from Sorted Array        // ？
+
+var removeDuplicates = function(nums) {
+    if (nums == 0) {                         // 双指针
+        return 0
+    }
+    var nextPlace = 1                        // 从0和1的开始的区别
+    for (var i = 1; i < nums.length; i++){
+        if (nums[i] !== nums[i - 1]) {
+              nums[nextPlace++]  = nums[i]
+        }
+    }
+    return nextPlace
+
+}
+
+62. Unique Paths
+
+var uniquePaths = function(m, n) {
+
+}
+
+66. Plus One
+
+var plusOne = function(digits) {
+    digits[digits.length - 1]++
+
+    for (var i = digits.length - 1; i > 0; i-- ) {
+        if (digits[i] == 10) {
+            digits[i] =0
+            digits[i - 1]++
+        } else {
+            return digits
+        }
+    }
+
+    if (digits[0] == 10) {
+        digits[0] = 0
+        digits.unshift(1)
+    }
+    return digits
+}
+
+367
+var isPerfectSqure = function (num) {
+    
+    var n = num / 2 
+    isPerfectSqure =false
+    
+    if(num == 1) {
+        return true
+    }
+
+    for (var i = 2; i <= n; i++){             //用二分法再做一遍
+        if(i * i == num){
+            isPerfectSqure = true
+            return true 
+        }
+    } 
+
+    if (!isPerfectSqure){
+        return false 
+    }   
+}
+
+258. Add Digits
+
+var addDigits = function (num) {            //为什么求除以9的余数。一个数各个位上的数字模9之和就等于这个数模9的值
+
+  if (num == 0) {
+        return 0
+    }
+    if (num % 9 == 0) {
+        return 9
+    }
+    
+    return num % 9
+        
+}
+
+
+var addDigits = function (num) {
+  
+    var sum = 0 
+    while (num > 0) {
+        var digit = num % 10
+        sum += digit 
+        num = (num - digit) / 10
+    }
+    
+    if (sum < 10){
+        return sum
+    }else {
+        return addDigits(sum)         //递归,并且需要这个运算结果，需要加个return返回结果
+    }
+    
+}
+
+
+
+263.Ugly Number
+
+var isUgly = function(n) {             //除以2，3，5 直到得到的是1
+    if (n < 1){
+        return false
+    }
+    while ( n % 2 == 0){
+        n = n / 2 
+    }
+    while ( n % 3 == 0){
+        n = n / 3 
+    }
+    while ( n % 5 == 0){
+        n = n / 5 
+    }
+    return n == 1
+
+}
+
+
+
+283
+
+var moveZeroes = function(nums) {
+    var a = []
+    var n = nums.length
+    var count = 0
+    for (var i = 0; i < n; i++ ) {
+        if (nums[i] == 0){
+            count++
+        }else { 
+            a.push(nums[i])
+        }
+    }
+
+    for (var j = 0; j < count; j++){
+        a.push[0]
+    }
+
+    return a
+
+
+}
+
+function moveZeroes(nums[0,1,0,3,12]){
+    var a = []
+    var count = 0
+    for (var i = 0; ; i++ ) {
+        if (nums[i] == 0){
+            count++
+        }else { 
+            a.push(nums[i])
+        }
+    }
+
+    for (var j = 0; j < count; j++){
+        a.push[0]
+    }
+
+    return a
+    
+}
+326. Power of Three
+
+var isPowerOfThree = function(n) {
+    if (n == 0){
+        return false
+    }
+    while ( n % 3 ==0) {
+        n = n / 3
+    }
+    return n ==1
+}
+
+var isPowerOfThree = function(n) {
+
+
+
+}
+485
+var findMaxConsecutiveOnes = function(nums) {
+
+    var max = 0
+    var c = 0
+
+    for (var i = 0; i < nums.length; i++){
+        if(nums[i] == 1){
+            count++
+            if (count > max) {
+                max = count
+            }
+        }else{
+            c = 0
+        }
+    }
+
+    return max
+
+}
+
+
+412
+var fizzBuzz = function(n){
+    var answer = []
+
+for (var i = 1; i <= n; i++){
+    if(i % 3 == 0 && i % 5 == 0 ) {
+        answer.push("FizzBuzz")
+    }else if (i % 5 == 0) {
+        answer.push("Buzz")
+    }else if ( i % 3 == 0) {
+        answer.push("Fizz")
+    }else{
+        
+        answer.push('' + i)      //'' + i, 就把i转换成字符串
+    }
+   
+    }
+  return answer
+}
+
+202. Happy Number
+
+var isHappy = function(n){
+
+    var m = n
+    var sum = 0
+    
+    do{
+        while (m > 0) {
+            var gewei = m % 10
+            sum += gewei * gewei
+            m = (m - gewei) / 10
+        }
+        m = sum
+        sum = 0
+
+      }while (m * m >= 10) 
+          
+      if (m == 1) {
+            return true
+      }else {
+          return false
+      }      
+
+}
+
+var isHappy = function(n){
+    var appeared = []
+
+    var sum = 0
+    while (true) {
+        var digit = n % 10
+        sum += digit * digit
+        n = (n - digit) / 10
+    }
+    if (sum == 1) {
+        return true
+    } else {
+        for (var i = 0; i < appeared.length; i++) {
+            if (sum == appeared[i]) {
+                return false
+            }
+        }
+        appeared.push(sum)
+        n = sum
+    }
+  }
+}
+
+var isHappy = function(n) {
+    var sum = 0
+    while (n > 0) {
+        var digit = n % 10
+        sum += digit * digit
+        n = (n - digit) / 10
+    }
+
+    if (sum == 1) {
+        return true
+    } else if (sum == 4) {
+        return false
+    } 
+
+    return isHappy(sum)
+
+}
+
+977. 有序数组的平方
+
+var sortedSquares = function(nums) {
+  
+  var a = []
+
+  for (var i = 0; i < nums.length; i++) {
+      a.push(nums[i] * nums[i])
+  }
+  
+  for (var i = 0; i < nums.length; i++) {
+      for (var j = i + 1; j < nums.length; j++) {
+          if (a[j] <= a[i]) {
+              var m = a[i]
+              a[i] = a[j]
+              a[j] = m
+          }
+      }
+  } 
+  return a
+
+};
+
+
+
+var distributeCandies = function(candyType) {
+    n = candyType.length
+    var count = 1
+    var a = []
+
+    a.push(candyType[0])
+
+    for (var i = 1; i < n; i++) {
+        var isNewcandyType = true
+ 
+        for (var j = 0 ; j < a.length; j++) {
+            if (candyType[i] == a[j]) {
+                isNewcandyType = false
+                break
+            }
+        }
+
+        if (isNewcandyType) {
+            count++
+            a.push(candyType[i])
+        }
+
+    }
+
+    if (n / 2 >= count) {
+        return count
+    }else {
+        return n / 2
+    }
+
+};
+
+
+
+35. 搜索插入位置
+
+var searchInsert = function(nums, target) {
+    for (var i = 0; i < nums.length; i++) {
+        if (target == nums[i]) {
+            return i
+        } else {
+            if(target < nums[0]) {
+                return 0
+            } else if (target > nums[nums.length - 1]) {
+                return nums.length
+            }else {
+                for (var j = 0; j < nums.length; j++ ) {
+                    if (target > nums[j] && target <nums[j + 1]) {
+                        return j + 1
+                    }
+                }
+            } 
+        } 
+    }
+};
+
+504. 七进制数
+
+var convertToBase7 = function(num) {
+    var result = ''
+    var number = num
+
+    if (number == 0) {
+        return '0'
+    }
+    if (number < 0) {
+        number = - number
+    }
+
+    while(number > 0) {
+        var digit = number % 7
+        result = String(digit) + result
+        number = (number - digit) / 7
+    }
+    
+
+
+    if (num > 0) {
+    return result
+    }else {
+        return result = '-' + result
+    }
+
+};
+
+var countPrimes = function(n) {
+  var knownPrime = 
+
+  var countPrimes = function (n) {
+      
+  }
+  
+
+  function isPrime(n) { 
+      
+  }
+
+
+
+};
+
+
+
+var countPrimes = function(n) {
+    var isPrime = Array(n).fill(true)
+
+    for (var i = 2; i * i < n; i++) {
+        if (isPrime[i]) {
+            for (var j = 2 * i; j < n; j += i) {
+                isPrime[j] = false
+            }
+        }
+    }
+
+    var count = 0
+
+    for (var i = 2; i < isPrime.length; i++) {
+        if (isPrime[i]) {
+            count++
+        }
+    }
+    return count
+
+}
+
+338. 比特位计数
+
+var countBits = function(n) {
+    var result = [0]
+
+    var sub = 1
+    var subTimes = 0
+
+    for (var i = 1; i <= n; i++) {
+        result[i] = result [i - sub] + 1
+        subTimes++
+        if (subTimes == sub) {
+            sub = sub * 2
+            subTimes = 0
+        }
+    } 
+    return result
+};
+
+50. Pow(x, n)
+
+    var myPow = function(x, n) {
+
+    if (n % 2 == 0) {
+        return 1
+    } 
+    if (n % 2 == 0) {
+        var t = myPow((x, n / 2), 2)
+    } else {
+        return myPow(myPow(x, Math.floor(n / 2)), 2) * x
+    }
+
+    };
+
+
+338. 比特位计数
+
+var countBits = function(n) {
+    var result = [0]
+
+    var sub = 1
+    var subTimes = 0
+
+    for (var i = 1; i <= n; i++) {
+        result[i] = result [i - sub] + 1
+        subTimes++
+        if (subTimes == sub) {
+            sub = sub * 2
+            subTimes = 0
+        }
+    } 
+    return result
+}
+
+// 位运算中的与运算
+
+var countBits = function(n) {
+    var result = [0]
+
+    for (var i = 1; i <= n; i++) {
+        result[i] = result [i & （i - 1）] + 1
+
+    } 
+    return result
+}
+
+50. Pow(x, n)
+
+var myPow = function(x, n) {
+    if（ n < 0) {
+        return 1 / myPow(x, -n)
+    }
+
+    var start = x
+    var result = 1
+
+    while (n > 0) {
+        var digit = n % 2
+        if (digit == 1) {
+            result *= start
+        }
+        start = start * start
+        n = (n - digit) / 2
+    }
+
+    return result
+};
+
+
+count - Primes 
+
+var knownPrimes = [2, 3, 5, 7]
+
+var countPrimes = function (n) {
+    if (n < 2) {
+        return 0
+    }
+
+    var count = 1
+    for (var i = 3; i < n; i += 2) {
+        if (isPrimes(i)) {
+            if (i > knownPrimes[knownPrimes.length - 1]) {
+                knownPrimes.push(i)
+            }
+        }
+    }
+    
+}
+
+function isPrime(n) {
+    if (n < 2) {
+        return false
+    }
+    var sn = Math.sqrt(n)
+    var prime 
+    for (var i = 0; (prime = knownPrimes[i]) <= sn; i++) {
+        if (n % prime == 0) {
+                return false
+            }
+        }
+    }
+    
+}
+
+
+var countPrimes = function (n) {
+
+    var isPrime = Array(n).fill(true)    //先假设所有数都是素数
+
+    for (var i = 2; i * i < n; i++) {
+        if (isPrime[i]) {
+            for (var j = 2 * i; j < n; j += i) {
+                isPrime[j] = false
+            }
+        }
+    }
+
+    var count = 0
+
+    for (var i = 2; i < isPrime.length; i++) {
+        if (isPrime[i]) {
+            count++
+        }
+
+    }
+    return count
+
+}
+
+
+
+42.接雨水
+
+    var trap = function(height) {
+        var len = height.length
+        for () {
+            var leftMaxHeight = 0
+            for (var j = i - 1; j >= 0; j--)
+        }
+    }
+    var rightMaxHeight = 0
+    for (var k = i + 1; knownPrimes < len; k++) {
+        if (height[k] > rightMaxHeight) {
+            rightMaxHeight = height[k]
+        }
+    }
+
+    var waterHeight = max.min(leftMaxHeight,rightMaxHeight)
+
+
+
+
+  var leftTillMax = [] //
+
+
+
+
+415.字符串相加
+
+3. 无重复字符的最长子串
+
+var lengthOfLongestSubstring = function(s) {
+    var map = {}  // 记录窗口范围内每个字符出现的次数
+    var i = 0
+    var j = 0
+    var max = 0
+
+    while (j < s.length) {
+        var char = s[j]
+        if (char in map) {
+            map[char]++
+            if (map[char] == 2) {
+                while (i < j) {
+                    var c = s[i++]
+                    map[c]--
+                    if (map[c] == 1) {  // 一旦有一个字符去掉后次数变为1，则结束
+                        break
+                    }
+                }
+            } 
+        } else {
+            map[char] = 1
+        }
+        if (j - i + 1> max) {
+            max = j - i + 1
+        }
+        j++
+    }
+
+ return max 
+
+}
+
+
+387. 字符串中的第一个唯一字符
+
+var firstUniqChar = function(s) {
+    var map = {}
+
+     for (var i = 0; i < s.length; i++) {
+        var char = s[i]
+        if (char in map) {
+            map[char]++
+        } else {
+            map[char] = 1
+        }
+    }
+
+    for (var i = 0; i < s.length; i++) {
+        var char = s[i]
+        if (map[char] == 1) {
+            return i
+        }
+    }
+
+    return -1
+
+}
+
+// 面试题，大整数相加，
+//对于大整数，是指超过规定类型的整数，它一般的存储类型为字符串类型char。
+//在JS中，需要将字符串中的每一位字符利用parseInt()转成整数，再做加减，否则最后的结果是字符串的连接
+415. 字符串相加   
+
+var addStrings = function(num1, num2){
+    var l1 = num1.length
+    var l2 = num2.length
+    
+    var r = ''
+    var carry = 0
+    for (var i = l1 - 1, j = l2 - 1; i >= 0 || j >= 0; i--, j--) {
+        var a = Number(num1[i] ?? 0)
+        var b = Number(num2[j] ?? 0)
+        var s = a + b + carry
+        r = s % 10 + r
+        carry = s > 9 ? 1 : 0
+
+    }
+    if (carry) {
+        return carry + r
+    } else {
+        return r
+    }
+}
+
+43. 字符串相乘      // 写的有点牛逼
+
+var multiply = function(num1, num2) {
+    if (num2.length > num1.length) {    // 拿
+        var t = num1
+        num1 = num2
+        num2 = t
+    }
+
+    var multipies = ['0']  // num1的0倍到9倍
+    var start = num1
+    for (var i = 1; i < 10; i++) {
+        multipies.push(start)
+        start = addStrings(start, num1)
+    }
+
+    var result = '0'
+
+    for (var i = num2.length - 1, padZeros = 0; i >= 0; i--, padZeros++) {
+        var a = num2[i]
+        var times = multipies[a] + '0'.repeat(padZeros)
+        result = addStrings(result, times)
+    }
+    return result
+}
+
+
+
+
+
+53. 最大子数组和
+
+//解法1
+
+var maxSubArray = function(nums) {
+
+var ThisSum = 0
+var MaxSum = 0   // MaxSum不能为-Infinity,因为MaxSum = 0可以防止第一个数是负数的时候把负数加进来
+var max = -Infinity
+
+for (var i = 0; i < nums.length; i++) {
+    ThisSum += nums[i]
+
+    if (nums[i] > max) {
+        max = nums[i]
+    }
+
+    if (ThisSum > MaxSum) {
+        MaxSum = ThisSum
+    } else if (ThisSum < 0) {
+        ThisSum = 0
+    }
+}
+
+if (MaxSum == 0) {
+    return max
+} else {
+    return MaxSum
+}
+
+};
+
+
+
+var maxSubArray = function(nums) {
+    var mid = nums.length >> 1
+    var left = nums.slice(0,mid)
+    var right = nums.slice(mid)
+
+    var leftMax = maxSubArray(left)
+    var rightMax = maxSubArray(right)
+
+    var leftSpinMax = 0
+    var sum = 0
+
+    for (var i = mid - 1; i >= 0; i --) {
+        sum += nums[i]
+        if (sum > leftSpinMax) {
+            leftSpinMax = sum
+        } 
+    }
+
+    var rightSpinMax = 0
+    var sum = 0
+
+    for (var i = mid ; i < nums.length; i ++) {
+        sum += nums[i]
+        if (sum > rightSpinMax) {
+            rightSpinMax = sum
+        } 
+    }
+
+    var spinMax = leftSpinMax + rightSpinMax
+
+    return Math.max(spinMax, leftMax, rightMax)
+
+
+    
+};
+
+
+7. 整数反转
+
+var reverse = function(x) {
+
+var min = Math.pow(-2, 31)          // 避免反转后的数溢出
+var max = Math.pow(2, 31) - 1       // 
+var sign = Math.sign(x)             // 保留符号位
+var m = Math.abs(x)
+var sum = 0
+
+while (m > 0) {
+    var d = m % 10
+    sum = sum * 10 + d
+    m = (m - d) / 10
+}
+
+var reverse = sign * sum
+
+if (reverse > max ) {                // 溢出后返回值为0
+    return 0
+} else if (reverse < min) {
+    return 0
+} else {
+    return reverse
+}
+
+};
+
+
+13. 罗马数字转整数
+
+var romanToInt = function(s) {
+    var obj = {
+        "I":              1,
+        "V":              5,
+        "X":             10,
+        "L":             50,
+        "C":             100,
+        "D":             500,
+        "M":             1000,
+    };
+    var result = 0
+    for (var i = 0; i < s.length; i++) {
+        var front = s[i] 
+        var back = s[i + 1]
+        
+        if (obj[back] > obj[front]) {  // 这里用obj.back和front就输出为NAN
+            result -= obj[front]
+        } else {
+            result += obj[front]
+        }
+    }
+
+    return result
+
+};
+
+977. 有序数组的平方
+
+// 解法1，sort排序
+
+    var sortedSquares = function(nums) {
+        var array = []
+
+        for(var i = 0; i < nums.length; i++) {
+            array[i] = nums[i] * nums[i]
+        }
+
+        array.sort((a, b) => a - b)       // sort中，a - b 代表升序。b - a 则为降序
+        return array
+    
+    };
+
+// 解法2，双指针
+
+
+
+var firstUniqChar = function(s) {
+    var map = {}
+
+    for (var i = 0;) {
+        var char = s[i]
+        if (char in map) {
+            map[char]++
+        } else {
+            map[char] = 1
+        }
+    }
+    for () {
+        var char = map []
+    }
+}
+
+
+
+
+var lengthOfLongestSubstring = function(s) {
+    for (var start = 0; start < s.length; start++) {
+        for (var end = start + 1; end <= s.length) {
+            var part = s.slice(start, end) 
+            if (part 没有重复) {
+                max = math.max(part.length, max)
+            }
+        }
+    }
+    return  max  
+}
+
+var lengthOfLongestSubstring = function(s) {
+    var map = {}    // 记录滑动窗口范围内每个字符出现的次数
+    var i = 0
+    var j = -1
+    var max = 0
+
+    while (j < s.length) {
+        j++
+        var char = s[j] 
+        if (char in map) {
+            map[char]++
+            if (map[char] == 2) {
+                while (xxx) {
+                    var c = s[i++]
+                    map[c]--
+                    if (map[c] == 1) {  // 一旦有一个符号去掉后次数变为1，则结束循环
+                        break
+                    }
+
+                }
+
+            }
+        } else {
+            map[char] = 1
+            if (j - 1 + 1 > max) {
+                max = j - 1 + 1
+            }
+        }
+    }
+}
+
+
+
+237. 删除链表中的节点
+
+    var deleteNode = function(node) {
+
+        node.val = node.next.val          // 无法直接删除这个结点，但是可以把下个结点的值覆盖到要删除的这个结点上
+        node.next = node.next.next
+
+    };
+
+
+
+
+
+
+141. 环形链表
+
+var hasCycle = function(head) {
+    var map = []
+    while (head) {
+        if (map.includes(head)) {
+            return true
+        }
+        map.push(head)
+        head = head.next
+    }
+    return false 
+};
+
+var hasCycle = function(head) {
+    var slow = head
+    var fast = head
+
+    while (fast && fat.next.next) {
+        slow = head.next
+        fast = head.next.next
+        if (fast = slow)
+        return true
+        break
+    }
+
+    return fasle
+
+
+}
+
+206. 反转链表
+
+    var reverseList = function(head) {
+        var pre = null         // 设置一个前置fake结点
+        var cur = head         // 设置当前结点cur为head
+
+        while (cur) {
+            var tmp = cur.next     // 用中间值tmp保存原有的下个结点的位置指向
+            cur.next = pre         // cur的指针调转方向，指向pre
+            
+            pre = cur    // pre 和cur都下移一位开始重复循环，直至cur指向原本链表末尾的null
+            cur = tmp
+        }
+
+        return pre     // 返回新的头结点，pre
+
+    };
+
+
+    var reverseList = function(head) {
+        if (!head || !head.next) {          // 如果只有一个结点或为空
+            return head
+        }
+        
+        var nodes = []
+
+        while (head) {
+            nodes.push(head)
+            head = head.next
+        }
+
+        nodes.reverse()
+
+        for (var i = 0; i < nodes.length - 1; i++) {
+            node[i].next = node[i + 1]
+        }
+        nodes[i].next = null
+
+        return nodes[0]
+
+    }
+
+
+19. 删除链表的倒数第 N 个结点
+
+    var removeNthFromEnd = function(head, n) {
+
+        var node = head
+        var count = 0
+
+        while(node) {
+            node = node.next
+            count++
+        }
+
+        var step = count - n - 1
+
+        if (step == -1) {
+            return head.next
+        }
+
+        node = head
+        while(step > 0) {
+            node = node.next
+            step--
+        }
+
+        node.next = node.next.next
+        return head
+
+    };
+
+
+    var removeNthFromEnd = function(head, n) {
+        var p = head
+        var count
+    }
+
+
+    21. 合并两个有序链表
+
+    var mergeTwoLists = function(list1, list2) {
+
+        var cur1 = list1
+        var cur2 = list2
+
+        var newList = new ListNode(0)          // 创造一个新链表？？还有没有其他方式创建
+        var node = newList
+
+        while (cur1 && cur2) {
+            if (cur1.val < cur2.val) {
+                node.next = cur1
+                cur1 = cur1.next
+            } else {
+                node.next = cur2
+                cur2 = cur2.next
+            }
+            node = node.next               // node结点下移一位，构成循环的一环
+        }
+
+        if (cur1 && cur2 == null) {          // 如果其中一个链表为null，则只需要加上另外一个链表
+            node.next = cur1
+        }
+        if (cur2 && cur1 == null) {
+            node.next = cur2
+        }
+
+        return newList.next
+
+    };
+
+
+    var mergeTwoLists = function(list1, list2) {
+
+        var dummy = new ListNode(0)             // 最后要输出头结点dummy.next，所以要用将dummy存起来
+        var p = dummy
+
+        while (list1 && list2) {
+            if (list1.val < list2.val) {
+                p.next = list1
+                list1 = list1.next
+            } else {
+                p.next = list2
+                list2 = list2.next
+            }
+            p = p.next
+        }
+
+        p.next = list1 || list 2
+
+        return dummy.next
+
+    };
+
+
+142. 环形链表 II
+
+    var detectCycle = function(head) {
+
+        var map = new Set()
+
+        while (head !== null) {
+            if (map.has(head)) {
+                return head
+            } else {
+                map.add(head)
+            }
+            head = head.next
+        }
+
+        return null
+
+    };
+
+
+
+
+
+
+    24. 两两交换链表中的节点
+
+    var swapPairs = function(head) {
+        var swapPairs = function(head) {
+
+        var dummy = new ListNode(0)
+        dummy.next = head
+        var prev = dummy
+
+        while (head && head.next) {
+            var temp = head.next
+            
+            head.next = temp.next
+            prev.next = temp
+            temp.next = head
+
+            prev = head
+            head = head.next
+
+        }
+        return dummy.next
+    };
+
+    }
+
+
+
+
+
+
+
+
+</script>    
