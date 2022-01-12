@@ -12,7 +12,7 @@ var curryth = {
         }
 
         if (n !== len / size) {
-            var temp = len - 1 - (n - n * size)
+            var temp = n * size -1
             result[n] = array.slice(temp)
         }
 
