@@ -1,5 +1,5 @@
 var curryth = {
-    
+
     chunk: function(array, size) {
         var len = array.length
         var n = Math.trunc(len / size)
@@ -57,14 +57,12 @@ var curryth = {
 
 
 
-    drop: function(array, n) {
-
+    drop: function(array, n = 1) {
             return array = array.splice(n)
-      
     },
 
-    dropRight: function(array, size) {
-      
+    dropRight: function(ary, n = 1) {
+        return ary = ary.splice(0, ary.length - n)
     },
 
     dropRightWhile: function(array, size) {
@@ -131,27 +129,137 @@ var curryth = {
     },
 
 
-    join: function(array, separator = '~') {
+    join: function(array, separator) {
         var result = ''
         for (var i = 0; i < array.length - 1; i++) {
-            result += array[i] + separator    // 需要加个toString(）？？但是数组里本来不就是字符串的形式吗？
+            result += array[i].toString() + separator   // 需要加个toString(），数组里可能出现数字
         }
         return result += array[array.length - 1]
         
     },
 
-    last: function(array, size) {
-      
+    last: function(ary) {
+        return ary[ary.length - 1]
     },
-    lastIndexOf: function(array, size) {
-      
+
+    lastIndexOf: function(ary, value, fromIndex = ary.length - 1) {
+
+        for (var i = fromIndex; i >= 0; i--) {
+            if (ary[i] == value) {
+                return i 
+                break
+            }
+        }
+        return -1
     },
-    reverse: function(array, size) {
-      
+
+    reverse: function(ary) {
+
+        for (var i = 0, j = ary.length - 1; i < j; i++, j--) {
+            var temp = ary[i]
+            ary[i] = ary[j]
+            ary[j] = temp
+        }
+        return ary 
     },
-    indexOf: function(array, size) {
-      
+
+    /**
+     * 
+         uniq: function(ary) {
+            var res = []
+            for (var i = 0; i < ary.length; i++) {
+                if (res.includes(ary[i])) {
+                    continue            用continue跳出单次循环，用break会结束整个for循环
+                } else {
+                    res.push(ary[i])
+                }
+            }
+            return res
+        },
+     * 
+     */
+
+    uniq: function(ary) {
+        var res = []
+        for (var i = 0; i < ary.length; i++) {
+            if (!res.includes(ary[i])) {
+                res.push(ary[i])
+            } 
+        }
+        return res
     },
+
+    uniqBy: function(ary, iteratee=_.identity) {
+        var res = []
+        for (var i = 0; i < ary.length; i++) {
+            if (!res.includes(ary[i])) {
+                res.push(ary[i])
+            } 
+        }
+        return res
+    },
+
+    /**
+     * forEac高阶函数的使用，遍历数组，不用套两个for循环了，很方便
+     */
+
+    without: function(ary, ...values) {
+
+        var res = []
+
+        ary.forEach( item => {
+            if(!values.includes(item)) {
+                res.push(item)
+            }
+        })
+        return res
+    },
+
+    zip: function(...arrays) {
+        
+        var res = []
+        var maxLength = 0
+        for (var i = 0; i < arrays.length; i++) {
+            if (arrays[i].length > maxLength) {
+                maxLength = arrays[i].length
+            }
+        }
+
+        for (var i = 0; i < maxLength; i++) {
+            var temp = []
+            for (var j = 0; j < arrays.length; j++) {
+                temp.push(arrays[j][i])
+            }
+            res.push(temp)
+        }
+        return res
+
+    },
+    countBy: function(ary) {
+
+    },
+    every: function(ary) {
+
+    },
+    filter: function(ary) {
+
+    },
+    find: function(ary) {
+
+    },
+    forEach: function(ary) {
+
+    },
+    groupBy: function(ary) {
+
+    },
+
+
+
+
+
+
+
 
 
 }

@@ -1784,78 +1784,189 @@ function quickSort(ary) {
 
 
 // 真正的快排
-function qSort(ary, start = 0, end = ary.length) {
+
+// 对数组ary从start到end(包含)对元素进行快排
+// 只能排数字的快排
+function qSort(ary, start = 0, end = ary.length - 1) {
   if (start >= end) {
     return ary
   }
-  var pivotIdx = Math.floor(Math.random() * (end - start) + start)
-  var pivotElt = ary[pivotIdx]
+  var pivotIdx = Math.floor(Math.random() * (end - start + 1) + start)
+  var pivot = ary[pivotIdx]
 
-  swap(ary, pivotIdx, end - 1)
+  swap(ary, pivotIdx, end)
 
   var i = start
-  for (var j = start; j < end; j++) { // 不遍历放在最好的哨兵元素
+  for (var j = start; j < end; j++) { // 不遍历放在最后的哨兵元素
     if (ary[j] < pivot) {
-      swap(ary, i++, j)
+      swap(ary, i, j)
+      i++
     }
   }
   swap(ary, i, end) // 将哨兵元素换回中间
 
 
   // 此时，i位置
-  // 此时，i到j之间是[大于等于]哨兵元素
+  // i + 1到j之间是[大于等于]哨兵元素
   // start到i-1是[小于]哨兵元素
-  // i
+  // i位置本身不用再动了，因为哨兵元素在有序后也一定会放在i位置
   qSort(ary, start, i - 1)
-  qSort(ary, i, end)
+  qSort(ary, i + 1, end)
 
   return ary
 
 }
 
-function() {
 
-    while(true) {
-      while ()
+排序函数中的高阶函数predicate, compare
 
-    }
-}
+// predicate函数针对数组中的元素返回一个确定其顺序的数值
+// 排序算法会根据这个数值来确定元素在原数组中的有序位置
+// it => it 接收什么就返回什么，比如包含年龄身高两个对象key值的数组里面，it => it.height,表示按身高顺序来排
+function qSortBy(ary, predicate = it => it, start = 0, end = ary.length - 1) {
+  if (start >= end) {
+    return ary
+  }
+  var pivotIdx = Math.floor(Math.random() * (end - start + 1) + start)
+  var pivot = ary[pivotIdx]
 
+  swap(ary, pivotIdx, end)
 
-// 快排 b站写法
-
-1.左边放个指针 i = 0，并把第一个数作为基准数 temp
-2.右边放个指针 j = arry.length - 1
-3.如果ary[j] > temp, j--
-4.如果ary[j] < temp, 把ary[j]复制到ary[i]的位置, i++
-5.如果ary[i] > temp, 把ary[i]复制到ary[j]的位置， j--
-6.如果 i = j , 就把temp挪到相遇的位置，ary[i] = temp。 第一次遍历结束
-7.后面继续用递归
-
-function quickSort(ary) {
-  var i = 0
-  var j = ary.length - 1
-  var pivot = ary[i]
-
-  while (i < j) {
-
-    if (ary[j] > pivot) {
-      j--
-    } else if (ary[j] < pivot) {
-      ary[i] = ary[j] 
+  var i = start
+  for (var j = start; j < end; j++) { // 不遍历放在最后的哨兵元素
+    if (predicate(ary[j]) < predicate(pivot)) {
+      swap(ary, i, j)
       i++
     }
-    if (ary[i] > pivot) {
-      ary[j] = ary[i]
-      j--
+  }
+  swap(ary, i, end) // 将哨兵元素换回中间
+
+
+  // 此时，i位置
+  // i + 1到j之间是[大于等于]哨兵元素
+  // start到i-1是[小于]哨兵元素
+  // i位置本身不用再动了，因为哨兵元素在有序后也一定会放在i位置
+  qSortBy(ary, start, i - 1)
+  qSortBy(ary, i + 1, end)
+
+  return ary
+
+}
+
+qSort(ancestry, it => -it.born) // 加个负号，倒序排列，原本是升序。
+// compare函数接收数组中的两个元素，返回正，负，零以告诉排序算法谁大谁小或者两者相同
+function qSortWith(ary, compare = (a, b) => a - b, start = 0, end = ary.length - 1) {
+  if (start >= end) {
+    return ary
+  }
+  var pivotIdx = Math.floor(Math.random() * (end - start + 1) + start)
+  var pivot = ary[pivotIdx]
+
+  swap(ary, pivotIdx, end)
+
+  var i = start
+  for (var j = start; j < end; j++) { // 不遍历放在最后的哨兵元素
+    if (compare(ary[j], pivot) < 0) { // compare接收两个元素，返回正负零告诉函数谁大谁小
+      swap(ary, i, j)
+      i++
     }
-    
+  }
+  swap(ary, i, end) // 将哨兵元素换回中间
+
+
+  // 此时，i位置
+  // i + 1到j之间是[大于等于]哨兵元素
+  // start到i-1是[小于]哨兵元素
+  // i位置本身不用再动了，因为哨兵元素在有序后也一定会放在i位置
+  qSortWith(ary, compare,start, i - 1)
+  qSortWith(ary, compare,i + 1, end)
+
+  return ary
+
+}
+
+qSort(ancestry, (a, b) => a.born - b.born)
+
+
+sort函数
+.sort((a, b) => a - b)升序排列
+.sort((a, b) => b - a)降序排列
+
+
+
+
+
+
+
+
+
+  function qSort3(ary, start = 0, end = ary.length -1) {
+    if (start >= end) {
+    return ary
+  }
+  var pivotIdx = Math.floor(Math.random() * (end - start + 1) + start)
+  var pivot = ary[pivotIdx]
+
+  swap(ary, pivotIdx, end)
+
+  var i = start
+  var k = i
+  for (var j = start; j < end; j++) { // 不遍历放在最后的哨兵元素
+    if (ary[j] < pivot) {
+      if (i == k) {
+        swap(ary, i, j)
+      } else  {
+        swap(ary, i, j)
+        swap(ary, k, j)
+      }
+      k++
+      i++
+    } else if (ary[j] == pivot) {
+      swap(ary, j, k++)
+    }
+  }
+  swap(ary, end, k) // 将哨兵元素换回中间
+
+  qSort(ary, start, i - 1)
+  qSort(ary, k + 1, end)
+
+  return ary
   }
 
 
 
 
-}
+// 快排 b站写法
+
+  1.左边放个指针 i = 0，并把第一个数作为基准数 temp
+  2.右边放个指针 j = arry.length - 1
+  3.如果ary[j] > temp, j--
+  4.如果ary[j] < temp, 把ary[j]复制到ary[i]的位置, i++
+  5.如果ary[i] > temp, 把ary[i]复制到ary[j]的位置， j--
+  6.如果 i = j , 就把temp挪到相遇的位置，ary[i] = temp。 第一次遍历结束
+  7.后面继续用递归
+
+  function quickSort(ary) {
+    var i = 0
+    var j = ary.length - 1
+    var pivot = ary[i]
+
+    while (i < j) {
+
+      if (ary[j] > pivot) {
+        j--
+      } else if (ary[j] < pivot) {
+        ary[i] = ary[j] 
+        i++
+      }
+      if (ary[i] > pivot) {
+        ary[j] = ary[i]
+        j--
+      }
+      
+    }
+
+  }
 
 
 2022/01/07
@@ -2314,8 +2425,164 @@ function keyBy (array, propName) {
 
 
 
+function flatten(ary) {
+  var result = []
+  for (var i = 0; i < ary.length; i++) {
+    var item = ary[i]
+    it (Array.isArray(item)) {
+      result.push()
+    }
+  }
+}
 
 
+concat
+
+// 嵌套的，不确定的，就用递归
+function flattenDeep(ary) {
+
+}
+
+function flattenDepth(ary, n = 1) {
+  return ary.reduce((result, item) => {
+
+  })
+}
+
+
+
+
+
+
+
+var century = {}
+
+ancerstry.forEach(person => {
+  var c = Math.ceil(person.died / 100)
+  if (century[c]) {
+      century[c].push(person)
+  } else {
+      century[c] = [person]
+  }
+})
+
+// 常见面试题
+function groupBy(array, predicate) {
+  var grouped = {}
+  array.forEach(it => {
+    var groupName = predicate(it)
+    if (grouped[groupName]) {
+grouped[groupName].push(it)
+    } else {
+      grouped[groupName] = [it]
+    }
+  })
+  return grouped
+}
+
+
+groupBy(ancerstry, it => it.name.split('').at(-1))
+
+
+
+_.mapValues(grouped, (peoples) => val * 2)
+
+function mapValues(obj, mapper) {
+  var result = {}
+  for (var key in obj) {
+    result[key] = mapper(obj[key], key)
+  }
+  return result
+}
+
+
+function average(ary) {
+  return ary.reduce((a,b) => a + b) / ary.length
+}
+
+mapValues(grouped, peoples => {
+
+  return average(peoples.map(it => it.died - it.born))
+
+})
+
+
+mapValues(groupBy(ancestry, it => Math.ceil(it.died / 100)), peoples => {
+  return average(peoples.map(it => it.died - it.born))
+})
+
+
+
+
+
+
+
+
+function every(ary, predicare) {
+  for (var i = 0; i < ary.length; i++) {
+    if (!predicare(ary[i])) {
+      return false
+    }
+  }
+  return false
+}
+
+function some(ary, predicare) {
+  for (var i = 0; i < ary.length; i++) {
+    if (predicare(ary[i])) {
+      return true
+    }
+  }
+  return true
+}
+
+
+f(a) && f(b) && f(c) && f(d)
+
+f(a) || f(b) || f(c) // 等价于
+!(!f(a) && !f(b) && !f(c))
+
+function some(ary, predicar) {  // isPrime
+  
+}
+
+function isPrime(n) {}
+
+function invert(f) {  // 求一个函数的反函数，即原函数返回真时，创建出的函数返回假
+    return function(...args) {
+        return !f(...args)
+    }
+    return !ary.some(fp)
+} // 摩根定律
+// negate the result the function return
+
+function isMale() {}
+var isNotPrime = invert(isPrime)
+var isFemale = invert(isMale)
+
+
+
+
+2022/01/13
+
+二叉树
+
+二叉树定义：
+  空
+  一个根结点，其左子树为一个二叉树，右子树为一个二叉树
+
+  其中最顶部的结点为根结点（root node）
+  两颗子树都为空的结点称为叶子结点（leaf node）
+
+  任意一颗二叉树中，空结点的数量比非空结点的数量正好多1
+    当有n个结点时，每个结点有两个子结点，所以子结点的数量一定是2n个
+    这n个结点除了根结点以外，都有其它的结点指向，所以有n-个结点被指针指向，所以有2n - (n - 1)个指针式空闲的，即
+
+  完全二叉树：
+    从上到下从左到右的结点，某个结点如果有子结点，则其前面的结点也必然有子结点，这样的二叉树称为完全二叉树
+  满二叉树：
+    除最后一层结点外，其他层的结点都有两个子结点
+  满二叉树是完全二叉树，但完全二叉树不是满二叉树
 
 
 

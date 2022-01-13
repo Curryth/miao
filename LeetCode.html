@@ -1235,6 +1235,40 @@ var hasCycle = function(head) {
     }
 
 
+    215. 数组中的第K个最大元素
+
+var findKthLargest = function(nums, k, start = 0, end = nums.length - 1) {
+    function swap(ary, i, j) {
+        var temp = ary[i]
+        ary[i] = ary[j]
+        ary[j] = temp
+    }
+
+    var start = 0, end = nums.length - 1 
+    var pivotIdx = Math.floor(Math.random() * (end - start + 1) + start)
+    var pivot = nums[pivotIdx]
+
+    swap(nums, pivotIdx, end)
+    
+    var i = start
+    for (var j = i; j < end; j++) {
+        if (nums[j] > pivot) {
+            swap(nums, i, j)
+            i++
+        }
+    }
+    swap(nums, i, end)
+    if (i == k - 1) {
+        return nums[i]
+    } else if (i < k - 1) { 
+        return findKthLargest(nums, k, i + 1, end)
+    } else if (i > k - 1) {
+        return findKthLargest(nums, k, start, i - 1)
+    }
+    
+};
+
+
 
 
 
