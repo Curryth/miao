@@ -1,4 +1,4 @@
-var curryth = function {
+var curryth = function() {
 
     function chunk(array, size) {
         var len = array.length
@@ -329,5 +329,5 @@ var curryth = function {
 
 
 
-}
+}()
 
