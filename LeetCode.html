@@ -1045,7 +1045,7 @@ var hasCycle = function(head) {
         break
     }
 
-    return fasle
+    return false
 
 
 }
@@ -1235,44 +1235,668 @@ var hasCycle = function(head) {
     }
 
 
-    215. 数组中的第K个最大元素
+215. 数组中的第K个最大元素
 
-var findKthLargest = function(nums, k, start = 0, end = nums.length - 1) {
-    function swap(ary, i, j) {
+// swap函数最好放在外面，不然递归的时候会执行若干次
+function swap(ary, i, j) {
         var temp = ary[i]
         ary[i] = ary[j]
         ary[j] = temp
+}
+
+var findKthLargest = function(nums, k, start = 0, end = nums.length - 1) {
+    if (end - start == 0) {
+        return nums[start]
     }
 
-    var start = 0, end = nums.length - 1 
-    var pivotIdx = Math.floor(Math.random() * (end - start + 1) + start)
+    var pivotIdx = Math.floor( Math.random() * (end - start + 1) + start )
     var pivot = nums[pivotIdx]
 
-    swap(nums, pivotIdx, end)
-    
+    swap(nums, pivotIdx, )
+
     var i = start
-    for (var j = i; j < end; j++) {
+
+    for (var j = start; j < end; j++) {
         if (nums[j] > pivot) {
-            swap(nums, i, j)
-            i++
+            swap (nums, i++, j)
         }
     }
-    swap(nums, i, end)
+    swap (nums, i, end) 
+    
     if (i == k - 1) {
         return nums[i]
-    } else if (i < k - 1) { 
-        return findKthLargest(nums, k, i + 1, end)
-    } else if (i > k - 1) {
-        return findKthLargest(nums, k, start, i - 1)
     }
+    if (i > k - 1) {
+       return findKthLargest(nums, k, start, i - 1)
+    } else {
+       return findKthLargest(nums, k, i + 1, end)
+    }
+
+} 
+最后一部分写成这样也可以
+    if (i == k - 1) {
+        return nums[i]
+    }
+    if (i > k - 1) {
+       findKthLargest(nums, k, start, i - 1)
+    } else {
+       findKthLargest(nums, k, i + 1, end)
+    }
+    return nums[k - 1]
     
+我最开始愚蠢的写法
+var findKthLargest = function(nums, k) {
+    qSort(nums,start = 0, end = nums.length - 1, k)
+    return nums[k - 1]
+};
+
+    function swap(ary, i, j) {
+    var temp = ary[i]
+    ary[i] =ary[j]
+    ary[j] = temp
+     }
+
+    function qSort(nums, start = 0, end = nums.length - 1, k) {
+        var pivotIdx = Math.floor(Math.random() * (end - start + 1) + start)
+        var pivot = nums[pivotIdx]
+
+        swap(nums, pivotIdx, end)
+        
+        var i = start
+        for (var j = i; j < end; j++) {
+            if (nums[j] > pivot) {
+                swap(nums, i, j)
+                i++
+            }
+        }
+        swap(nums, i, end)
+        if (i == k - 1) {
+            return nums[i]
+        } else if (i < k - 1) { 
+            qSort(nums, i + 1, end, k)
+        } else if (i > k - 1) {
+            qSort(nums, start, i - 1, k)
+        }
+        return nums
+    }
+
+100. 相同的树
+
+var isSameTree = function(p, q) {
+    if (p == null && q == null) {
+        return true
+    }
+    if (p == null && q != null || p != null && q == null) {
+        return false
+    }
+    if (p.val !== q.val) {
+        return false
+    }
+
+    return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+
+};
+// 精简版。二叉树中左右没有重叠，运用递归不会像斐波那契数列一样存在大量重复计算的情况。
+var isSameTree = function(p, q) {
+    if (!p && !q) {
+        return true
+    }
+    if (!p && q || p && !q) {
+        return false
+    }
+    return p.val == q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+
+}
+
+104. 二叉树的最大深度
+
+var maxDepth = function(root) {
+    if (root == null)  {
+        return 0
+    }
+    return 1 + Math.max(maxDepth(root.left), maxDepth(root.right))
+}
+
+
+111. 二叉树的最小深度
+
+var minDepth = function(root) {
+    if (root == null) {
+        return 0
+    }
+    if (root.left == null && root.right != null) {
+        return 1 + minDepth(root.right)
+    }
+    if (root.right == null && root.left != null) {
+        return 1 + minDepth(root.left)
+    }
+    return Math.min(minDepth(root.left), minDepth(root.right)) + 1
+
+}
+
+var minDepth = function(root) {
+    if (!root) {
+        return 0
+    }
+    if (!root.left && root.right) {
+        return 1 + minDepth(root.right)
+    }
+    if (!root.right&& root.left) {
+        return 1 + minDepth(root.left)
+    }
+    return 1 + Math.min(minDepth(root.left), minDepth(root.right))
+
+}
+
+226. 翻转二叉树
+
+var invertTree = function(root) {
+    if (!root) {
+        return root
+    }
+    invertTree(root.left)   // 用递归把左子树翻转
+    invertTree(root.right)   // 再把右子树翻转
+
+    const temp = root.right   // 把左右子树换位置，整个翻转过程完成
+    root.right = root.left    //
+    root.left = temp
+
+    return root
+}
+
+617. 合并二叉树
+
+var mergeTrees = function(root1, root2) {
+    if (!root1) {
+        return root2
+    }
+    if (!root2) {
+        return root1
+    }
+
+     root1.val += root2.val
+
+    root1.left = mergeTrees(root1.left, root2.left)
+    root1.right = mergeTrees(root1.right, root2.right)
+
+    return root1
+
 };
 
 
+144. 二叉树的前序遍历
+
+非递归写法，递归写法面试不给过的
+二叉树非递归遍历的逻辑要搞清楚
+一般面试都是问先序或者中序遍历的非递归写法，不问后序的
+
+var preorderTraversal = function(root) {
+    var result = []
+
+    var nodes = []
+    var p = root
+    
+    while(true) {
+        while (p) {
+            nodes.push(p)
+            result.push(p.val)
+            p = p.left
+        }
+    }
+
+    while (nodes.length) {
+        p = nodes.pop()
+        if (p.right) {
+            p = p.right
+            break
+        }
+     }
+    return result
+}
 
 
 
+var preorderTraversal = function(root, result = []) {
+    
+    if (root == null) {
+        return result
+    } 
+    
+    result.push(root.val)
+    preorderTraversal(root.left,result)
+    preorderTraversal(root.right,result)  
 
+    return result
+
+}
+
+ 
+var preorderTraversal = function(root) {
+    
+    var result = []
+
+    function preOrder(root) {
+        if (root == null) {
+            return result
+        } 
+        
+        result.push(root.val)     // 先根结点，再左子结点，右子结点。
+        preOrder(root.left)
+        preOrder(root.right)  
+    }
+    preOrder(root)   // 写了个preOrder函数要调用才能有输出结果
+    return result
+
+}
+
+
+114. 二叉树展开为链表
+
+var flatten = function(root) {
+    if (root == null) {
+        return []
+    }
+
+    flatten(root.left)      // 先用递归把左右子树展平
+    flatten(root.right)
+
+    var left = root.left    // 把左右子树先保存下来
+    var right = root.right
+
+    root.left = null        // 把左子树断掉清空，接到右子树原本的位置
+    root.right = left
+
+    while (root.right != null) {     // 把左子树的末端变成新的根结点
+        root = root.right            // 把原本的右子树接到左子树下面
+    }
+    root.right = right
+
+    return right
+}
+
+105. 从前序与中序遍历序列构造二叉树
+
+var buildTree = function(preorder, inorder) {
+    if (!preorder.length || !inorder.length) {
+        return null
+    }
+
+    var node = new TreeNode(preorder[0])
+
+    var index = inorder.indexOf(preorder.shift())  
+    // 将preorder中每个结点可能有的子树，依次从inorder中分离出来
+
+    node.left = buildTree(preorder, inorder.slice(0, index))
+    node.right = buildTree(preorder, inorder.slice(index + 1))
+
+    return node
+}
+
+106. 从中序与后序遍历序列构造二叉树
+
+var buildTree = function(inorder, postorder) {
+    if (!inorder.length || !postorder.length) {
+        return null
+    }
+
+    var node = new TreeNode(postorder.pop())
+
+    var index = inorder.indexOf(node.val) 
+     
+
+    node.left = buildTree(inorder.slice(0, index), postorder.slice(0, index))
+    node.right = buildTree(inorder.slice(index + 1), postorder.slice(index))
+    // inorder index两侧为 左子树 + 右子树
+    // inorder的左子树与postorder的左子树，inorder的右子树与postorder的右子树，分别递归
+
+    return node
+}
+
+老谢解法
+
+var buildTree = function(inorder, postorder) {
+    if (inorder.length == 0) {     
+        return null
+    }
+
+    var root = new TreeNode(postorder[postorder.length - 1])
+    var rootIdxInorder = inorder.indexOf(root.val)
+    // 找到根结点在中序遍历中的下标位置 
+     
+    var leftInorder = inorder.slice(0, rootIdxInorder)
+    var rightInorder = inorder.slice(rootIdxInorder + 1)
+    // 中序遍历中，根结点左侧为左子树，右侧为右子树
+
+    var leftPostorder = postorder.slice(0, rootIdxInorder)
+    var rightPostorder = postorder.slice(rootIdxInorder, postorder.length - 1)
+    // 后序遍历中，rootIdxInorder左侧为其左子树，右侧为其右子树
+    // 其实为什么在后续遍历数组中，以中序遍历数组中根结点的下标位置来切分，还是有点需要观察得出的
+    // 到postorder.length - 1 的位置是不包含根结点的
+    root.left = buildTree(leftInorder, leftPostorder)
+    root.right = buildTree(rightInorder, rightPostorder)
+
+    return root
+}
+
+
+889. 根据前序和后序遍历构造二叉树
+
+var constructFromPrePost = function(preorder, postorder) {
+    if (!preorder.length || !postorder.length) {
+        return null
+    }
+
+    var root = new TreeNode(preorder[0])
+    var index = postorder.indexOf(preorder[1]) 
+    // 左子树根结点在post中的位置即是post中左右子树的分割线
+
+    var leftPreOrder = preorder.slice(1, index + 2)
+    var rightPreOrder = preorder.slice(index + 2)
+    // 先序遍历中左子树和右子树的分界线要分清楚。
+
+    var leftPostOrder = postorder.slice(0, index + 1)
+    var rightPostOrder = postorder.slice(index + 1, postorder.length -1)
+    //slice的边界条件要搞清
+
+    root.left = constructFromPrePost(leftPreOrder, leftPostOrder)
+    root.right = constructFromPrePost(rightPreOrder, rightPostOrder)
+
+    return root
+
+}
+
+102. 二叉树的层序遍历
+
+var levelOrder = function(root) {
+    if (root == null) {
+        return null
+    }
+    var result = []
+
+    var row = [root]
+
+    while(row.length) {
+        var rowVals = []    // 记住存储当前行的值
+        var nextRow = []    // 存储下一行的结点
+
+        for (var i = 0; i < row.length; i++) {
+            var node = row[i]   // 取出当前行的当前结点
+            rowVals.push(node.val)   // 将结点的值存入数组
+            if (nodes.left) {  // 如果左子结点存在，则将其放入下一行结点的数组
+                nextRow.push(node.left)
+            }
+            if (nodes.right) {
+                nextRow.push(node.right)
+            } 
+        }
+        result.push( rowVals )  // 把该行结点的值组成的数组放入结果数组
+        row = nextRow     // 下一行称为当前行
+    }
+
+}
+
+
+606. 根据二叉树创建字符串
+
+var tree2str = function(root) {
+    if (!root) {
+        return ''
+    }
+    if (!root.left && !root.right) {
+        return '' + root.val
+    }
+    if (!root.left) {
+        return root.val + '(' + tree2str(root.right) + ')'
+    }
+    if (!root.right) {
+        return root.val + '(' + 
+    }
+   
+}
+
+
+
+98.验证二叉搜索树
+
+var isValidBST = function(root) {
+    var prevVal = -Infinity
+    inorderTraverse(root, val => {
+      if (val <= prevVal) {
+          isBST = false
+      }
+      prevVal = val
+    })
+    return isBST
+}
+
+function inorderTraverse(root, action) {
+    if (root) {
+        if (inorderTraverse(root.left, action) === false) {
+            return false // 返回false告诉上层调用者不用遍历了
+        }
+        if (  action(root.val) === false ) {
+            return
+        }
+        if (inorderTraverse(root.right, action) === false) {
+            return false
+        }
+    }
+}
+
+108. 将有序数组转换为二叉搜索树
+
+var sortedArrayToBST = function(nums) {
+    if (nums.length === 0) {
+        
+    }
+}
+
+
+225. 用队列实现栈
+    class MyStack {
+        queue1 = []
+        queue2 = []
+
+        push(x) {
+            this.queue2.push(x)
+            while(this.queue1.length) {
+                this.queue2.push(this.queue1.shift())
+            }
+            [this.queue1, this.queue2] =[this.queue2, this.queue1]
+        }
+        pop() {
+            return this.queue1.shift()
+        }
+        top() {
+            return this.queue1[0]
+        }
+        empty() {
+            return !this.queue1.length
+        }
+    }
+
+
+
+232. 用栈实现队列
+
+    function MyQueue () {
+        this.inStack = []
+        this.outStack = []
+    }
+
+    MyQueue.prototype = {
+        push(x) {
+            this.inStack.push(x)
+        }, 
+        moveStack() {
+            while (!this.outStack.length) {
+                while (this.inStack.length) {
+                    this.outStack.push(this.inStack.pop())
+                }
+            }
+        },
+
+        pop() {
+            this.moveStack()
+            return this.outStack.pop()
+        },
+
+        peek() {
+            this.moveStack()
+            return this.outStack[this.outStack.length - 1]
+        },
+
+        empty() {
+            return !this.inStack.length && !this.outStack.length
+        }
+    }
+
+
+    706. 设计哈希映射
+    
+    class MyHashMap {
+    constructor() {
+      this.maps = Array(32).fill(null)
+      this._size = 0
+    }
+   
+    hashCode(key) {
+      if (typeof key == 'number') {
+        key = 'N-' + key
+      } else if (typeof key == 'string') {
+        key = 'S-' + key
+      } else if (typeof key == 'boolean') {
+        key = 'B-' + key
+      } else if (key == null) {
+        key = 'NIL-' + key
+      } else {
+        if ('my_hashtable_objectId' in key) {
+          key = key.my_hashtable_objectId
+        } else {
+          key = key.my_hashtable_objectId = 'O-' + Stirng(id++)
+        }
+      }
+      var hash = 131313131
+      var seed = 131
+      for (var i = 0; i < key.length; i++) {
+        hash = (((hash * seed) >>> 0) + key.charCodeAt(i)) >>> 0  // ？位运算，不带符号向右移0位，避免溢出的情况
+      }
+      return hash % this.maps.length
+    }
+
+    put(key,val) {
+      var idx = this.hashCode(key)
+      var p = this.maps[idx]
+        while (p) {          // 遍历p链表,寻找目标key值的p结点，找到了就将p.val覆盖为新val
+          if (p.key === key) {    
+            p.val = val
+            return this
+          }
+          p = p.next   
+        }
+      this.maps[idx] = {    // 如果找到最后都没有符合要求的结点，那就在哈希表上某个位置创造头结点存放这个对象
+        key: key,
+        val: val,
+        next: this.maps[idx]
+      } 
+      this._size++
+      if (this._size / this.maps.length > 0.75) {  // 当空间被占据到75%以上的时候
+        this.扩容()
+      }
+      return this
+    }
+   
+    扩容() {
+      var prevMaps = this.maps         // 把原来数组的值全都取出来
+      this.maps = new Array(this.maps.length * 2).fill(null)   // 原数组扩容两倍
+      this._size = 0               // 扩容后清空size 
+      for (var list of prevMaps) {
+        var p = list
+        while (p) {
+          var key = p.key
+          var val = p.val
+          this.put(key, val)    // this不是prevMaps的，this是hashTable
+          p = p.next
+        }
+      }
+    }
+    
+    缩容() {
+      if (this.maps.length <= 32) {
+        return
+      }
+      var prevMaps = this.maps         // 把原来数组的值全都取出来
+      this.maps = new Array(this.maps.length / 2).fill(null)
+      this._size = 0               // 扩容后清空size 
+      for (var list of prevMaps) {
+        var p = list
+        while (p) {
+          var key = p.key
+          var val = p.val
+          this.put(key, val)    // this不是prevMaps的，this是hashTable
+          p = p.next
+        }
+      }
+    }
+    
+    get(key) {
+      var idx = this.hashCode(key)
+      var p = this.maps[idx]
+      while (p) {
+        if (p.key === key) {
+          return p.val
+        }
+        p = p.next
+      }
+      return - 1
+    }
+    
+    has(key) {
+      var idx = this.hashCode(key)
+      var p = this.maps[idx]
+      while (p) {
+        if (p.key === key) {
+          return true
+        }
+        p = p.next
+      }
+      return false
+    }
+    
+    remove(key) {
+      var idx = this.hashCode(key)
+      var p = this.maps[idx]
+      if (!p) {
+          return
+      }
+      if (p.key === key) {        // 如果头结点就是要删除的对象，则删除头结点
+          this.maps[idx] = p.next
+          this._size--
+          if (this._size / this.maps.length < 0.2) {
+            this.缩容
+          }
+          return this
+      }
+      while (p.next) {            // 否则就遍历链表继续找要删除的那个结点
+        if (p.next.key == key) {
+          p.next = p.next.next
+          this._size--
+          if (this._size / this.maps.length < 0.2) {
+            this.缩容
+          }
+          break
+        }
+        p = p.next
+      }
+      return this
+    }
+    
+    clear() {
+      this.maps = Array(32).fill(null)
+      this._size = 0
+      return this
+    }
+  }
 
 
 </script>    

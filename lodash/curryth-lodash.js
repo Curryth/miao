@@ -1,6 +1,6 @@
-var curryth = {
+var curryth = function {
 
-    chunk: function(array, size) {
+    function chunk(array, size) {
         var len = array.length
         var n = Math.trunc(len / size)
         var result = []
@@ -17,10 +17,9 @@ var curryth = {
         }
 
         return result
+    }
 
-    },
-
-    compact: function(array) {
+    function compact(array) {
         var res = [false, null,0, "", undefined,  NaN ]
         var Array = []
 
@@ -41,9 +40,9 @@ var curryth = {
         }
         return Array
       
-    },
+    }
 
-    compact: function(array) {
+    function compact(array) {
         var Array = []
         
         for (var i = 0; i < array.length; i++) {
@@ -53,50 +52,68 @@ var curryth = {
         }
         return Array
 
-    },
+    }
 
 
-
-    drop: function(array, n = 1) {
+    function drop(array, n = 1) {
             return array = array.splice(n)
-    },
+    }
 
-    dropRight: function(ary, n = 1) {
+    function dropRight(ary, n = 1) {
         return ary = ary.splice(0, ary.length - n)
-    },
+    }
 
-    dropRightWhile: function(array, size) {
+    function dropRightWhile(array, size) {
       
-    },
+    }
 
-    dropWhile: function(array, size) {
+    function dropWhile(array, size) {
       
-    },
+    }
 
-    fill: function(array, value, start = 0, end = array.length) {
+    function fill(array, value, start = 0, end = array.length) {
         for (var i = start; i < end; i++) {
             array[i] = value
         }
         return array
-    },
+    }
 
-    findIndex: function(array, size) {
+    function findIndex(array, size) {
       
-    },
+    }
 
-    findLastIndex: function(array, size) {
+    function findLastIndex(array, size) {
       
-    },
+    }
 
-    flattenDeep: function(array, size) {
-      
-    },
+    function flatten(ary) {
+      return ary.reduce( (result, item) => {
+          return result.concat(item)
+      },[])
+    }
 
-    flattenDepth: function(array, size) {
-      
-    },
+    function flattenDeep(ary) {
+        return ary.reduce( (result, item) => {
+            if (Array.isArray(item)) {
+                return result.concat( flattenDeep(item) ) 
+            }
+            return result.concat(item)
+        },[])
+    }
 
-    fromPairs: function(pairs) { 
+    function flattenDepth(ary, n = 1) {
+      if (n == 0) {
+          return [...ary]
+      }
+      return ary.reduce((result, item) => {
+          if (Array.isArray(item)) {
+              return result.concat(flattenDepth(item, n - 1))
+          }
+          return result.concat(item)
+      },[])
+    }
+
+    function fromPairs(pairs) { 
         
         var obj = {}
         for (var i = 0; i < pairs[0].length; i++) {
@@ -105,44 +122,55 @@ var curryth = {
             obj[a] = b
         }
         return obj
-    },
+    }
 
-    head: function(array) {
+    function head(array) {
         return array[0]
       
-    },
+    }
 
-    indexOf: function(array, value, fromIndex = 0 ) {
+    function indexOf(array, value, fromIndex = 0 ) {
 
-        for (var i = Index; i < array.length; i++) {
+        for (var i = fromIndex; i < array.length; i++) {
             if (array[i] == value) {
                 return i 
             } 
         }
         return -1
-    },
+    }
 
 
-    initial: function(array) {
+    function initial(array) {
         array = array.slice(0, array.length - 1)
         return array
-    },
+    }
+    
+    function intersection(array) {
+
+    }
+    function intersectionBy(array) {
+
+    }
+
+    function intersectionWith(array) {
+
+    }
 
 
-    join: function(array, separator) {
+    function join(array, separator) {
         var result = ''
         for (var i = 0; i < array.length - 1; i++) {
             result += array[i].toString() + separator   // 需要加个toString(），数组里可能出现数字
         }
         return result += array[array.length - 1]
         
-    },
+    }
 
-    last: function(ary) {
+    function last(ary) {
         return ary[ary.length - 1]
-    },
+    }
 
-    lastIndexOf: function(ary, value, fromIndex = ary.length - 1) {
+    function lastIndexOf(ary, value, fromIndex = ary.length - 1) {
 
         for (var i = fromIndex; i >= 0; i--) {
             if (ary[i] == value) {
@@ -151,9 +179,33 @@ var curryth = {
             }
         }
         return -1
-    },
+    }
 
-    reverse: function(ary) {
+    function  pull(ary,...values) {
+
+        var res = []
+        
+        ary.forEach( item => {
+            if (!values.includes(item)) {
+                res.push(item)
+            }
+        })
+        return ary = res
+    }
+
+    function pullAll(ary,values)  {
+
+        var res = []
+        
+        ary.forEach( item => {
+            if (!values.includes(item)) {
+                res.push(item)
+            }
+        })
+        return ary = res
+    }
+
+    function reverse(ary) {
 
         for (var i = 0, j = ary.length - 1; i < j; i++, j--) {
             var temp = ary[i]
@@ -161,7 +213,7 @@ var curryth = {
             ary[j] = temp
         }
         return ary 
-    },
+    }
 
     /**
      * 
@@ -179,7 +231,7 @@ var curryth = {
      * 
      */
 
-    uniq: function(ary) {
+    function uniq(ary) {
         var res = []
         for (var i = 0; i < ary.length; i++) {
             if (!res.includes(ary[i])) {
@@ -187,9 +239,9 @@ var curryth = {
             } 
         }
         return res
-    },
+    }
 
-    uniqBy: function(ary, iteratee=_.identity) {
+    function uniqBy(ary, iteratee=_.identity) {
         var res = []
         for (var i = 0; i < ary.length; i++) {
             if (!res.includes(ary[i])) {
@@ -197,13 +249,13 @@ var curryth = {
             } 
         }
         return res
-    },
+    }
 
     /**
      * forEac高阶函数的使用，遍历数组，不用套两个for循环了，很方便
      */
 
-    without: function(ary, ...values) {
+    function without(ary, ...values) {
 
         var res = []
 
@@ -213,9 +265,9 @@ var curryth = {
             }
         })
         return res
-    },
+    }
 
-    zip: function(...arrays) {
+    function zip(...arrays) {
         
         var res = []
         var maxLength = 0
@@ -234,27 +286,42 @@ var curryth = {
         }
         return res
 
-    },
-    countBy: function(ary) {
-
-    },
-    every: function(ary) {
-
-    },
-    filter: function(ary) {
-
-    },
-    find: function(ary) {
-
-    },
-    forEach: function(ary) {
-
-    },
-    groupBy: function(ary) {
-
-    },
+    }
 
 
+    function countBy(collection, predicate) {
+        var predicate = iteratee(predicate)
+        var obj = {}
+
+        collection.forEach( item => {
+            var key = predicate(item)
+            if (obj.includes(key)) {
+                obj[key]++
+            } else {
+                obj[key] = 1
+            }
+        })
+
+        return obj
+
+    }
+
+    function add(augend, addend) {
+        let res = augend + addend
+        return res
+    }
+
+    function sum(ary) {
+
+        var sum = 0
+
+        for (var i = 0; i < ary.length; i++) {
+            sum += ary[i]
+        }
+
+        return sum 
+    }
+   
 
 
 

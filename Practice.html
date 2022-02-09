@@ -393,3 +393,41 @@ function quickSort(ary, start = 0, end = ary.length - 1) {
     return ary
 
 }
+
+
+
+
+function treeToAry(root) {
+    if (root == null) {
+        return []
+    }
+
+    var nodes = [root]
+    var result = []
+    
+    while(nodes.length) {
+        var current = nodes.shift()
+        result.push(current.val)
+        nodes.push(current.left, current.right)
+    } else {
+        result.push(null)
+    }
+
+    return result
+}
+
+
+
+高阶函数
+
+function filter(ary, test) {
+    var res = []
+    
+    for (var i = 0; i < ary.length; i++) {
+        var item = ary[i]
+        if (  test(item)  ) {
+            res.push(item)
+        }
+    }
+    return res
+}

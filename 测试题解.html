@@ -1,0 +1,41 @@
+<script>
+
+94.
+    //for in 应用于数组
+    Array.prototype.sayHello = function(){
+    console.log("Hello")
+    }
+    Array.prototype.str = 'world';
+    var myArray = [1,2,10,30,100];
+    myArray.name='数组';
+
+    for(let index in myArray){
+    console.log(index);
+    }
+    //输出结果如下
+    0,1,2,3,4,name,str,sayHello
+
+    //for in 应用于对象中
+    Object.prototype.sayHello = function(){
+    console.log('Hello');
+    }
+    Obeject.prototype.str = 'World';
+    var myObject = {name:'zhangsan',age:100};
+
+    for(let index in myObject){
+    console.log(index);
+    }
+    //输出结果
+    name,age,str,sayHello
+    //首先输出的是对象的属性名，再是对象原型中的属性和方法，
+    //如果不想让其输出原型中的属性和方法，可以使用hasOwnProperty方法进行过滤
+    for(let index in myObject){
+    if(myObject.hasOwnProperty(index)){
+        console.log(index)
+    }
+    }
+    //输出结果为
+    name,age
+    //你也可以用Object.keys()方法获取所有的自身可枚举属性组成的数组。
+    Object.keys(myObject)
+</script>
