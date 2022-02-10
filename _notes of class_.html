@@ -2447,7 +2447,7 @@ ancestry = [{name: 'Kobe Bryant', sex: 'f', born: 1978, died: 2020, father: 'Joe
     return person.born - mother.born
   })
 
-  
+
 
 
 
@@ -2464,18 +2464,18 @@ ancestry.forEach(person => {
 })
 
 // 常见面试题
-function groupBy(array, predicate) {
-  var grouped = {}
-  array.forEach(it => {
-    var groupName = predicate(it)
-    if (grouped[groupName]) {
-grouped[groupName].push(it)
-    } else {
-      grouped[groupName] = [it]
-    }
-  })
-  return grouped
-}
+  function groupBy(array, predicate) {
+    var grouped = {}
+    array.forEach(it => {
+      var groupName = predicate(it)
+      if (grouped[groupName]) {
+          grouped[groupName].push(it)
+      } else {
+        grouped[groupName] = [it]
+      }
+    })
+    return grouped
+  }
 
 
 groupBy(ancestry, it => it.name.split('').at(-1))
@@ -2521,7 +2521,7 @@ function every(ary, predicare) {
       return false
     }
   }
-  return false
+  return true
 }
 
 function some(ary, predicare) {
@@ -2530,7 +2530,7 @@ function some(ary, predicare) {
       return true
     }
   }
-  return true
+  return false
 }
 
 
