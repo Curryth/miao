@@ -1321,21 +1321,24 @@ function randomAry(n) {
     return ary
 }
 
-function insertSort(ary) {
+  function insertSort(ary) {
 
-    for (var i = 1; i < ary.length; i++) {
-        var t = ary[i]
-        for (var j = i - 1; j >= 0; j--) {
-            if (ary[j] > t) {
-                ary[j + 1] = ary[j]
-            } else {  
-                break
-            }
-        }
-        ary[j + 1] = t
-    }
-    return ary
-}
+      // 从第一个元素开始，该元素可以认为已经被排序
+      for (var i = 1; i < ary.length; i++) {
+          var t = ary[i]  
+        //取出下一个元素，在已经排序的元素序列中从后向前扫描
+          for (var j = i - 1; j >= 0; j--) {
+              if (ary[j] > t) {
+                  ary[j + 1] = ary[j]
+         // 不断后移比t大大元素
+              } else {  
+                  break // 直到找到一个比t小的元素
+              }
+          }
+          ary[j + 1] = t  // 将t插入上面这个元素的后面
+      }        
+      return ary
+  }
 
 function isSorted(ary) {
     for (var i = 0; i < ary.length - 1; i++) {
@@ -2515,18 +2518,18 @@ mapValues(groupBy(ancestry, it => Math.ceil(it.died / 100)), peoples => {
 
 
 
-function every(ary, predicare) {
+function every(ary, predicate) {
   for (var i = 0; i < ary.length; i++) {
-    if (!predicare(ary[i])) {
+    if (!predicate(ary[i])) {
       return false
     }
   }
   return true
 }
 
-function some(ary, predicare) {
+function some(ary, predicate) {
   for (var i = 0; i < ary.length; i++) {
-    if (predicare(ary[i])) {
+    if (predicate(ary[i])) {
       return true
     }
   }
@@ -2905,7 +2908,7 @@ Object.setPrototypeOf(obj, target) 设置obj对象的原型为target对象。
 所有的数值以数值类型的构造函数(Number)的原型属性(Number.prototype)为原型
 所有的字符串以字符串类型的构造函数(String)的原型属性(String.prototype)为原型
 所有的布尔以布尔类型的构造函数(Boolean)的原型属性(Boolean.prototype)为原型
-所有的对象以对象类型的构造函数(Array)的原型属性(Array.prototype)为原型
+所有的数组以数组类型的构造函数(Array)的原型属性(Array.prototype)为原型
 所有的函数以函数类型的构造函数(Function)的原型属性(Function.prototype)为原型
 
 构造函数的prototype属性是做为其构造出来的实例对象的原型，而不是它自己的原型
@@ -3083,10 +3086,10 @@ Object.defineProperty(obj, 'foo' , {
 可以用来判断一个属性是否是一个对象的自有属性
 
 var hasOwn = Object.prototype.hasOwnProperty
-function forOwn(obj, iterator) {
+function forOwn(obj, iteratee) {
   for (var key in obj) {
     if (hasOwen.call(obj, val)) {
-      if ( iterator(obj[key], key) === false) {
+      if ( iteratee(obj[key], key) === false) {
         break
       }
     }
@@ -3190,52 +3193,6 @@ Laying out a table
       }
     }
   }
-
-
-
-  var rows = [
-    [new TextCell('foo'), new TextCell('foo\nbarr'), new TextCell('bazzaaa')]
-    [new TextCell('foo\naaa\nbbb'), new TextCell('fooc\nbarra'), new TextCell('bazz\naaa')]
-  ]
-
-// 下划线单元格，接收任意一个单元格做为参数
-  function UnderlineCell(innerCell) {
-    this.inner = innerCell
-  }
-  UnderlineCell.prototype.minWidth = function() {
-    return this.inner.minWidth()
-  }
-  UnderlineCell.prototype.minHeight = function() {
-    return this.inner.minHeight() + 1
-  }
-  UnderlineCell.prototype.mindraw = function(width, height) {
-    return this.inner.draw(width,height - 1).concat('-'.repeat(width))
-  }
-
-
-  function BorderedCell(inner) {
-    this.inner = inner
-  }
-  UnderlineCell.prototype.minWidth = function() {
-    return this.inner.minWidth() + 2
-  }
-  UnderlineCell.prototype.minHeight = function() {
-    return this.inner.minHeight() + 2
-  UnderlineCell.prototype.mindraw = function(width, height) {
-    var innerBlock = this.inner.draw(width - 2, height - 2).concat('-'.repeat(width))
-    var topBorder = '「' + '-'.repeat(width - 2) + ''
-    var bottomBlock = '' + '-'.repeat(width - 2) + '」'
-    return [
-      topBorder,
-      ...borderBlock,
-      bottomBlock,
-    ]
-  }
-  }
-
-
-
-
   function Creature(canMove, shu, ke, zhong) {
     this.canMove =canMove
     this.shu = shu
@@ -3259,32 +3216,9 @@ Laying out a table
   }
 
 
+ 2022/01/20
 
-
-rows = []
-
-var MOUNTAINS.forEach()
-
-
-
-
-
-
-
-  function BorderedCell(inner) {
-    this.inner = inner
-  }
-
-
-
-
-
-
-
-
-2022/01/20
-
-向量
+ 向量
 
   function Vector(x, y) {
     this.x = x
@@ -3365,12 +3299,12 @@ var MOUNTAINS.forEach()
   }
 
 
-属性和方法，谁更好，不改动的话，用属性就可以，后续需要改动的话，还是在对象里构造函数，当方法使用方便。
-很多语言里有不可更改的私有属性，JS中现在也有了。
-属性的读取是调用函数，属性的应用也是调用函数
+  属性和方法，谁更好，不改动的话，用属性就可以，后续需要改动的话，还是在对象里构造函数，当方法使用方便。
+  很多语言里有不可更改的私有属性，JS中现在也有了。
+  属性的读取是调用函数，属性的应用也是调用函数
 
 
-JS的类型判断：
+ JS的类型判断：
   typeof 用来判断原型类型，除null以外，它针对原始类型都能返回类型名称的小写单词
   instanceof  用来判断对象是否是某个的实例或其子类的实例，不能判断原型类型，也不能判断null
   Object.prototype.toString 
@@ -3432,7 +3366,7 @@ JS的类型判断：
     })
   
 
-// stack 栈
+ // stack 栈
 
   function Stack(initials = []) {
     this._head = null
@@ -3521,7 +3455,7 @@ JS的类型判断：
         }
     }) 
 
-// 另一种写法：
+ // 另一种写法：
   function Queue(initials = []) {
     this._head = null
     this._tail = null
@@ -3634,7 +3568,7 @@ JS的类型判断：
     }
   }
 
-/**
+ /**
  * 使用上方的语法实现一个类的时候，会存在一些问题：
  * 代码不是一整块
  * 代码有很多重复的部分
@@ -3649,7 +3583,7 @@ JS的类型判断：
 
 
 
-/**
+ /**
  * 箭头函数与非箭头函数的区别：
  * 
  * 箭头函数里面没有arguments，使用时看其外部环境中的arguments
@@ -3709,7 +3643,7 @@ JS的类型判断：
     }
   }
 
-// 用class写出的改良版Stack
+ // 用class写出的改良版Stack
 
   class Stack2 {
     #head = null
@@ -3940,11 +3874,13 @@ JS的类型判断：
   }
 
 
+
   _.filter(users, 'active'); // 第二个参数为字符串
   _.filter(users,  _.property('active')  );
   _.filter(users, it => it.active);  // 把第二个参数转化成接函数的调用
 
   _.filter(users, {age: 36, active: true});  // 第二个参数为对象
+  _.filter(users,  _.matches(   {age: 36, active: true}   ); // 判断一个对象是否满足匹配这个目标
   _.filter(users, it => it.age == 36 && it.active == true);
 
   _.filter(users, ['active', true]);   // 第二个参数为数组
@@ -3952,20 +3888,57 @@ JS的类型判断：
   _.filter(users, it => it.active == true);
 
 
-  var filter2 = transformIteratee(filter)
+  // 02/12探究下，为什么_.property('active')可以返回一个转化字符串的函数
+  // _.matchesProperty(['active', true])又为什么可以是转化数组的
 
-  function transformIteratee(f) {
-    return function(...args) {
-      var last = args.pop()
-      var predicate = iteratee(last)
-      return f(...args, predicate)
+  返回给定对象特定路径下的值（浅层次不带点点属性，如father.name）
 
-    }
+  // f = property('foo')   就相当于 f = get(_, 'foo') 
+  // 即把get第二参数绑定为'foo‘，第一个参数待输入的某个对象
+
+  function property(name) {
+      return function(obj) {  // 接收一个name返回一个函数，函数能返回obj.name属性
+        return obj[name]
+      }
   }
 
+  function property(name) {
+    return bind(get, null, _, name)  // get函数绑定成property函数
+  }
 
-  function findKey(obj, predicate) {
-    predicate = iteratee(predicate)
+  obj = {a:{b:{c:3}}}, get(obj, 'a.b.c'),就要用下面的函数来获取路径上的值了
+
+  function get(obj, path) {
+      var names = path.split('.') // 将字符串，如a.b.c拆分成['a', 'b', 'c']数组形式
+      for (var name of names) { // 遍历数组,这里就是今天问题的关键了，为什么property可以处理字符串
+          obj = obj[name]       //因为这里有split可以将字符串直接转换成数组，然后再进行返回一个函数进行对比，
+          if (obj == null) { 
+            return obj
+          }
+      }
+      return obj
+  }
+
+  // 写成reduce形式
+  function get(obj,path) {
+    var names = toPath(path)  // 用toPath函数将属性路径转化成包含属性路径的数组
+    return names.reduce((obj,name) => {
+      return obj && obj[name] // 左边为undefined 或者 null时走右边，?怎么感觉有问题，不应该左边非空再走右边吗？
+    },obj)                    // 这里应该改为&&且且，不能是？？符号
+  }                           // reduce限定条件，obj非空
+  
+
+ toPath 转化输入到值为属性路径的数组
+
+
+  function toPath(path) {
+    if (typeof path == 'string') {
+    return path.split('[')
+      .flatMap(it => it.split(']')) // 先map再flat，即flatMap
+      .flatMap(it => it.split('.'))
+      .filter(it => it)     // 把隔板间隔出来的空字符串‘ ’，去掉
+    }                       // 但是filter it到it为什么就能过滤空字符串呢？
+    return path   // 是字符串则要拆，如果传过来的直接就是数组，则无需任何操作直接返回。
   }
 
 
@@ -3974,37 +3947,52 @@ JS的类型判断：
 
     var result = []
     for (var i = 0; i < ary.length; i++) {
-      if (predicate(ary[i], i)) {
-        result.push(ary[i])
+      if (predicate(ary[i], i)) { // 把数组项和下标传给predicate函数，如果返回真，则把这项push进去
+        result.push(ary[i])   
       }
     }
     return result
   }
 
+  // 如果filter函数去掉predicate = iteratee(predicate)这行代码
+  // 只接函数做为最后一个参数
+  // 那么我可以用下面的transformiteratee在外面改造filter函数
+  // 让其最后一个参数可以接string，object，Array
 
+  var filter2 = transformIteratee(filter)
+
+  function transformIteratee(f) {
+    return function(...args) {
+      var last = args.pop()  // 弹出filter最后一个参数
+      var predicate = iteratee(last)  // 像原本转换非函数形式的predicate一样转换
+      return f(...args, predicate)  // 重新绑定为新filter
+
+    }
+  }
+
+// 必须要把predicate转化成一个函数？
+// 和 res = res.valueOf() 类似吗？
   function iteratee(predicate) {
-    if (typeof predicate === 'string') {
-      predicate = property(predicate)
-    }
+    if (typeof predicate === 'string') {  // 返回一个函数，函数可以对比字符串
+      predicate = property(predicate)  // 本来property(path),path可能是字符串形式
+    }                                  // 返回的本应是一个这里直接拿来用来对比字符串是否相等匹配了
+                                       // 其实property返回的是一个值，这里用来当作布尔值真假判断，也不是不可以
     if (Array.isArray(predicate)) {
-      predicate = matchesProperty(...predicate)
-    }
-    if (predicate && typeof predicate === 'object') {
+      predicate = matchesProperty(...predicate)  // 本来是用来判定path路径上的值是否和val相等
+    }                                           // 因为路径可以为数组形式，这里用来判定数组是否相等匹配了
+    if (predicate && typeof predicate === 'object') { // 返回一个函数对比target对象是否匹配
       predicate = matches(predicate)
     }
     return predicate
   }  
 
-
-  function matchesProperty(pair) {
-    var key = pair[0]
-    var val = pair[1]
+  function property(path) {   // path是字符串形式的，也可以是数组？
     return function(obj) {
-      return obj[key] === val
+        return get(obj,path)
     }
   }
 
-  function matchesProperty(path, val) {
+  function matchesProperty(path, val) {  // 这里的path是数组？
       return function(obj) {
         return isEqual(get(obj, path), val)
       }
@@ -4021,7 +4009,10 @@ JS的类型判断：
     }
   }
 
-  function isMatch(obj = {a:1,b:2,c: {x:1,y:2}, src = {b:2,c:{y:2}}}  ) {
+
+  
+  // 考虑深层次的情况，obj是不是src的子结构
+  function isMatch( obj = {a:1,b:2,c: {x:1,y:2}}, src = {b:2,c:{y:2}} ) {
     
     for (var key in src) {
       if (src[key] && typeof src[key] === 'object') { // src[key]存在且为对象时
@@ -4037,115 +4028,84 @@ JS的类型判断：
     return true
   }
 
-  function matches(src) {
-    return bind(isMatch, null, _, src) // js上自带的bind不支持跳着绑定。
-  }
 
 
 
-  function property(name) {
-    return function(obj) {
-        return obj[name]
-    }
-  }
-  
-  obj = {a:{b:{c:3}}} 展开obj.a属性.b属性.c属性为3
-  get(obj, 'a,b,c')
-  obj.a.b.c 在不确定有多少层的情况下没办法直接用这个
-
-  function get(obj, path) {
-      var names = path.split('.')
-      for (var name of names) {       // for (...of...)遍历数组中的每一项
-        obj = obj[name]   // 把names展开，
-        if (obj == null) {   
-          return obj
-        }
-      }
-      return obj
-  }
-
-  // reduce写法， ？不懂
-  function get(obj, path) {
-      var names = path.split('.')
-      names.reduce((obj, name) => {
-        return obj ?? obj[name]  // 左边为null和undefined，走右边
-      }, obj)
-  }
-  
-  // 递归写法， ？不懂
-  function get(obj, path) {
-    path = toPath(path)
-    if (obj == null) {
-      return obj
-    }
-    if (path.length == 0) {
-      return obj
-    }
-
-      return get(obj[path[0]], path.slice(1))
-  }
-  obj = {a:{b:{c:3}}}
-  get(obj, 'a.b.c')
-  obj.a.b.c
 
 
   _.bind(f, null, _, 2, 3)  // 绑定f函数， this的位置绑定为空，跳过第一个元素，给第二三个元素赋值
   // 在lodash中，下划线_ 为一个函数，所有的lodash方法都绑定在这个函数的上面。
 
-  // 这个函数？没懂，啥跳着绑定的bind啊，草
-  var _ = {}
+
+  // 带占位符的bind的写法，支持跳过一些参数绑定
+  // 创建一个调用func的函数，thisArg绑定func函数中的 this
+
+  var _ = {} // 要先申明一个占位符号变量，所以下面读取到下划线占位符的时候才不会报错
 
   function bind(func, thisArg, ...fixedArgs) {
-
-    return function(...args) {
-      var bindArgs = fixedArgs.slice()
+                              // 1, _ , 3, _ , 5 已填充的参数
+    return function(...args) {  // args后续添加的参数 2， 9， 4，6，7
+      var bindedArgs = fixedArgs.slice()  // 不要改变在闭包里的fixedArgs，复制出来一份出来修改添加
       var i = 0
       for (var j = 0; j < bindedArgs.length; j++) {
         if (bindedArgs[j] === _) {
           bindedArgs[j] = args[i++]
         }
       }
-      bindedArgs.push(...args.slice(i))
-      return func.apply(thisArg, bindedArgs)
-    }
+      bindedArgs.push(...args.slice(i))  // 最后把剩余的参数都push进去
+      return func.apply(thisArg, bindedArgs)  // 参数添加好最后应该是1，2，3，9，5，4，6，7
+    } // func.call(this.Arg, ...binderArgs)也行
   }
 
 
   //创建一个调用func的函数。调用func时最多接受 n个参数，忽略多出的参数。
   function ary (func, n = func.length) {
     return function(...args) {
-      return func(...args.slice(0, n))
-    }
-  }
-
-
-  function ary (func, n = func.length) {
-    return function(...args) {
       return func.call(this, ...args.slice(0, n))
+      // 也可以写成func.call(this, ...args.slice(0, n))
     }
   }
 
+  //创建一个调用func的函数。调用func时最多接受 1个参数，忽略多出的参数
   function unary(func) {
     return function(...args) {
       return func(...args.slice(0, 1)) 
     }
   }
 
+  function parseInt(string, radix) {
+    
+  }
+
+   // 创建一个针对断言函数 func 结果取反的函数。 
+  //func 断言函数被调用的时候，this 绑定到创建的函数，并传入对应参数
   function negate(f) {
     return function(...args) {
       return !f(...args)
     }
   }
 
+  function negate(predicate) {
+        return function (...args) {
+            return !predicate.call(this, ...args)
+        }
+    }
+
+
   function isPrime() {}
 
   [1,2,3,3,4].filter( negate(isPrime) )
 
-
-  function spread(f) {
+  // 返回一个函数，可以把一个数组展开后再传入函数func
+  function spread(func) {
     return function(ary) {
-      return f(...ary)  // f.apply(this, ary)也可以
+      return func(...ary)  // f.apply(this, ary)也可以
     }
+  }
+
+  // 可以抽面试官的写法
+  function spread(func) {
+   return func.apply.bind(func, null)
   }
 
   function flip(func) {
@@ -4165,37 +4125,47 @@ JS的类型判断：
       return res
     }
   }
+  
+
+  // 会缓存结果的函数，如果结果曾经运算过，直接返回结果。
 
   function memoize(func) {
+      var map = new Map()  
 
-    return function(val) {
-      if (map.has(val)) {
-        return map.get(val)
-      }
-      var res = func(val)
-      map.set(val, res)
-      return res
-    }
+      return function(val) {
+          if (map.has(val)) {
+            return map.get(val)
+          }
+          var result = func(val)
+          map.set(val, result)
+          return result
+        }
   }
+
+  // 上面的map没法保存， [2,3] -> 7， 只能单个值 -> 单个值
+  // 而下面独自构造的Map和Cache接口可以解决这个问题
   
+
+  // 记忆化函数，以后在react和Vue里面都会用到
   function memoize(func, resolver = it => it) {
     var map = new memoize.Cache()
 
     return function(...args) {
-      var key = resolver(...args)
-
-      if (map.has(key)) {
-        return map.get(key)
+      var key = resolver(...args) // 用返回值 resolver 的返回值作为 key 缓存函数的结果。 
+                                 //默认情况下用第一个参数作为缓存的 key
+      if (map.has(key)) {   // 如Math.pow(2,5) ,传入两个参数，总不能用数组当作key吧
+        return map.get(key)      // 但是只用2当key不会出现第二个参数不同的情况吗？？
       }
-      var res = func(...args)
-      map.set(key, res)
-      return res
+      var result = func(...args)
+      map.set(key, result)
+      return result
     }
-    memoize.cache = map
+    memoize.cache = map   // 把map映射挂回到要返回到实例上
 
-    return memoized
+    return memoized     // 最后返回memoized
   }
-  memoize.Cache = Map
+  memoize.Cache = Map    // Cache是memoize的一个属性，作为一个定制的接口存在，
+                         // 这个接口可以接Map
 
 
 
@@ -4229,14 +4199,14 @@ JS的类型判断：
       return f.apply(null, ary)
     }
   }
-  
 
-  function curry(f, n = f.length) {
-    return function(...args) {
+  function curry(f, n = f.length) {  // n为需要的参数个数
+    return function(...args) { // args为输入的参数个数
       if (args.length < n) {
         return curry(f.bind(null, ...args), n - args.length)
+        // 需要的参数不够则递归，并写明还需要多少个参数。
       } else {
-        return f(...args)
+        return f(...args) // 输入的参数个数足够则直接返回结果
       }
     }
   }
@@ -4849,6 +4819,182 @@ JS的类型判断：
 
 
 
+
+
+  2022/02/12
+
+静态类型：变量是有类型的，特定类型的变量只能指向相应类型的值 c，c++，java,typescript
+动态类型：变量本身没有类型，任何变量随时可以指向任意类型的值，js，python，php
+
+强类型：运算或传参不会自动执行类型转换，python，java
+弱类型：语言是否会在一起情况下自动对值做类型转换，js，c，c++
+
+
+  function People(name,age) {
+    if (new.target !== People) {
+      return new People(name,age)
+    }
+    this.name = name
+    this.age = age
+  }
+
+  var wang = new People()
+  People.call( wang )
+
+
+with语句，当语句内没有相关函数或方法或变量，它会向上搜索找寻。
+下面的sin,cos,还有PI都是向上从Math里搜索而来的 
+
+  var x = 1
+  var y = 2
+  with(Math) {
+    console.log(x * sin(x) + cos(y) * PI)
+  }
+
+Object.preventExtensions() 禁止添加属性
+Object.seal()              封装属性
+Object.freeze()            冻结属性
+
+
+  function deepFreeze(obj) {
+    if (Object.isFrozen(obj)) {
+      return obj
+    }
+    Object.freeze(obj)
+    for (var key in obj) {
+      if (obj[key] && typeof(obj[key]) === 'object') {
+        deepFreeze(obj[key])
+      }
+    }
+    return obj
+  }
+
+describe('Array', function(){
+
+}) 
+
+describe('MyMap', function () {
+  describe('构造函数')
+})
+
+
+try {
+  xxxx
+} catch (e) {
+  try {
+    yyyy
+  } catch (e) {
+
+  }
+}
+
+
+  var context = null
+
+  function withContext(newContext, body) {
+    var oldContext = context
+    context = newContext
+    try {
+      var result = body() 
+    } finally {
+      context = oldContext
+    }
+    return result
+  }
+
+  function InputError(message) {
+    Error
+  }
+
+
+  function primitiveMultiply(a,b) {
+    if (Math.random) {
+      return a * b
+    } else {
+      throw new MultiplyorUnitFailure()
+    }
+  }
+
+  function multiple(a,b) {
+
+  }
+
+
+
+  var box = ........
+
+  function withBoxUnlocked(f) {
+
+  }
+
+
+2022/02/14
+  
+第9章 Regular Expressions 正则表达式
+  
+正则表达式的两种写法，我们常用第二种：
+
+  var re1 = new RegExp("abc")  // RegExp构造函数Contractor function
+  var re2 = /abc/
+
+
+
+自定义零宽断言
+(?=expr)正预测先行断言 positive lookahead，即要求一个位置的右边的内容要满足expr
+(?!expr)负预测先行断言 negative lookahead，即要求一个位置的右边的内容不能满足expr
+(?<=exper)正预测后发断言 positive lookbehind，即要求一个位置的左边的内容要满足expr
+(?<!exper)负预测后发断言 negative lookbehind，即要求一个位置的左边的内容不能满足expr
+
+零宽断言可以连续使用，连续使用时断言的是同一个位置
+
+\b === (?<!\w)(?=\w)(?<=\w)(?!\w)
+^ === (?<!.)左右不能出现任何符号
+$ === (?!.)匹配第行的结尾 或 (?![^]) 匹配字符串整体的结尾
+
+
+具名分组：
+  
+(?<year>\d{4}-(?<month>\d{2})-(?<day>\d{2}))
+
+match.groups.year
+match.groups.month
+match.groups.day
+
+非捕获分组：
+使用“?:”表示。该分组不计数，也不捕获
+（?:foo)(bar)
+(?:) 不匹配任何东西，当其不存在。
+
+前向/后向引用
+\1 \2 .. \9 表示第几对括号已经匹配到的具体内容
+.(.)\1 表示 ABB 形式的字符串
+(.)(.)\1 表示 ABA 形式的字符串
+(.)(.)\2\1 表示 ABBA 形式的字符串 
+(foo|bar){2}
+(foo|bar)\2
+
+正则的选项：
+/foo/igmysu
+第二个？后面的部分即为正则表达式的选项
+不同选项有不同的效果
+i ignoreCase  不区分大小写
+g global      全局匹配，即找到所有的匹配，而不是只找到一个匹配
+m multiline   多行匹配，有m的时候^$可以表示一行的开始和结束，没有m时表示整个字符串的开始和结束
+s dotAll      有时s，正则中的.可以代表任意符号
+u unicode     启用unicode
+d hasIndices  匹配结果中会包含每个捕获分组的开始和结束位置
+y sticky      每次匹配必须从首次开始的位置就成功
+
+
+
+`高圆圆
+
+李一一
+
+张三三
+
+范冰冰`.replace(/(.)(.)(\2)/g, '$2$3$1(原名$&)')
+(变成冰冰范， 一一李，三三张)
 
 </script>
 

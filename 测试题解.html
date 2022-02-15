@@ -38,4 +38,67 @@
     name,age
     //你也可以用Object.keys()方法获取所有的自身可枚举属性组成的数组。
     Object.keys(myObject)
+
+    
+
+    function factorial(x) {
+        if (x == 0) {
+            return 1
+        }
+
+        let res = 1
+        for (var i = 1; i <= x; i++) {
+            res *= i
+        }
+        return res
+    }
+
+    function sigma(s,e,x,f) {
+        const f = function(n) {
+            return ( pow(-1, n) / factorial(2 * n + 1) ) * x (2 * n + 1)
+        }
+
+        let res = 0
+        for (var i = s; i <= e; i++) {
+            res += f(i)
+        }
+        return res
+    }
+
+
+
+
+    function factorial(x) {
+        if (x == 0) {
+            return 1
+        }
+        return x * factorial(x - 1)
+    }
+
+    function sigma(s,e,f) {
+        let sum = 0
+        for (var i = s; i <= e; i++) {
+            sum += f(i)
+        }
+        return sum
+    }
+    
+    
+    function sin(x) {
+        return sigma(0, 20, function(n) {
+            return Math.pow(-1, n) * Math(x, 2 * n + 1) / factorial(2 * n + 1)
+        }) 
+    }
+    // 这样把一个函数嵌套进另一个函数中，就能实现一个表达式中两个变量变化，求结果的情况
+    // 也可以写成下面这样
+
+    function sin(x) {
+        function f(n) {
+            return Math.pow(-1, n) * Math.pow(x, 2 * n + 1) / factorial(2 * n + 1)
+        }
+        return sigma(0, 20, f)
+    }
+
+
+
 </script>

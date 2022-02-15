@@ -431,3 +431,19 @@ function filter(ary, test) {
     }
     return res
 }
+
+
+  function insertSort(ary) {
+      for (var i = 1; i < ary.length; i++) {
+            var t = ary[i]
+            for (var j = i - 1; j >= 0; j--) {
+                if (ary[j] > t) {
+                    ary[j + 1] = ary[j]
+                } else {
+                    break
+                }
+            }
+            ary[j + 1] = t
+      }
+      return ary
+  }

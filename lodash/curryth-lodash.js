@@ -54,21 +54,31 @@ var curryth = function() {
 
     }
 
-
+    // 去除前面n个元素
     function drop(array, n = 1) {
-            return array = array.splice(n)
+            return array = array.splice(n)  // start默认为0，这里end = n
     }
+
+    // 删除尾部n个元素
 
     function dropRight(ary, n = 1) {
-        return ary = ary.splice(0, ary.length - n)
+        return ary = ary.splice(0, ary.length - n) // slice返回删除了的部分
     }
 
-    function dropRightWhile(array, size) {
-      
+    function dropRightWhile( ary, predicate = identity ) {
+        for (var i = 0; i < ary.length; i++) {
+            if (!predicate(ary[i], i, ary)) {
+                return ary = ary.splice(0, ary.length - i)
+            }
+        }
     }
 
     function dropWhile(array, size) {
-      
+        for (var i = 0; i < ary.length; i++) {
+            if (!predicate(ary[i], i, ary)) {
+                return ary = ary.splice(i)
+            }
+        }
     }
 
     function fill(array, value, start = 0, end = array.length) {
@@ -78,12 +88,24 @@ var curryth = function() {
         return array
     }
 
-    function findIndex(array, size) {
-      
+    function findIndex(array, predicate, fromIndex) {
+        predicate = iteratee(predicate)
+        for (var i = fromIndex; i < array.length; i++) {
+            if (predicate(array[i])) {
+                return i
+            }
+        }
+        return -1
     }
 
-    function findLastIndex(array, size) {
-      
+    function findLastIndex(array, predicate, fromIndex = array.length-1) {
+        predicate = iteratee(predicate)
+        for (var i = fromIndex; i > 0; i--) {
+            if (predicate(array[i])) {
+                return i
+            }
+        }
+        return -1
     }
 
     function flatten(ary) {
@@ -145,9 +167,14 @@ var curryth = function() {
         return array
     }
     
-    function intersection(array) {
-
+    function intersection(...arys) {
+        let res = arys[0]
+        for (var i = 1; i < arys.length; i++) {
+            res = res.filter(val => ary[i].includes(val))
+        }
+        return res
     }
+
     function intersectionBy(array) {
 
     }
@@ -216,7 +243,7 @@ var curryth = function() {
     }
 
     /**
-     * 
+     *  O(N * N)写法
          uniq: function(ary) {
             var res = []
             for (var i = 0; i < ary.length; i++) {
@@ -228,10 +255,8 @@ var curryth = function() {
             }
             return res
         },
-     * 
-     */
 
-    function uniq(ary) {
+        function uniq(ary) {
         var res = []
         for (var i = 0; i < ary.length; i++) {
             if (!res.includes(ary[i])) {
@@ -241,18 +266,39 @@ var curryth = function() {
         return res
     }
 
-    function uniqBy(ary, iteratee=_.identity) {
-        var res = []
+     * 
+     */
+    
+
+    // 给数组去重
+    function uniq(ary) {
+        set = new Set(ary)  // 把数组转化成集合，集合自动去重
+        let result = Array.from(set)  // 再把集合这种类数组形式的转化成数组，就OK了
+        return result 
+     }
+    
+
+    // 这里的predicate只是一个比较大方法，而不是filter里直接带限定条件返回真假值的
+    // 所以这里需要设置一个obj对象，用来保存真假值的结果，为假的时候才往result中push没有出现的值
+    function uniqBy(ary, predicate = identity) {
+        predicate = iteratee(predicate)
+
+        var result = []
+        var obj = {}
         for (var i = 0; i < ary.length; i++) {
-            if (!res.includes(ary[i])) {
-                res.push(ary[i])
-            } 
+            if (  obj[ predicate(ary[i]) ]  ) {
+                continue
+            } else {
+                obj[ predicate(ary[i]) ] = true   // 把这个属性添加赋成布尔值，方便上面的判断
+                result.push(ary[i])
+            }
+
         }
-        return res
+        return result
     }
 
     /**
-     * forEac高阶函数的使用，遍历数组，不用套两个for循环了，很方便
+     * forEach高阶函数的使用，遍历数组，不用套两个for循环了，很方便
      */
 
     function without(ary, ...values) {
@@ -306,9 +352,149 @@ var curryth = function() {
 
     }
 
+    function flatMap(collection,iteratee) {
+
+    }
+
+    function flatMapDeep(collection,iteratee) {
+        
+    }
+
+    function flatMapDepth(collection,iteratee) {
+        
+    }
+
+    function groupBy(collection, predicate = identity) {
+        predicate = iteratee(predicate)
+
+        var obj = {}
+        for (var item in collection) {
+            var key = predicate(item)
+            if ( !(key in obj) ) { // 这一步就很可
+                obj[key] = [item]  // 直接[item]也很可，没必要obj[key] = []再push了
+            } else {
+                obj[key].push(item)
+            }
+        }
+        return obj
+    }
+
+    // forEach 遍历数组/对象每一个元素，不改变原数组
+    //（原本forEach是不会返回值的，这里要求返回collection）
+    function forEach(collection, predicate = identity) {
+        for (var val in collection) {
+            if (!predicate(val, key, collection)) {
+                break
+            }
+        }
+        return collection
+    }
+
+    function forEachRight(collection, predicate = identity) {
+        if (Array.isArray(collection)) {
+            for (var i = collection.length - 1; i >= 0; i--) {
+                if ( !predicate(collection[i], i, collection) ) {
+                    break
+                }
+            }
+        } else {
+            for (var val in collection) {
+                if (!predicate(val, key, collection)) {
+                    break
+                }
+            }
+        }
+        return collection
+    }
+    
+    
+    function keyBy(collection, predicate = identity) {
+        predicate = iteratee(predicate)
+
+        var obj = {}
+        collection.forEach(it => obj[predicate(it)] = it)
+        return obj
+    }
+    
+    // predicate = identity ,这里predicate是一个obj,string,或者number
+    // 我们需要将其转化成一个函数，才能用它将predicate(item)转化成一个具体的值
+    // 最后再返回由predicate(item)值组成的新数组
+    //而这就是.map(item => predicate（item)  的由来
+
+    function map(ary, predicate = identity) {
+        predicate = iteratee(predicate)
+
+        let result = []
+        for (var item of ary) {
+            result.push( predicate(item) ) 
+        }
+
+        return result
+    }
+
+    function partition(ary, predicate = identity) {
+        predicate = iteratee(predicate)
+        
+        let a = []
+        let b = []
+        let result = []
+        for (var item of ary) {
+            if (predicate(item)) {
+                a.push(item)
+            } else {
+                b.push(item)
+            }
+        }
+        result.push(a)
+        result.push(b)
+        return result
+        
+    }
+    
+    // accumulator可能为0，可能为{},直接在一开始让result = accumulator就行
+    // 然后再给predicate传两个参数，不需要想太多！
+    function reduce(collection, predicate = identity, accumulator) {
+        var result = accumulator
+        if (Array.isArray(collection)) {
+            for (var i = 0; i < collection.length; i ++) {
+                result = predicate(result, collection[i])
+            }
+        } else {
+              for (var key in collection) {
+                  result = predicate(result, collection[key])
+              }
+        }
+        return result
+    }
+    
+    function reduceRight(ary, predicate = identity) {
+        var result = accumulator
+        if (Array.isArray(collection)) {
+            for (var i = collection.length - 1; i >= 0; i--) {
+                result = predicate(result, collection[i])
+            }
+        } else {
+              for (var key in collection) {
+                  result = predicate(result, collection[key])
+              }
+        }
+        return result
+    }
+
     function add(augend, addend) {
         let res = augend + addend
         return res
+    }
+
+    function max(ary) {
+        if (ary.length == 0) {
+            return  undefined
+        }
+        let max = -Infinity
+        ary.forEach( item => {
+            max = item > max ? item : max
+        })
+        return max 
     }
 
     function sum(ary) {
@@ -321,7 +507,430 @@ var curryth = function() {
 
         return sum 
     }
+
+    function repeat(string = '', n) {
+        let res = '' 
+        for (var i = 0; i < n; i++) {
+            res += string
+        }
+        return res
+    }
    
+    function range(start = 0, end, step = 1) {
+        let res = []
+        if (start < 0 )
+        for (var i = start; i < end; i += step) {
+            res.push(i)
+        }
+    }
+
+    function shuffle(collection) {
+        
+    }
+
+    function size(collection) {
+        if (typeof collection === 'string' || Array.isArray(collection)) {
+            return collection.length
+        }
+        if (typeof collection === 'object') {
+            var res = []
+            for (var key in collection) {
+                res.push(collection[key])  // .key和[key]的区别？
+            }
+            return res.length
+            // var count = 0
+            // for (var key in collection) count++
+            // return count也行
+        }
+    }
+
+    function some(collection, predicate) {
+        predicate = iteratee(predicate)
+        
+        if ( Array.isArray(collection) ) {
+            for (var i = 0; i < collection.length; i++) {
+                if ( predicate(collection[i]) ) {
+                    return true
+                }
+            }
+        } else {
+            for (var key in collection) {
+                if ( predicate(collection[key]) ) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+    
+    // collection (Array|Object): 用来迭代的集合
+    // predicate=_.identity (Array|Function|Object|string): 每次迭代调用的函数
+
+    function every(collection, predicate) {
+        predicate = iteratee(predicate)
+        
+        if ( Array.isArray(collection) ) {
+            for (var i = 0; i < collection.length; i++) {
+                if ( !predicate(collection[i]) ) {
+                    return false
+                }
+            }
+        } else {   // 如果collection是对象
+            for (var key in collection) {
+                if ( !predicate(collection[key]) ) {
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+    
+    // 这里用插入排序写一下，有点忘了这个排序的写法了
+
+    function sortBy(ary, predicate = identity) {
+        predicate = iteratee(predicate)
+
+        for (var i = 1; i < ary.length; i++) {
+            var temp = ary[i]
+            for (var j = i - 1; j >= 0; j-- ) {
+                if ( predicate(ary[j]) > predicate(temp) ) {
+                    ary[j + 1] = ary[j]
+                } else {
+                    break
+                }
+            }
+            a[j + 1] = temp
+        }
+        return ary
+        
+    }
+
+
+    /**
+     * ==和===的区别,==会将两侧的数据进行类型转换再对比
+     * 测试案例new Boolean(true)，Boolean在这里做为一个构造函数，得到的是一个包装对象，
+     * 这个包装对象， == true 但是不 === true
+     * 可以用valueOf,返回包装对象实例对应的原始类型的值
+     * 即 new Boolean(true).valueOf() === true
+     * 而用==的时，new Boolean(true) == true 返回的是true
+     */
+
+    function isBoolean(val) {
+      if (val == true || val == false) {  // 
+          return true
+      } 
+      return false
+    }
+
+    function isArray(val) {
+       return val.__proto__ === Array.prototype
+    }
+
+    function isMap(val) {
+        return val instanceof Map
+    }
+    
+    
+    function isNaN(val) {
+        if (typeof(val) == 'object') {
+            val = val.valueOf()
+        }
+        return val !== val
+    }
+
+    function isNil(val) {
+        return val === null || val === undefined
+    }
+
+    function isNull(val) {
+        return val  === null
+    }
+
+    function isNumber(val) {
+        return val.__proto__ === Number.prototype
+    }
+
+    function isString(val) {
+        return val.__proto__ === String.prototype
+    }
+    
+
+    // 直接return function还是有点难想的
+    // 返回一个函数，判断一个对象是否匹配另外一个对象
+
+    function matches(target) {
+        return function(obj) {
+            for (var key in target) {   // 不能写成var key in obj, 这里是要看target的key是不是都在obj中
+                if (obj[key] !== target[key]) {
+                    return false
+                }
+            }
+            return true
+        }
+    }
+
+
+    /**部分深度对比函数，src对比obj的一部分
+     * 深层次对比，当对比的部分是对象中嵌套对象时，需要进去嵌套的对象中再继续对比
+     * 所以，上面这步就需要用到递归，
+     * 而这个递归的终止条件就是src[key]存在，以及它的类型是个对象
+     * 用到的例子obj = {a:1,b:2,c: {x:1,y:2}}, src = {b:2,c:{y:2}}
+     * 例子中src是obj的子结构，
+     * src[c] = {y:2},  obj[c] = {x:1,y:2}
+     * 递归进去src[y] = 2, obj[y] = 2, 而且src[y]不是对象，递归到此终止。
+     */
+
+    function isMatch(obj, src) {
+        for (var key in src) { 
+            if (src[key] && typeof(src[key]) == 'object') {
+                if (!isMatch(obj[key], src[key])) {
+                    return false
+                }
+            } else {
+                if (src[key] !== obj[key]) { // 浅层次对比部分，直接比key上的非对象属性
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+
+    // 转化path为属性路径的数组
+    // path可能为字符串形式的'a.b.c'，或者'a[0].b.c'，后者是展开obj = {a:[{b:{c:3}}]}
+    // 这里暂时只考虑路径中带'.'和'[]'的情况
+
+    function toPath(path) {
+        if (typeof(path) == 'string') {
+            return path.split('[')
+              .flatMap(it => it.split(']'))
+              .flatMap(it => it.split('.'))
+              .filter(it => it)  // 过滤掉上面两步产生的空字符串
+        }
+        return path
+    }
+
+    function findKey(obj, predicate) {
+        predicate = iteratee(predicate)
+        var result
+        for (var key in obj) {
+            if (predicate(obj[key])) {
+                result = key
+                break
+            }
+        }
+        return result
+    }
+
+    function findLastKey(obj, predicate) {
+        predicate = iteratee(predicate)
+        var result
+        for (var key in obj) {
+            if (predicate(obj[key])) {
+                result = key
+            }
+        }
+        return result
+    }
+
+    
+    // 获取路径上的值？啥意思？ 不就是求对象，key上的value吗？
+    // 路径可以是['a', 'b', 'c']数组形式，也以为‘a.b.c’字符串形式
+
+    function get(obj, path) {
+        var names = toPath(path)
+        return names.reduce((obj,name) =>{
+            return obj && obj[name]
+        },obj)
+    }
+    
+
+    // property即属性的意思，这个函数就是返回属性路径上的值
+    // 加了get的加强版
+    function property(path) {
+        return function(obj) {
+            return get(obj,path)
+        }
+    }
+
+    
+    // 路径上值是不是val
+    // 返回一个函数判定给定对象路径上的值是否等于val
+    function matchesProperty(path, val) {
+        return function(obj) {
+            return isEqual(  get(obj,path), val )
+        }
+    }
+    
+
+    // 转换函数
+
+    function iteratee(predicate) {
+        if (typeof predicate === 'string') {  // 返回一个函数，函数可以对比字符串
+          predicate = property(predicate)  // 本来property(path),path可能是字符串形式
+        }                                  // 返回的本应是一个这里直接拿来用来对比字符串是否相等匹配了
+                                           // 其实property返回的是一个值，这里用来当作布尔值真假判断，也不是不可以
+        if (Array.isArray(predicate)) {
+          predicate = matchesProperty(...predicate)  // 本来是用来判定path路径上的值是否和val相等
+        }                                           // 因为路径可以为数组形式，这里用来判定数组是否相等匹配了
+        if (predicate && typeof predicate === 'object') { // 返回一个函数对比target对象是否匹配
+          predicate = matches(predicate)
+        }
+        return predicate
+    }  
+    
+
+    // collection (Array|Object): 一个用来迭代的集合
+    // predicate: (Array|Function|Object|string): 每次迭代调用的函数
+    // 返回一个新的过滤后的数组
+    // predicate本身就包含一个条件，比如{ 'age': 36, 'active': true }
+    // 我们要把这个条件用iteratee转化成匹配这个条件的predicate函数
+
+    function filter(collection, predicate) {
+        predicate = iteratee(predicate)
+
+        let result = []
+        if (Array.isArray(collection)) {
+            for (var i = 0; i < collection.length; i++) {
+                if (predicate(collection[i], key)) {
+                    result.push(collection[i])
+                }
+            }
+        } else {
+            for (var key in collection) {
+                if (predicate(collection[key], key)) {
+                    result.push(collection[key])
+                }
+            }
+        }
+        return result
+        
+    }
+
+    function find(collection, predicate, fromIndex = 0) {
+        predicate = iteratee(predicate)
+        for (var i = fromIndex; i < collection.length; i++) {
+            if ( predicate(collection[i]) )  {
+                return collection[i]
+            }
+        }
+        return -1
+    }
+
+    function findLast(collection, predicate, fromIndex = collection.length - 1) {
+        predicate = iteratee(predicate)
+        for (var i = fromIndex; i > 0; i--) {
+            if ( predicate(collection[i]) )  {
+                return collection[i]
+            }
+        }
+        return -1
+    }
+
+    function flatMap(ary, predicate = identity) {
+        predicate = iteratee(predicate)
+        return ary.flatten.map(it => perdicate(it))
+    }
+
+    function flatMapDeep(ary, predicate = identity) {
+        predicate = iteratee(predicate)
+        return ary.flattenDeep.map(it => perdicate(it))
+    }
+
+    function flatMapDepth(ary, predicate = identity) {
+        predicate = iteratee(predicate)
+        return ary.flattenDepth.map(it => perdicate(it))
+    }
+
+    // 创建一个调用func的函数。调用func时最多接受 n个参数，忽略多出的参数。
+    function ary(func, n = func.length) {
+        return function(...args) {
+            return func.call(this, ...args.slice(0, n))
+            // 也可以写成func(...args.slice(0, n))
+            // 这里也可直接只给func传入args的前n个参数即可，不要考虑太多
+            // 两次return function还是有点意思的
+        } 
+    }
+
+    function unary(func) {
+        return ary(func, 1)
+    }
+    
+    // 创建一个调用func的函数，通过this绑定和创建函数的参数调用func，调用次数不超过 n 次。 
+    // 之后再调用这个函数，将返回一次最后调用func的结果
+    
+    function before(n, func) {
+        let c = 0       // 用来记录调用func的次数
+        let result      // result 用来记录最后一次调用的结果
+        return function (...arg) {
+            if (c < n) {
+                result = func(...arg)
+                c++
+            }
+            return result
+        }
+    }
+
+    function parseInt(stirng, radix = 10) {
+        
+    }
+    
+    // 创建一个函数，调用func时候接收翻转的参数
+
+    function flip(func) {
+        return function (...args) {
+            return func(...args.reverse())
+        }
+    }
+
+
+    // 记忆化函数，以后在react和Vue里面都会用到
+
+    function memoize(func, resolver = it => it) {
+        map = new Map()
+        return function (...args) {
+            var key = resolver(...args)  // 默认返回参数的第一个值
+            if (map.has(key)) {
+                return map.get(key)
+            }
+            var result = func(...args)
+            map.set(key, result)
+            return result
+        }
+    }
+    
+    // 创建一个针对断言函数 func 结果取反的函数。 
+    //func 断言函数被调用的时候，this 绑定到创建的函数，并传入对应参数
+    // 又是两个return function的叠加
+    function negate(predicate) {
+        return function (...args) {
+            return !predicate(...args)
+        }
+    }
+    // 返回一个函数，可以把一个数组展开后再传入函数func
+    // 没有...展开符之前，spread函数就是展开数组的利器
+    function spread(func) {
+        return function (ary) {
+            return func.apply(this, ary)
+        }
+    }
+
+
+
+    function curry(f, n = f.length) {  // n为需要的参数个数
+        return function(...args) { // args为输入的参数个数
+            if (args.length < n) {
+                return curry(f.bind(null, ...args), n - args.length)
+                // 需要的参数不够则递归，并写明还需要多少个参数。
+          } else {
+                return f(...args) // 输入的参数个数足够则直接返回结果
+          }
+        }
+    }
+
+
 
 
 
@@ -331,7 +940,11 @@ var curryth = function() {
         compact: compact,
         drop: drop,
         dropRight: dropRight,
+        dropRightWhile: dropRightWhile,
+        dropWhile: dropWhile,
         fill: fill,
+        findIndex: findIndex,
+        findLastIndex: findLastIndex,
         flatten: flatten,
         flattenDeep: flattenDeep,
         flattenDepth: flattenDepth,
@@ -339,6 +952,7 @@ var curryth = function() {
         head: head,
         indexOf: indexOf,
         initial: initial,
+        intersection: intersection,
         join: join,
         last: last,
         lastIndexOf: lastIndexOf,
@@ -350,8 +964,58 @@ var curryth = function() {
         without: without,
         zip: zip,
         countBy: countBy,
+        flatMap: flatMap,
+        flatMapDeep: flatMapDeep,
+        flatMapDepth: flatMapDepth,
+        forEach: forEach,
+        forEachRight: forEachRight,
+        groupBy: groupBy,
+        keyBy: keyBy,
+        map: map,
+        partition: partition,
+        reduce: reduce,
+        reduceRight: reduceRight,
         add: add,
+        max: max,
         sum: sum,
+        repeat: repeat,
+        range: range,
+        size: size,
+        shuffle: shuffle,
+        some: some,
+        every: every,
+        sortBy: sortBy,
+        isBoolean: isBoolean,
+        isArray: isArray,
+        isMap: isMap,
+        isNaN: isNaN,
+        isNil: isNil,
+        isNull: isNull,
+        isNumber: isNumber,
+        isString: isString,
+        matches: matches,
+        isMatch: isMatch,
+        toPath: toPath,
+        findKey: findKey,
+        findLastKey: findLastKey,
+        get: get,
+        property: property,
+        matchesProperty: matchesProperty,
+        iteratee: iteratee,
+        filter: filter,
+        find: find,
+        findLast: findLast,
+        ary: ary,
+        unary: unary,
+        before: before,
+        parseInt: parseInt,
+        flip: flip,
+        memoize: memoize,
+        negate: negate,
+        spread: spread,
+        curry: curry,
+
+
     }
 }()
 
