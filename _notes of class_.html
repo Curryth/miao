@@ -919,30 +919,22 @@ Reversing an array 倒序数组
       return result
     }
 
-
     function reverseArrayInPlace(array) {
-      var i = 0
-      var j = array.length - 1
-
+        var i = 0
+        var j = array.length - 1
 
         while (i <= j ) {
-          var temp = array[i]
-          array[i] = array[j]
-          array[j] = temp
-          i++
-          j--
+            var temp = array[i]
+            array[i] = array[j]
+            array[j] = temp
+            i++
+            j--
         }
         return array
-
-    }
-
-
-for (var index in array) {
-}
-console.log(index)
+     }
 
 
-稀疏数组，带empty项的
+稀疏数组带empty项的
 
 以下的函数都会作用于稀疏数组里的稀疏项empty项
 
@@ -957,58 +949,59 @@ array.sort()
 // DeapEqual 深度对比  
 
 
-deepEqual(NaN, NaN)  
+  deepEqual(NaN, NaN)  
 
-function deepEqual(a, b) {               // 不仅可以判断对象的相等，值相等也会返回true
-  if (a === b) {            // 原始类型相同
-    return true
-  } 
-  if (a !== a && b !== b) {    // 如果一个数不等于自己，说明它是NaN
-    return true
-  }
-    // 两个都是数组
-  if (Array.isArray(a) && Array.isArray(b)) { // Array.isArray()函数来判定一个数是不是数组
-    if (a.length !== b.length) {
-      return false
-    } else {
-      for (var i = 0; i < a.length; i++) {
-        if ( !deepEqual(a[i], b[i]) ) {    // 用递归来判定数组是不是完全相等
-          return false
+  function deepEqual(a, b) {               // 不仅可以判断对象的相等，值相等也会返回true
+      if (a === b) {            // 原始类型相同
+          return true
+      } 
+      if (a !== a && b !== b) {    // 如果一个数不等于自己，说明它是NaN
+          return true
+      }
+      // 两个都是数组
+      if (Array.isArray(a) && Array.isArray(b)) { // Array.isArray()函数来判定一个数是不是数组
+          if (a.length !== b.length) {
+              return false
+          } else {
+                for (var i = 0; i < a.length; i++) {
+                    if ( !deepEqual(a[i], b[i]) ) {    // 用递归来判定数组是不是完全相等
+                        return false
+                    }
+                 }
+             return true
+            }
+       }
+
+    // 两个都是对象                             // 因为typeof null === 'object',要排除掉
+    if (!Array.isArray(a) && !Array.isArray(b) && a && b && typeof a === 'object' && typeof b === 'object') {
+        for (var key in a) {
+            if (!(key in b)) {   // a的每个属性都要在b里
+                return false       // 否则返回false
+             }
         }
-      }
-      return true
-    }
-  }
+        for (var key in b) {  
+            if (!(key in a)) {  // b的每个属性都要在a里
+                return false    // 否则返回false
+             }
+         }
+      // 上方两个循环确定a和b的属性集合相同
 
-  // 两个都是对象
-  if (!Array.isArray(a) && !Array.isArray(b) && a && b typeof a === 'object' && typeof b === 'object') {
-      for (var key in a) {
-        if (!(key in b)) {   // a的每个属性都要在b里
-          return false       // 否则返回false
+        for (var key in a ) {
+            if (!deepEqual(a[key], b[key])) {
+                return false
+             }
         }
-      }
-      for (var key in b) {  
-        if (!(key in a)) {  // b的每个属性都要在a里
-          return false    // 否则返回false
+        for (var key in b ) {
+            if (!deepEqual(a[key], b[key])) {
+                return false
+             }
         }
-      }
-     // 上方两个循环确定a和b的属性集合相同
+        return true // 上面对象这一部分判断都是返回false过滤掉所有不对的情况，
+                   // 所以最后只剩下正确的情况，即返回true
+    }
 
-    for (var key in a ) {
-      if (!deepEqual(a[key], b[key])) {
-          return false
-      }
-    }
-    for (var key in b ) {
-      if (!deepEqual(a[key], b[key])) {
-          return false
-      }
-    }
-    return true
+    return false // 如果经过上面所有判断都没有返回true的情况，那么就不深度相等，返回false
   }
-
-  return false
-}
 
 
 
@@ -4937,6 +4930,34 @@ try {
   var re1 = new RegExp("abc")  // RegExp构造函数Contractor function
   var re2 = /abc/
 
+ab
+ab[xy]          遇到ab,然后遇到xy
+ab[^xy]         遇到ab,然后不要遇到xy,^脱字符
+  [0-9]         \d  digit                         \D 非数字
+[0-9 a-z/A-Z]   \w   word                         \W  非word
+ [    ]         \s   各种形式的空格                  \S  非格
+
+ab+c    b允许重复多次
+ab?     b允许重复0或者1次         可以写成 ab{0,1}c
+ab*c    b允许重复多次或者0次               ab{0,}c
+
+a{3,5}     a允许重复3次到5次
+a{0,5}     a允许重复0次到5次
+a{2,}      a允许重复2次到无限次
+
+/foo(bar)/.exec('foobarsf')
+   
+
+零宽符号
+^   左边没有任何东西
+$   右边没有任何东西
+\b  是否是边界bandary      \w  \W
+
+[ ]               子表达式
+(abc|xyz|jkq)*    可以匹配abc或者xyz或者jkq，按顺序来匹配。后面也可以加个*，重复遇见
+
+/^foo{3,5}$/.exec('fooooo')    ^...$强制匹配字符串
+
 
 
 自定义零宽断言
@@ -4954,7 +4975,7 @@ $ === (?!.)匹配第行的结尾 或 (?![^]) 匹配字符串整体的结尾
 
 具名分组：
   
-(?<year>\d{4}-(?<month>\d{2})-(?<day>\d{2}))
+var match = (?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})).exec(xxxx)
 
 match.groups.year
 match.groups.month
@@ -4963,7 +4984,7 @@ match.groups.day
 非捕获分组：
 使用“?:”表示。该分组不计数，也不捕获
 （?:foo)(bar)
-(?:) 不匹配任何东西，当其不存在。
+(?:) 不匹配任何东西，也不计数，当其不存在。
 
 前向/后向引用
 \1 \2 .. \9 表示第几对括号已经匹配到的具体内容
@@ -4975,13 +4996,14 @@ match.groups.day
 
 正则的选项：
 /foo/igmysu
+new RegExp('foo', 'igmysud')
 第二个？后面的部分即为正则表达式的选项
 不同选项有不同的效果
 i ignoreCase  不区分大小写
 g global      全局匹配，即找到所有的匹配，而不是只找到一个匹配
 m multiline   多行匹配，有m的时候^$可以表示一行的开始和结束，没有m时表示整个字符串的开始和结束
 s dotAll      有时s，正则中的.可以代表任意符号
-u unicode     启用unicode
+u unicode     启用unicode,支持\u{xxxxx}
 d hasIndices  匹配结果中会包含每个捕获分组的开始和结束位置
 y sticky      每次匹配必须从首次开始的位置就成功
 
@@ -4995,6 +5017,15 @@ y sticky      每次匹配必须从首次开始的位置就成功
 
 范冰冰`.replace(/(.)(.)(\2)/g, '$2$3$1(原名$&)')
 (变成冰冰范， 一一李，三三张)
+
+
+/\b\w{7,}\b/
+
+
+
+function wildcardMatch(wildcard, str) {
+    var resStr = wildcard.replaceAll('?')
+}
 
 </script>
 

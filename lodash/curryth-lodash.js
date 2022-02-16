@@ -66,6 +66,7 @@ var curryth = function() {
     }
 
     function dropRightWhile( ary, predicate = identity ) {
+        predicate = iteratee(predicate)
         for (var i = 0; i < ary.length; i++) {
             if (!predicate(ary[i], i, ary)) {
                 return ary = ary.splice(0, ary.length - i)
@@ -73,7 +74,8 @@ var curryth = function() {
         }
     }
 
-    function dropWhile(array, size) {
+    function dropWhile(array, predicate = identity) {
+        predicate = iteratee(predicate)
         for (var i = 0; i < ary.length; i++) {
             if (!predicate(ary[i], i, ary)) {
                 return ary = ary.splice(i)
@@ -88,7 +90,7 @@ var curryth = function() {
         return array
     }
 
-    function findIndex(array, predicate, fromIndex) {
+    function findIndex(array, predicate, fromIndex = 0) {
         predicate = iteratee(predicate)
         for (var i = fromIndex; i < array.length; i++) {
             if (predicate(array[i])) {
@@ -96,6 +98,7 @@ var curryth = function() {
             }
         }
         return -1
+
     }
 
     function findLastIndex(array, predicate, fromIndex = array.length-1) {
@@ -624,6 +627,110 @@ var curryth = function() {
       return false
     }
 
+    function isArguments(val) {
+        return val instanceof Arguments
+    }
+
+    function isDate(val) {
+        return val instanceof Date
+    }
+
+    function isElement(val) {
+        return val instanceof Element
+    }
+    
+    //判定 value 是否为一个空对象，集合，映射或者set即可
+    // 就返回object,map,set，真的为空的情况，其它的情况都返回假
+    function isEmpty(val) {
+        if (val instanceof Map || val instanceof Set) {
+            if (val.size == 0) {
+                return true
+            }
+            return false
+        }
+        if (val instanceof Object) {
+            for (var key in val) {
+                return !(key in val) == true
+            }
+            return false
+        }
+        return true
+    }
+
+    function isEqual(val, other) {
+        if (val === other) {
+            return true
+        }
+        if (val !== val && other !== other) {
+            return true
+        }
+        if (Array.isArray(val) && Array.isArray(other)) {
+            if (val.length !== other.length) {
+                return false
+            } 
+            for (var i = 0; i < val.length; i++) {
+                if (!isEqual(val[i], other[i])) {
+                    return false
+                }
+            }
+            return true
+        }
+        if (!Array.isArray(val) && !Array.isArray(other) && a && b && typeof val === 'object' && typeof other == 'object') {
+            for (var key in a) {
+                if (!(key in b)) {
+                    return false
+                }
+            }
+            for (var key in b) {
+                if (!(key in a)) {
+                    return false
+                }
+            }
+            for (var key in a) {
+                if (!isEqual(val[key], other[key])) {
+                    return false
+                }
+            }
+            return true
+        }
+        return false
+    }
+
+    function isEqualWith(val, other, customizer) {
+        if (isEqual(customizer(val), customizer(other))) {
+            return true
+        }
+        return false
+    }
+
+    function isError(val, other) {
+        
+    }
+
+    function isFinite(val) {
+        return typeof val == 'number' && val !== Infinity && val !== -Infinity
+    }
+
+    function isFunction(val) {
+        return val instanceof Function
+    }
+
+    function isInteger(val) {
+        return val % 1 == 0 && typeof val === 'number'
+    }
+
+    function isLength(val) {
+        return isInteger(val) && val > 0
+    }
+
+    function isMatchWith(val, other, customizer) {
+        if (isMatch(customizer(val), customizer(other))) {
+            return true
+        }
+        return false
+    }
+
+
     function isArray(val) {
        return val.__proto__ === Array.prototype
     }
@@ -986,6 +1093,18 @@ var curryth = function() {
         every: every,
         sortBy: sortBy,
         isBoolean: isBoolean,
+        isArguments: isArguments,
+        isDate: isDate,
+        isElement: isElement,
+        isEmpty: isEmpty,
+        isEqual: isEqual,
+        isEqualWith: isEqualWith,
+        isError: isError,
+        isFinite: isFinite,
+        isFunction: isFunction,
+        isInteger: isInteger,
+        isLength: isLength,
+        isMatchWith: isMatchWith,
         isArray: isArray,
         isMap: isMap,
         isNaN: isNaN,

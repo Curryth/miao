@@ -447,3 +447,13 @@ function filter(ary, test) {
       }
       return ary
   }
+
+
+  function validatePIN (pin) {
+      var result = /(^\d{4}$)|(^\d{6}$)/    // 或者/(^\d{4}|^\d{6})$/
+      return result.test(pin)
+      //return true or false
+   }
+
+
+</script>
