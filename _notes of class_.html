@@ -4938,20 +4938,21 @@ ab[^xy]         遇到ab,然后不要遇到xy,^脱字符
  [    ]         \s   各种形式的空格                  \S  非格
 
 ab+c    b允许重复多次
-ab?     b允许重复0或者1次         可以写成 ab{0,1}c
-ab*c    b允许重复多次或者0次               ab{0,}c
+ab?     b允许重复0或者1次         即可以写成 ab{0,1}c
+ab*c    b允许重复多次或者0次       即可以写成 ab{0,}c
 
 a{3,5}     a允许重复3次到5次
 a{0,5}     a允许重复0次到5次
 a{2,}      a允许重复2次到无限次
 
 /foo(bar)/.exec('foobarsf')
-   
 
-零宽符号
-^   左边没有任何东西
-$   右边没有任何东西
-\b  是否是边界bandary      \w  \W
+Backtracking 回溯
+
+正则表达式匹配一个二进制书后面接一个b或者一个10进制数没有后缀，或者16进制数后接一个h
+/\b([01]+b|\d+|[\da-f]+h)\b/
+   
+   
 
 [ ]               子表达式
 (abc|xyz|jkq)*    可以匹配abc或者xyz或者jkq，按顺序来匹配。后面也可以加个*，重复遇见
@@ -4961,19 +4962,19 @@ $   右边没有任何东西
 
 
 自定义零宽断言
-(?=expr)正预测先行断言 positive lookahead，即要求一个位置的右边的内容要满足expr
+(?=expr)正预测先行断言 positive lookahead，即要求一个位置的右边的内容要满足expression
 (?!expr)负预测先行断言 negative lookahead，即要求一个位置的右边的内容不能满足expr
 (?<=exper)正预测后发断言 positive lookbehind，即要求一个位置的左边的内容要满足expr
 (?<!exper)负预测后发断言 negative lookbehind，即要求一个位置的左边的内容不能满足expr
 
 零宽断言可以连续使用，连续使用时断言的是同一个位置
 
-\b === (?<!\w)(?=\w)(?<=\w)(?!\w)
-^ === (?<!.)左右不能出现任何符号
-$ === (?!.)匹配第行的结尾 或 (?![^]) 匹配字符串整体的结尾
+\b === (?<!\w)(?=\w)(?<=\w)(?!\w) (即左边不能有符号右边要有，或者左边要有符号右边没有)
+^ === (?<!.)   左边不能出现任何符号
+$ === (?!.) .不能匹配换行符，所以这个是匹配每行的结尾 或 (?![^])右边不能匹配任何东西，回车也不行， 即匹配字符串整体的结尾
 
 
-具名分组：
+具名分组： 给每个括号都命名
   
 var match = (?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})).exec(xxxx)
 
@@ -4987,29 +4988,17 @@ match.groups.day
 (?:) 不匹配任何东西，也不计数，当其不存在。
 
 前向/后向引用
-\1 \2 .. \9 表示第几对括号已经匹配到的具体内容
+\1 \2 .. \9 表示重复第几对括号已经匹配到的具体内容
 .(.)\1 表示 ABB 形式的字符串
 (.)(.)\1 表示 ABA 形式的字符串
-(.)(.)\2\1 表示 ABBA 形式的字符串 
+(.)(.)\2\1 表示 ABBA 形式的字符串 （先重复第2个括号内的，再重复第1个括号内的）
 (foo|bar){2}
 (foo|bar)\2
 
-正则的选项：
-/foo/igmysu
-new RegExp('foo', 'igmysud')
-第二个？后面的部分即为正则表达式的选项
-不同选项有不同的效果
-i ignoreCase  不区分大小写
-g global      全局匹配，即找到所有的匹配，而不是只找到一个匹配
-m multiline   多行匹配，有m的时候^$可以表示一行的开始和结束，没有m时表示整个字符串的开始和结束
-s dotAll      有时s，正则中的.可以代表任意符号
-u unicode     启用unicode,支持\u{xxxxx}
-d hasIndices  匹配结果中会包含每个捕获分组的开始和结束位置
-y sticky      每次匹配必须从首次开始的位置就成功
+如：
+/.(.)\1  前向引用
 
-
-
-`高圆圆
+`高圆圆     
 
 李一一
 
@@ -5019,12 +5008,228 @@ y sticky      每次匹配必须从首次开始的位置就成功
 (变成冰冰范， 一一李，三三张)
 
 
+正则的选项：
+/foo/igmysu
+new RegExp('foo', 'igmysud')
+第二个？后面的部分即为正则表达式的选项
+不同选项有不同的效果
+i ignoreCase  不区分大小写
+g global      全局匹配，即找到所有的匹配，而不是只找到一个匹配
+m multiline   多行匹配，有m的时候^$可以表示一行的开始和结束，没有m时表示整个字符串的开始和结束
+s dotAll      有s时，正则中的.符号可以代表任意符号
+u unicode     启用unicode,支持\u{xxxxx}
+d hasIndices  匹配结果中会包含每个捕获分组的开始和结束位置
+y sticky      每次匹配必须从首次开始的位置就成功
+
+
+
+
+
 /\b\w{7,}\b/
 
 
 
 function wildcardMatch(wildcard, str) {
     var resStr = wildcard.replaceAll('?')
+}
+
+
+
+2022/02/17
+
+'sdfafd'.search(/fo./)   // search会从第0位开始搜寻，exec是从lastIndex开始，
+                        // 如果lastIndex结果不为0，则会出现问题，需要避免
+
+String.prototype.search = function (re) {
+  if (typeof re === 'string' ) {
+    return
+  }
+  re.exec(this)
+}
+
+
+'adsfasdf'.match(/f(.)/)    // 分两种情况，/f(.)/g,全局匹配，
+                            // 或者 /f(.)/, match到第一个匹配的值即返回
+
+String.prototype.match2 = function (re) {
+  var str = this
+  if (typeof re === 'string') {
+    re = new RegExp('re')
+  }
+  if ( !re.global ) {
+    return re.exec(str)
+  }
+
+  var result = []
+  var oldLastIndex = re.lastIndex 
+  re.lastIndex = 0
+  var match
+  while (match = re.exec(str)) {
+    result.push(match[0]) {}
+  }
+  re.lastIndex = oldLastIndex
+  return result
+}
+
+String.prototype.matchAll2 = function (re) {
+  if (!re.global) {
+    throw new TypeError()
+  }
+  return this.
+}
+
+
+
+拷贝构造函数 ： 通过传入一个现有的对象给该类型的构造函数，构造函数能够返回一个相同的新对象
+
+String.prototype.split2 = function (spliter) {
+  if (typeof spliter == 'string') {
+    var result = []
+    if (spliter == '') {
+      for (var i = 0; i < this.length; i++) {
+
+      }
+    }
+
+
+    var startIdx = 0
+    
+    while (true) {
+      var idx = this.indexOf(spliter, startIdx)
+      if (idx > 0) {
+        result.push(this.slice(startIdx, idx))
+        startIdx = idx + spliter.length
+      } else {
+        result.push(this.slice(startIdx))
+        break
+      }
+    }
+    return result
+  }
+
+  else {
+    var result = []
+    var re = new RegExp(re.source, re.global ? re.flags : re.flags + 'g') {
+    var startIdx = 0
+    var match
+    while (match = re.exec(this)) {
+      result.push(this.slice(startIdx, match.index))
+      result.push(...match.slice(1))
+      startIdx = re.lastIndex
+    }
+    result.push(this.slice(startIdx))
+    return result
+    }
+
+}
+
+
+
+String.prototype.replace2 = function (replace, replacement) {
+
+  if (typerof replacer == 'string') {
+    var idx = this.indexOf(replacer)
+    if (id >= 0) {
+      var p1 = this.slice(0, idx)
+      var p3 = this.slice(idx + replacer.length)
+      var p2 
+      if (typeof replacement === 'function') {
+        p2 = replacement(replacer, idx, this)
+      } else {
+        p2 = replacement.replace2('$&', replacer)
+      }
+      return p1 + p2 + p3
+    }
+    return this
+  } else {
+    var result = ''
+    var match
+    var startIdx = 0
+    while (match  = replacer.exec(this)) {
+      result += this.slice(startIdx, match.idx)
+      if (typeof replacement == 'string') {
+        replacement = replacement.split2('$1').jin(match[1])
+      }
+      result += replacement(...match, match.idex, this.toString())
+      startIdx = replacer.lastIndex
+      if (!replacer.global) {
+        break
+      }
+    }
+    result += this.slice(startIdx)
+    return result 
+  }
+}
+
+
+
+
+tagged template string 模板调用
+
+function raw(ary, ...interplots) {
+  var result = ary[0]
+  for (var i = 0; i < ary.length; i++) {
+    result += interplots[i]
+    result += ary.raw[i + 1]
+  }
+  return result
+}
+
+r = String.raw
+
+r`woasgj\\idjsn`
+
+
+
+
+function run() {
+  console.log(1)
+  var reStr = reInput.value
+  var flags = getFlags()
+  var testString = testStringInput.value
+  if (reStr.length == 0) {
+    resultShow.innerHTML = testStringInput.value
+  }
+  try {
+  var re = new RegExp(reStr, flags)
+  }catch(e) {
+    if (e instanceof SyntaxError) {
+      resultShow.innerHTML = testString
+      return 
+    } else {
+      throw e
+    }
+  }
+  console.log(re)
+
+  var resultHTML = ''
+  var startIdx = 0
+  var match 
+
+  while (match = re.exec(testString)) {
+    resultHTML += testString.slice(startIdx, match,index)
+    resultHTML += '<strong>' + match[0] + '</strong>'
+    startidx = re.lastIndex
+    if (!re.global) {
+      break
+    }
+  }
+  resultHTML += testString.slice(startIdx)
+  resultShow.innerHTML = resultHTML
+} 
+
+function  getFlags() {
+  var flags = ''
+  if (reFlagsGlobal.checked) {
+    flag += 'g'
+  }
+  if (reFlagsMultiLine.checked) {
+    flag += 'm'
+  }
+  if (reFlagsIgnoreCase.checked) {
+    flag += 'i'
+  }
+  
 }
 
 </script>

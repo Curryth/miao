@@ -103,7 +103,7 @@ var curryth = function() {
 
     function findLastIndex(array, predicate, fromIndex = array.length-1) {
         predicate = iteratee(predicate)
-        for (var i = fromIndex; i > 0; i--) {
+        for (var i = fromIndex; i >= 0; i--) {
             if (predicate(array[i])) {
                 return i
             }
@@ -244,6 +244,56 @@ var curryth = function() {
         }
         return ary 
     }
+    
+    // 只需要展开arys，遍历每一个数组的每一项，有不同的就push进result，不要想的那么复杂
+    function union(...arys) {
+        var result = []
+        arys.forEach(ary => {
+            ary.forEach(item => {
+                if ( !(result.includes(item))) {
+                // 数组用includes， 对象才用 key in 
+                    result.push(item)
+                }
+            })
+        })
+        return result
+    }
+
+    function unionBy(...arys, predicate = identity) {
+        predicate = iteratee(predicate)
+
+        var result = []
+        arys.forEach(ary => {
+            ary.forEach(item => {
+                if ( !(result.includes( predicate(item) ) ) )  {
+                // 数组用includes， 对象才用 key in 
+                    result.push( predicate(item) )
+                }
+            })
+        })
+        return result
+    
+    }
+
+    function unionWith(objs,others, comparator) {
+        var ary = objs.concat(others)
+        // ary = flatten(arys) 也可以，那样函数输入参数为（arys,comparator)
+        var result = []
+
+        for (var i = 0; i < ary.length; i++) {
+            var flag = true
+            for (var j = i + 1; j < ary.length - 1; j++) {
+                if ( comparator(ary[j], ary[i]) ) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) {
+                result.push(ary[i])
+            }
+        }
+        return result
+    }
 
     /**
      *  O(N * N)写法
@@ -304,6 +354,33 @@ var curryth = function() {
      * forEach高阶函数的使用，遍历数组，不用套两个for循环了，很方便
      */
 
+    function uniqWith(ary, comparator) {
+        var result = []
+
+        for (var i = 0; i < ary.length; i++) {
+            var flag = true
+            for (var j = i + 1; j < ary.length - 1; j++) {
+                if ( comparator(ary[j], ary[i]) ) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) {
+                result.push(ary[i])
+            }
+        }
+        return result
+
+    }
+
+    function unzip() {
+
+    }
+    function unzipWith() {
+        
+    }
+
+
     function without(ary, ...values) {
 
         var res = []
@@ -340,16 +417,15 @@ var curryth = function() {
 
     function countBy(collection, predicate) {
         var predicate = iteratee(predicate)
-        var obj = {}
 
-        collection.forEach( item => {
+        collection.redcue( (obj,item) => {
             var key = predicate(item)
-            if (obj.includes(key)) {
-                obj[key]++
-            } else {
+            if ( !(key in obj) ) {
                 obj[key] = 1
+            } else {
+                obj[key]++
             }
-        })
+        },{})
 
         return obj
 
@@ -371,13 +447,12 @@ var curryth = function() {
         predicate = iteratee(predicate)
 
         var obj = {}
-        for (var item in collection) {
+        for (var i = 0; i < collection.length; i++) {
             var key = predicate(item)
             if ( !(key in obj) ) { // 这一步就很可
-                obj[key] = [item]  // 直接[item]也很可，没必要obj[key] = []再push了
-            } else {
-                obj[key].push(item)
-            }
+                obj[key] = []  // 直接[item]也很可，没必要obj[key] = []再push了
+            } 
+            obj[key].push(item)
         }
         return obj
     }
@@ -424,14 +499,19 @@ var curryth = function() {
     // 最后再返回由predicate(item)值组成的新数组
     //而这就是.map(item => predicate（item)  的由来
 
-    function map(ary, predicate = identity) {
+    function map(collection, predicate = identity) {
         predicate = iteratee(predicate)
+        var result = []
 
-        let result = []
-        for (var item of ary) {
-            result.push( predicate(item) ) 
+        if (Array.isArray(collection)) {
+            for (var item of collection) {
+                result.push(predicate(item))
+            }
+        } else {
+            for (var key in collection) {
+                result.push( predicate(collection[key]) )
+            }
         }
-
         return result
     }
 
@@ -470,7 +550,7 @@ var curryth = function() {
         return result
     }
     
-    function reduceRight(ary, predicate = identity) {
+    function reduceRight(ary, predicate = identity, accumulator) {
         var result = accumulator
         if (Array.isArray(collection)) {
             for (var i = collection.length - 1; i >= 0; i--) {
@@ -550,20 +630,11 @@ var curryth = function() {
     function some(collection, predicate) {
         predicate = iteratee(predicate)
         
-        if ( Array.isArray(collection) ) {
-            for (var i = 0; i < collection.length; i++) {
-                if ( predicate(collection[i]) ) {
-                    return true
-                }
-            }
-        } else {
-            for (var key in collection) {
-                if ( predicate(collection[key]) ) {
-                    return true
-                }
+        for (var key in collection) {
+            if (predicate(collection[key])) {
+                return true
             }
         }
-
         return false
     }
     
@@ -578,6 +649,7 @@ var curryth = function() {
                 if ( !predicate(collection[i]) ) {
                     return false
                 }
+                return true
             }
         } else {   // 如果collection是对象
             for (var key in collection) {
@@ -585,9 +657,9 @@ var curryth = function() {
                     return false
                 }
             }
+            return true
         }
-
-        return true
+        return false
     }
     
     // 这里用插入排序写一下，有点忘了这个排序的写法了
@@ -628,7 +700,7 @@ var curryth = function() {
     }
 
     function isArguments(val) {
-        return val instanceof Arguments
+        return Object.toString.call(val) === '[Object Arguments]'
     }
 
     function isDate(val) {
@@ -675,18 +747,18 @@ var curryth = function() {
             }
             return true
         }
-        if (!Array.isArray(val) && !Array.isArray(other) && a && b && typeof val === 'object' && typeof other == 'object') {
-            for (var key in a) {
-                if (!(key in b)) {
+        if (!Array.isArray(val) && !Array.isArray(other) && val && other && typeof val === 'object' && typeof other == 'object') {
+            for (var key in val) {
+                if (!(key in other)) {
                     return false
                 }
             }
-            for (var key in b) {
-                if (!(key in a)) {
+            for (var key in other) {
+                if (!(key in val)) {
                     return false
                 }
             }
-            for (var key in a) {
+            for (var key in val) {
                 if (!isEqual(val[key], other[key])) {
                     return false
                 }
@@ -703,8 +775,10 @@ var curryth = function() {
         return false
     }
 
-    function isError(val, other) {
-        
+    function isError(val) {
+        return Object.toString.call(val) === '[Object Error]'
+        // 或者 toString.call(val) === '[Object Error]'
+        // 或者 val instanceof Error
     }
 
     function isFinite(val) {
