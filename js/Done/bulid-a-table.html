@@ -1,0 +1,123 @@
+<html>
+    <head>
+        <title>aaa</title>
+        <style>
+            table,td,th {
+                border-collapse: collapse;
+                border: 1px solid black; 
+            }
+            .number, .boolean {
+                color: blue;
+                font-weight: bold;
+            }
+            .string {
+                color: red;
+            }
+            .nil {
+                color: grey;
+            }
+        </style>
+    </head>
+  <body>
+
+   <script>  // 浏览器解析页面的时候一路下来，遇到<script>标签会优先解析其内部的，如果没有放在<body>中，会被自动放到<head>中去，这样会导致一部分需要<body>的执行不了
+
+
+  function table(ary) {
+    var table = elt('table')  //创建 <table> </table>
+    var thead = elt('thead')   // 创建 <thead> </thead>
+    var tr = elt('tr')       // 创建 <tr> </tr>
+    thead.appendChild(tr)    // 将tr标签添加到thead标签中
+
+    var keys = []
+    for (var obj of ary) {     // Object.keys(obj)函数，拿到obj上所有属性名构成的数组，且只拿到自有属性的，不从原型上拿。
+      keys.push(...Object.keys(obj))     // 将所有对象的所有key一股脑都push到新建数组中，待会再去重。
+    }
+    var keys = Array.from(new Set(keys))  // new Set对keys数组去重，然后重新构成新数组。
+    var th = elt('th', '(index)')    // 创建 表头 <th>(index)</th>
+    tr.appendChild(th)              // 将其上面添加到tr标签中
+    for (var key of keys) {        // 遍历属性值数组，一一构建<th>name</th>这样的表签，并添加到tr标签中
+        th = elt('th', key)        // 这一步即可构建完成表格的第一行
+        tr.appendChild(th)         
+    }
+    table.appendChild(thead)            // 把构建好的第一行添加到表格中
+
+    var tbody = elt('tbody')           // 创建<tbody></tbody>
+
+    var i = 0                          // 创建表格的第一列，序号的部分，从0开始
+
+    for (var obj of ary) {            // 遍历每一个对象信息
+        var tr = elt('tr')
+        tr.appendChild(elt('td', String(i++))) // 添加好每个对象前的序号，从0到1到2依次增加。并把数组转化成字符串，方便添加成文本结点
+        for (var key of keys) {       
+            if (obj.hasOwnProperty(key)) {  // 针对每一个对象，如果有这个信息，即添加对应的信息标签，如果没有，则只添加空信息
+                if (typeof obj[key] == 'number') {
+                    var td = elt('td', String(obj[key]))
+                    td.classList.add('number')       // 添加类名，方便等下添加样式，和字体颜色
+                    tr.appendChild(td)
+                } else if (typeof obj[key] == 'string') {
+                    var td = elt('td', '"' + obj[key] + '"')  // 字符串拼接上双引号
+                    td.classList.add('string')
+                    tr.appendChild(td)
+                } else if (typeof obj[key] == 'boolean') {
+                    var td = elt('td', String(obj[key]))
+                    td.classList.add('boolean')
+                    tr.appendChild(td)
+                } else if (typeof obj[key] == null) {
+                    var td = elt('td', String(obj[key]))
+                    td.classList.add('nil')          // isNill， 判断是否是null或undefined
+                    tr.appendChild(td)
+                } else {              // 如果不是以上几种形式，则直接添加字符串进去td标签
+                    var td = elt('td', String(obj[key]))
+                    tr.appendChild(td)
+                }
+            } else {   // 如果当前遍历的对象没有该属性key,则添加一个空td标签即可
+                tr.appendChild(elt('td'))
+             }
+        }
+        tbody.appendChild(tr)   // 每循环遍历一个对象的所有信息，就将含有这个对象所有信息的tr标签添加到tbody标签中
+    }
+    table.appendChild(tbody)   // 把tbody标签再添加到table标签中
+
+    document.body.appendChild(table)   // 最后的最后，一定记得把table添加到document中，否则是无法在HTML页面中显示的
+}
+  
+
+
+  table([ {name: 'wang', age: 18, isFinite: true},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {gender: 'female', name: undefined}])
+
+    function elt(tagName, ...children) {  // children 都是tagName的子结点，如果为字符串，则构造成文本结点，并appendChild进去
+        var node = document.createElement(tagName)  // 先把tagName都构建成元素结点
+        for (var child of children) {              // 再遍历其子结点，如果是字符串，则构建为文本结点
+            if (typeof child == 'string') {       // 如果不是呢？子结点都是字符串？不懂,因为在我们自己的函数中，只给它字符串
+                child = document.createTextNode(child)
+            }
+            node.appendChild(child)
+        }
+        return node
+    }
+
+
+
+
+
+
+
+    </script>
+  </body>
+</html>
+

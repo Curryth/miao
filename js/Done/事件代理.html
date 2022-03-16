@@ -1,0 +1,28 @@
+<div>
+    <button>Jisoo</button>
+    <button>韩素希</button>
+    <button>Jennie</button>
+    <button>李宣美</button>
+    <button>金泫雅</button>
+    <button>朴孝敏</button>
+</div>
+
+<script>
+//    var buttons = document.querySelectorAll('button')
+
+//    for (var button of buttons) {
+//        button.addEventListener('click', function(e) {
+//            console.log(this.textContent + '是我老婆！')
+//        })
+//    }
+
+    // 由div来代理button的点击事件，事件代理，事件委托，event delete
+
+    var div = document.querySelector('div')
+
+    div.addEventListener('click', function(e) {
+        console.log('div clicked', 'from', e.target, '我老婆！')
+    })
+
+
+</script>

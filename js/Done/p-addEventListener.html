@@ -1,0 +1,39 @@
+<p>我大老婆是金智秀<button>JisooYYDS</button>二老婆是韩素希</p>
+
+<script> 
+    var p = document.querySelector('p')
+    var button = document.querySelector('button')
+     button.addEventListener('click', function(e) {
+            console.log('南韩第一美女没得说！！！')
+    })
+
+    p.addEventListener('click', function(e) {
+        if (e.target === p) {
+            console.log('不要点我老婆！！！')
+        } else {
+            console.log('（点击🔘）叫你别点了，还点？？？')
+        }
+    })
+
+
+
+    document.body.addEventListener('click', function(e) {
+        console.log('大喊我的老婆们最美第一遍！')
+        
+    })
+
+    document.documentElement.addEventListener('click', function(e) {
+        console.log('大喊我的老婆们最美第二遍！')
+       event.stopPropagation()  // 阻止传播到下一层
+        // event.stopImmediatePropagation() 
+    })
+
+    document.addEventListener('click', function(e) {
+        console.log('大喊我的老婆们最美第三遍！')
+    })
+
+    window.addEventListener('click', function(e) {
+        console.log('大喊我的老婆们最美第四遍！')
+    })
+
+</script>

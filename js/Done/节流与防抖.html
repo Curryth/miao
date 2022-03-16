@@ -1,0 +1,54 @@
+<textarea> Type something here</textarea>
+  <script>
+  var textarea = document.querySelector(" textarea");
+     var timeout;
+     // 防抖功能，即不会频繁执行函数
+     textarea.addEventListener("keydown", function() {
+         clearTimeout(timeout);  // 按下按键就会清除timeout函数，就不会log出后面的话，
+         timeout = setTimeout(function () {  
+             console.log(" You stopped typing .");
+         }, 500);
+     });
+
+
+
+            // 事件一直在发生，就一直延迟触发，事件停止，隔一小段时间再触发
+    function debounce(func, time) {
+        var timeout
+        return function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(func, time);
+        }
+    }
+             // throttle 效率,  每隔固定的一段时间触发一次
+    function throttle2(func, time) {
+        var lastTime = 0
+        return function (e) {
+          var now = Date.now()
+          if (now - lastTime > time) {
+              func(e)
+              lastTime = now
+          }
+        }
+    }
+
+    function throttle(func, time) {
+        var timeout
+        var scheduled = false    // 先设置有安排事件要发生为假
+        var event 
+        return function (e) {
+            event = e          // 把最新的事件更新并保存
+            // clearTimeout(timeout);
+            if (!scheduled) {        
+                scheduled = true
+                timeout = setTimeout(() => {
+                    func(event)
+                    scheduled = false
+                }, time);
+            }
+        }
+    }
+
+
+
+</script>

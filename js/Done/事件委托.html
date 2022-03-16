@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .Jisoo{
+            width: 300px;
+            height: 300px;
+            background-color: aquamarine;
+        }
+        .Jennie{
+            width: 200px;
+            height: 200px;
+            background-color: gold;
+        }
+        .Rosé{
+            width: 100px;
+            height: 100px;
+            background-color: violet;
+        }
+    </style>
+</head>
+<body>
+<div class="Jisoo">
+    <div class="Jennie">
+        <div class="Rosé"></div>
+    </div>
+<script>
+let Jisoo = document.querySelector(".Jisoo")
+let Jennie = document.querySelector(".Jennie")
+let Rosé = document.querySelector(".Rosé")
+
+Jisoo.onclick = function(e) {
+    // console.log(this)        // 点击其他两个，也会log出最外层Jisoo这个this
+    // console.log('hello, my name is Jisoo')
+    console.log(e.target)  // 点击哪个target就是哪个
+}
+// Jennie.onclick = function() {
+//    console.log('hello, my name is Jennie')
+// }
+// Rosé.onclick = function() {
+//    console.log('hello, my name is Rosé')
+// }
+
+</script>
+</div>
+</body>
+</html>

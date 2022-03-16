@@ -1,0 +1,72 @@
+
+<div class="dragable" style="left:0;top:0;background-color: cadetblue;"></div>
+<div class="dragable" style="left:0;top:0;background-color: gold;"></div>
+<div class="dragable" style="left:0;top:0;background-color: aquamarine;"></div>
+
+<p>
+    我老婆Jisoo不要拖拽文字哦，只能拖拽彩色方块
+</p>
+<style>
+    .dragable {
+        width: 100px;
+        height: 100px;
+        border: 2px solid;
+        position: fixed;
+    }
+    html {
+        user-select: none;
+    }
+</style>
+
+
+<script>
+
+    var lastX
+    var lastY
+
+    // 直接用事件代理，控制所有方块
+    document.addEventListener('mousedown', e => {
+        if (e.target.matches('.dragable')) { // 如果匹配到目标类名
+            lastX = e.clientX               // client是相对于浏览器窗口页面到位置
+            lastY = e.clientY
+
+            window.addEventListener('mousemove', move)
+        }
+
+    })
+
+    function move(e) {     
+        console.log('mousemove')
+        if (e.which == 0) {
+            window.removeEventListener('mousemove', move)
+        }
+        var dx = e.clientX - lastX   // 这次的位置减去上一次的位置，即为移动的距离
+        var dy = e.clientY - lastY
+        
+        console.log(dx, dy)
+        console.log(e.target)  // 鼠标移动太快，这里会log出<body>
+        e.target.style.left = log(   parseInt(log(e.target.style.left))  + dx + 'px' )  // 移动鼠标后，目标方块的位置随之移动
+        e.target.style.top = log(   parseInt(log(e.target.style.top))  + dy + 'px' )
+
+
+        lastX = e.clientX
+        lastY = e.clientY
+    }
+
+    function log(x) {
+        console.log(x)
+        return x
+    }
+
+    var moveable = e.target.closest('.dragable')
+
+    if (moveable) {
+        startX = e.clientX
+        startY = e.clientY
+        console.log(movingNode)
+        movingNode.style.zIndex = maxZindex++
+        nodeX = parseInt(movingNode.style.left)
+        nodeY = parseInt(movingNode.style.top)
+        window.addEventListener('mousemove', move)
+    }
+</script>

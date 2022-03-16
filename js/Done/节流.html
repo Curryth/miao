@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{height: 2000px;}
+    </style>
+</head>
+<body>
+<script>
+// 防抖：是只执行最后一次
+// 节流： 控制执行次数. 控制高频事件执行次数
+
+// 如果触发事件，就设置一个setTimeout，那重复触发会重复设置嘛？上课好像讲过
+// 防抖比节流就多了个clearTimeout，重复触发，就一直clear掉设置的setTimeout
+
+function throttle(fn, delay) {
+    let flag = true
+    return function() {
+        if (flag) {
+            setTimeout(() => {
+                fn.call(this)
+                flag = true
+            }, delay)
+        }
+        flag = false
+    }
+}
+
+window.onscroll = throttle(function() {
+    console.log('hello Jisoo')
+}, 500)
+</script>
+    
+</body>
+</html>

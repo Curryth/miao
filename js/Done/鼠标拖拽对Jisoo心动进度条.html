@@ -1,0 +1,40 @@
+<p>对老婆Jisoo的心动❤️指示条</p>
+
+<div style="background: pink; width: 100px; height: 50px;"></div>
+
+<script>
+    var rect = document.querySelector('div')
+    var lastX
+
+    rect.addEventListener('mousedown', function(event) {
+        if (event.which == 1) {
+            lastX = event.pageX
+            addEventListener('mousemove', moved)
+            event.preventDefault()  // 这一步干嘛的？
+        }
+    })
+
+
+    // 把buttonPressed和moved写成两个函数，模块化
+    function buttonPressed(event) {
+        if (event.buttons == null) {
+            return event.which != 0     // 有些浏览器event有which属性，有些没有就只能用event.buttons
+        } else {
+            return event.buttons != 0
+        }
+    }
+
+    function moved(event) {
+        if (!buttonPressed(event)) {  // 如果没有按下，则移除mousemove
+            removeEventListener('mousemove', moved)
+        } else {
+            var dist = event.pageX - lastX
+            var newWidth = Math.max(10, rect.offsetWidth + dist)
+            rect.style.width = newWidth + 'px'
+            lastX = event.pageX
+        }
+    }
+
+
+
+</script>

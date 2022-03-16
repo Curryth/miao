@@ -1,0 +1,27 @@
+<button>Jisoo</button>
+<p>Love you Jisoo</p>
+<script>
+
+    var button = document.querySelector('button')
+
+    button.addEventListener('click', function(e) {
+    console.log('button clicked')
+    })
+
+    var worker = new Worker('./worker.js')
+
+    var obj = {a:1, b:2}
+
+    worker.postMessage(obj)  // 给在浏览器执行的worker.js文件发消息
+     // 把数据结构化克隆发送过去，structuredClone()
+
+    // 接收worker发回的消息
+    worker.addEventListener('message', function(e) {
+
+    })
+
+
+
+
+
+</script>

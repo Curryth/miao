@@ -1,0 +1,91 @@
+<script>
+    var Character = {        // 字符
+        type: 'Character',
+        start: 0,
+        end: 1,
+        raw: 'a',
+        value: 'a',
+        ascii: 97
+    }
+    var Character = {        // 字符
+        type: 'Character',
+        start: 0,
+        end: 1,
+        raw: '\\k',      // 如果在字符串中为\k, 那么实际是\\k字符串？记混了。？不懂
+        value: 'k',      // 这里需要看看正则表达式题目那几节课，我没听懂。
+        ascii: 97
+    }
+
+    var Quantifier = {      // repeat 量词，b+
+        type: 'Quantifier',
+        重复的是: {
+            type: 'Character',
+            value: 'b',
+            ascii: 98
+        },
+        min: 2,         // {2,5},    如果是？， 则min=0，max=1。如果是*，则min=0,max=Infinity
+        max: 5,
+        greedy: true,  // 是否贪婪
+
+    }
+
+    var CharacterRange = {
+        type: 'CharacterRange',
+        start: {
+            type: 'Character',
+            value: 'i'
+        },
+        end: {
+            type: 'Character',
+            value: 'j'
+        }
+    }
+
+    var CharacterClass = {
+        type: 'CharacterClass',      // [^soi-jfwe]字符集
+        revert: true,   // 字符集是否取反，即是不是由^开头
+        elements: [
+            {
+              type: 'Character',
+              value: 's',
+            },
+            {
+                type: 'Character',
+                value: 'o',
+            },
+            CharacterRange     // 即i-j，我们可以单独写出来这个
+        ]
+    }
+
+    var CharacterEscape = {        // 转译符，\d
+        type: 'CharacterEscape',
+        value: '\\d',          // 要多加一个\, 为什么？忘了
+    }
+
+    var CaptureGroup = {        // (?<!ow|e|aa+b)
+        type: 'CaptureGroup',   // 捕获分组
+        start: 4,  // 起始位置
+        end: 17,
+        raw: '(?<!ow|e|aa+b)',
+        branches: [          // 分支，｜或
+          {
+              type: 'Branch',
+              elements: ['o', 'w']
+          },
+          {
+              type: 'Branch',
+              elements: ['e']
+          },
+          {
+              type: 'Branch',
+              elements: ['a', 'a+', 'b']
+          },
+        ],
+        isAssertion: true,       // 是否为零宽断言
+        lookahead: false,        // 是先行断言还是后发断言
+        positive: false,      // 是正预测还是负预测
+        name: 'owijef',        // 也可以为具名分组，?<  >  中间加分组名字，  // ?: 是否计数，这个考虑到了吗？
+        index: 1,              // 是第几个括号
+    }
+
+</script>

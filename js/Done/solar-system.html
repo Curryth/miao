@@ -1,0 +1,64 @@
+<style>
+    #周老师的学生们, #周老师, #小刘 {
+        position: fixed;
+        border-radius: 9999px;
+        text-align: start;  
+        overflow: hidden;
+    }
+    #周老师的学生们 {
+        width: 100px;
+        height: 100px;
+        background-color: rgb(100, 235, 100);
+    }
+    #周老师 {
+        width: 60px;
+        height: 60px;
+        background-color: pink;
+    }
+    #小刘 {
+        width: 40px;
+        height: 40px;
+        background-color: yellow;
+    }
+</style>
+
+<span id="周老师的学生们" style="left: 0; top: 0;">周老师的学生们</span>
+<span id="周老师" style="left: 0; top: 0;">周老师</span>
+<span id="小刘" style="left: 0; top: 0;">小刘</span>
+
+<script>
+    var 周老师的学生们 = document.querySelector('#周老师的学生们')    // 选择器要写成#id
+    var 周老师 = document.querySelector('#周老师')
+    var 小刘 = document.querySelector('#小刘')
+
+    var lastTime = null
+    var angle = 0
+
+    requestAnimationFrame(function animate(time) {
+        if (lastTime !== null) {
+            angle += (time - lastTime) * 0.0002
+        }
+        lastTime = time
+
+        var 周老师的学生们x = Math.cos(angle) * 100 + 450
+        var 周老师的学生们y = Math.sin(angle) * 100 + 450
+        周老师的学生们.style.left = 周老师的学生们x + 'px'
+        周老师的学生们.style.top = 周老师的学生们y + 'px'
+        
+        var angle1 = angle * 5
+        var 周老师x = Math.cos(angle1) * 250 + 周老师的学生们x + 25 - 10  // 加上太阳的位置，然后加上太阳的半径，再减去地球自身的半径
+        var 周老师y = Math.sin(angle1) * 250 + 周老师的学生们y + 25 - 10  // 不加减半径，地球会以自身的左上角，也就是起点部分，围绕着太阳的左上角转。
+        周老师.style.left = 周老师x + 'px'                    // 去掉边框圆角的时候这个情况可以看得很清楚
+        周老师.style.top = 周老师y + 'px'
+        
+        var angle2 = angle1 * 5
+        var 小刘x = Math.cos(angle2) * 50 + 周老师x + 10 - 5
+        var 小刘y = Math.sin(angle2) * 50 + 周老师y + 10 - 5
+        小刘.style.left = 小刘x + 'px'
+        小刘.style.top = 小刘y + 'px'
+
+        if (time < 10000) {   // 给他一个停止时间，10000毫秒
+            requestAnimationFrame(animate)
+       }
+    })
+</script>

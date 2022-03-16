@@ -1,0 +1,29 @@
+<p>Drag the bar</p>
+
+<div style="background: pink; width: 100px; height: 88px;"></div>
+
+<script>
+    var bar = document.querySelector('div')
+    var lastX 
+    
+    bar.addEventListener('mousedown', function(e) {
+        console.log(e)
+        if (e.which == 1) {        // 这个事件的which属性是啥来着？
+            lastX = e.pageX
+            window.addEventListener('mousemove', onMove) 
+            // 把event添加到window上，即使鼠标离开了bar，只要在窗口内移动，都可以继续执行下面的步骤
+            e.preventDefault()
+        }
+    })
+
+    function onMove(e) {
+        if (e.which == 0 || e.which == null) {
+            window.removeEventListener('mousemove', onMove)
+        } else {
+            var diff = e.pageX - lastX
+            var newWidth = bar.offsetWidth + diff 
+            bar.style.width = Math.max(10, newWidth) + 'px'
+            lastX = e.pageX
+        }
+    }
+</script>

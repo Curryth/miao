@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            border: 1px  solid;
+            position: relative;
+            display: inline-block;
+        }
+        ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            xheight: 50px;
+            width: 100%;
+            border: 1px solid;
+            display: none;
+        }
+        input:focus + ul:not(:empty) {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div>
+        <input type="text" name="word">
+        <ul class="suggestions"></ul>
+    </div>
+
+    <script>
+        var input = document.querySelector('input')
+        var suggestions = document.querySelector('.suggestions')
+
+//        input.addEventListener('input', function(e) {
+//            var word = input.value             // word是输入
+//            var suggests = getSuggests(word)   // 联想词
+//            var html = suggests.map(it => {
+//                return `<li>${it}</it>`
+//            }).join('')
+//            suggestions.innerHTML = html
+//        })
+        
+        var 已经显示出来的词的原始词的输入时间 = 0
+
+        // （先输入a, 再输入ab,）就是a1a2a3这一块联想词要显示出来的时候，发现自己的原始词输入time小于ab1ab2ab3原始词输入时间，
+       // 然后它就不会显示出来了
+
+        input.addEventListener('input', function(e) {
+            var word = input.value
+            var time = Date.now()  // 这次输入的词的时间
+
+            getSuggests(word, function(suggests) {
+                if (time >= 已经显示出来的词的原始词的输入时间) {
+                    var html = suggests.map(it => {
+                    return `<li>${it}</it>`
+                     }).join('')
+                    suggestions.innerHTML = html
+                    已经显示出来的词的原始词的输入时间 = time
+                }
+            })
+        })
+
+        function getSuggests(word, callback) {        // 构建获取联想词的函数
+            if (word.length < 3) {
+                return []
+            } 
+            var result = []
+            for (var i = 0; i < 10; i++) {  // 得到10个联想词
+                result.push(word + Math.random().toString(16).slice(2,7))
+            }     // 每个联想词由word和随机后缀拼接而成
+            setTimeout(() => {
+                callback(result)
+            }, 500 + Math.random() * 1000)  // 模拟网速不好的情况，延迟输出联想词
+            return result
+        }
+
+
+    </script>
+</body>
+</html>

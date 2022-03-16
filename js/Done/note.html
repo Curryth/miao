@@ -1,0 +1,43 @@
+Notes: <select
+<textarea></textarea>
+
+<script>
+
+    function saveToStorage() {
+        localStorage.lastSelectedNote = lastSelectedNote
+        localStorage.setItem("notes, JSON")
+    }
+
+    list.addEventListener("change", function() {
+        current.value = notes[list.value]
+    })
+
+
+
+
+
+    function addNote() {
+        list.
+        current,value = notes[name]
+    }
+
+    function deleteNote() {
+        if (confirm('确定删除嘛？')) {
+            delete notes[list.value]
+            var selectedOption = Array.from(lis.options).find(it => it.selected)
+            list.removeChild(selectedOption)
+            list.value = Array.from(list.option)[0].value
+            current.value = notes[list.value]
+
+            saveToStorage()
+        }
+    }
+
+    window.addEventListener('storage', function(e) {
+        console.log()
+
+
+
+ 
+    })
+</script>

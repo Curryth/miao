@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <input type="text">
+<script>
+    // 用户操作过于频繁
+    // 只需要最后一次操作
+    let inp = document.querySelector('input')
+
+    inp.oninput = debounce(function() {
+        console.log(this.value)
+    }, 500)
+
+    // 利用闭包来封装防抖的function
+    function debounce(fn, delay) {  // fn回调函数， delay延迟时间
+        let t = null   // 把原本的全局变量t,放进闭包里，
+        return function() { // return 一个内部函数，内部函数使用了外部函数debounce的一个变量t
+            if (t !== null) { // 因为是闭包所以t不会被销毁
+                clearTimeout(t)
+            }
+            t = setTimeout(() => {
+                console.log(this, 'this')
+               fn.call(this)         // 这里的this是input.oninput
+            }, 500)               // 这里不绑定的话，在外面使用this可能会变成window 
+        }
+    }
+
+
+    function throttle(func, time) {
+            var event
+            var timeout
+            var scheduled = false
+
+            return function(e) {
+                event = e
+                if (!scheduled) {
+                    scheduled = true
+                    timeout = setTimeout(() => {
+                        func(event)
+                        scheduled = false
+                    }, time)
+                }
+            }
+
+        }
+
+        
+
+
+</script>
+</body>
+</html>

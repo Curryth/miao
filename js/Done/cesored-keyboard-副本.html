@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+    <textarea name="" id="" cols="30" rows="10">aaaaa</textarea>
+    <button onclick="send()">提交</button>
+
+    <script>
+        var textarea = document.querySelector('textarea')
+
+
+
+        textarea.addEventListener('keydown', function(e) {
+            console.log(e)
+            if (e.key == 'Q' || e.key == 'W' || e.key == 'X') {
+                e.preventDefault()
+            }
+        })
+
+        textarea.addEventListener('dragover', function(e) {
+            console('dragover', e)
+            // e.preventDefault()
+        })
+
+        textarea.addEventListener('drop', function(e) {
+            e.preventDefault()
+        })
+        // 获取这个对象的value属性的属性描述符，这句话是什么意思，那这里为什么要getPrototype呢？
+        var valueDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(textarea), 'value')
+        
+        // 为什么要加一层包装？
+        Object.defineProperties(textarea, 'value', {
+            get: function() {
+                return valueDescriptor.get.call(this)
+            },
+            set: function(val) {
+                val = val.toString().replace(/[QWX]/g, '*')
+                valueDescriptor.set.call(this, val)
+            }
+        })
+
+        textarea.addEventListener('paste', function(e) {
+            console.log(e)
+            e.preventDefault()
+            var text = e.clipboardData.getData('text')
+
+            text = text.replace(/[嫂子]/g, '河蟹') // 替换掉全局的河蟹词
+
+            var beforeSelection = this.value.slice(0, this.selectionStart) // 句子汇总河蟹词前面的部分
+            var afterSelection = this.value.slice(this.selectionEnd)   // 后面的部分
+
+            this.value = beforeSelection + text + afterSelection     // 拼接出河蟹完的句子
+            this.selectionStart = this.selectionEnd = beforeSelection.length + text.length
+            // 复制进来一段文字后光标的位置变成原来的所在位置加上text的长度
+
+        })
+
+        textarea.addEventListener('copy', function(e) {
+            var text = 'aaaaaa'
+            text += '版权什么有比我嫂子更重要的嘛'
+            e.clipboardData.setData('text', text)
+            e.preventDefault()
+        })
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+</body>
+</html>

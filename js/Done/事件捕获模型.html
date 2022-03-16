@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        韩素希真的又飒又美，真的爱了！！！
+        <p>
+            啥时候才能去韩国迎娶我二老婆韩素希啊！
+            <button>BUTTON</button>
+        </p>
+    </div>
+
+    <script>
+        var div = document.querySelector('div')
+        var p = document.querySelector('p')
+        var button = document.querySelector('button')
+
+        div.addEventListener('click', function(e) {
+            console.log('div capture')
+        }, true)
+
+        div.addEventListener('click', function(e) {
+            console.log('div non capture')
+        })
+
+        p.addEventListener('click', function(e) {
+            console.log('p capture')
+        }, true)
+
+        p.addEventListener('click', function(e) {
+            console.log('p non capture')
+        })
+        button.addEventListener('click', function(e) {
+            console.log('button non capture')
+        })
+        button.addEventListener('click', function(e) {
+            console.log('button capture')
+            event.stopPropagation() // 阻止进入下一个阶段，但是本阶段后序的会执行完
+            // event.stopImmediatePropagation() // 立即在这里停止，本阶段后续的也不会执行
+        }, true)
+        button.addEventListener('click', function(e) {
+            console.log('button capture2')
+        }, true)
+        button.addEventListener('click', function(e) {
+            console.log('button capture3')
+        }, true)
+
+
+    </script>
+</body>
+</html>

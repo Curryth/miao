@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text">
+    <button>添加</button>
+    <ul>
+        <li>Jisoo</li>
+        <li>Jennie</li>
+        <li>Joy</li>
+        <li>Somi</li>
+    </ul>
+
+<script>
+    
+
+//     let li = document.querySelectorAll("li")
+//     let ul = document.querySelector("ul")
+//    for (let i = 0; i < li.length; i++) {
+//        li[i].onclick = function() {
+//            ul.removeChild(this)
+//           console.log(1)
+//        }
+//    }
+
+// 事件委托，子级的事件委托给父级来处理,点击ul依然可以获取li事件。
+// 因为事件捕获和事件冒泡，点击子级的li,可以冒泡到父级的ul上去
+// 所以可以把li上的事件委托给ul,减少了工作量
+// 利用事件委托来实现删除
+
+  let ul = document.querySelector("ul")
+  ul.onclick = function(e) {
+      ul.removeChild(e.target)
+      console.log(e.target)   // 这里log出来的就是点击的每个li标签事件
+  }
+
+</script>
+</body>
+</html>

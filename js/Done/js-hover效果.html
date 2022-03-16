@@ -1,0 +1,35 @@
+<div>
+    My GirlFriend 
+      <button>Jisoo</button><button>金智秀</button>
+    Is So Cute and I Love Her!!!
+</div>
+
+<style>
+    div.mouseover {
+        background-color: aquamarine;
+    }
+</style>
+<script>
+    var div = document.querySelector('div')
+    var button = document.querySelector('button')
+
+    div.addEventListener('mouseenter', function(e) {
+        console.log('div mouse enter capture')
+    }, true)
+
+    button.addEventListener('mouseenter', function(e) {
+        console.log('button nouse enter capture')
+    })
+
+    div.addEventListener('mouseenter', function(e) {
+        console.log(e)
+        div.classList.add('mouseover')
+    })
+
+    div.addEventListener('mouseleave', function(e) {
+        console.log(e)
+        div.classList.remove('mouseover')
+    })
+
+
+</script>

@@ -1,0 +1,299 @@
+<script>
+
+
+var ParseJSON = (function() {
+    var str = '{"xxxx":1112341,"y":2,"a":null,"b":false,"c":[1,2,null,{"a":1, "b":2},true,[4,5,6]],"d":{"z":{"y":1,"x":33}}}'
+    var i = 0               //      i指针
+  
+   // 外面申明ParseJSON函数，内部调用返回一个ParseJSON函数
+  // 构建一个闭包，返回一个函数parseValue()
+    return function ParseJSON(input) {
+        i = 0         // 把解析完移动到末尾的i重新置零放到首部来
+        str = input
+        return parseValue()
+    }
+    /**
+     * 思路：
+     *  用一个指针指向当前解析的位置
+     *  根据当前位置的符号就能确定解析出何种值
+     *  对于每种值，写出解析其值的一个函数
+     *  解析完成将指针移动到解析完成的下一位
+     * 
+     * 
+     * 
+     * 这个写法叫”递归下降“
+     */
+    
+     // 解析对象的时候，里面可能需要解析数组，解析数组的时候，里面可能嵌套对象
+     // 所以JSON解析是需要递归的
+
+     function passSpace() {
+         while(str[i] = '') {
+             i++
+         }
+     }
+     // 从某个位置开始解析出一个值，解析出什么类型取决于当前位置的符号
+    function parseValue() {
+        if (str[i] == '"') {
+             return parseString()   // 直接利用已写好的函数
+        }
+        if (str[i] == 't') {
+             return parseTrue()
+        }
+        if (str[i] == 'f') {
+             return parseFalse()
+        }
+        if (str[i] == 'n') {
+             return parseNull()
+        }        
+        if (str[i] >= '0' && str[i] <= '9') {
+             return parseNumber()
+        }
+        if (str[i] == '[') {
+            return parseArray()
+        }
+        if (str[i] == '{') {
+            return parseObject()
+        }
+    }
+
+    function parseObject() {   // 和下面数组的情况基本一模一样
+        var obj = {}
+        i++                   // skip {   跳过对象开头的{
+        if (str[i] == '}') {   // 跳过开头的{后，如果立马再遇见」,那么直接返回空对象{}
+            i++
+            return obj
+        }
+        while(str[i] !== '}') {
+            var key = parseString()    // 属性名肯定是字符串
+            if (str[i] !== ':') {      // 如果key之后不是不是：,则报错
+                throw new SyntaxError('Unexpected Token ' + str[i] + ' at pos ' + i)
+            } else  {
+              i++   // skip ':'           跳过对象中间的：
+            }
+            var value = parseValue()
+            obj[key] = value
+
+            if (str[i] == ',') {     // 如果遇到一个逗号，需要再走上一步value = parseValue
+                i++            // 遇到逗号，跳过它
+                continue                  // 因为对象里的每个值可能是任何形式的
+            }
+            i++    // skip '}'        // 跳过对象结尾的}, 对象扫描完毕，可以返回obj了
+            return obj
+        }
+    }
+
+    function parseObject2() {   // 和下面数组的情况基本一模一样
+        var obj = {}
+        i++                   // skip {   跳过对象开头的{
+        if (str[i] == '}') {   // 跳过开头的{后，如果立马再遇见」,那么直接返回空对象{}
+            i++
+            return obj
+        }
+        while(true) {
+            var key = parseString()    // 属性名肯定是字符串，这里会在parseString()里跳过key
+            i++   // skip ':'           跳过对象中间的：
+            var value = parseValue()
+            obj[key] = value
+            if (str[i] == ',') {     // 如果遇到一个逗号，需要再走上一步value = parseValue
+                i++            // 遇到逗号，跳过它
+                continue                  // 因为对象里的每个值可能是任何形式的
+            }
+            if (str[i] == '}') {
+                i++    // skip '}'        // 跳过对象结尾的}, 对象扫描完毕，可以返回obj了
+                return obj
+            } 
+        }
+    }
+
+    function parseArray() {
+        var ary = []
+        i++  // skip [   跳过数组开头的[
+        if (str[i] == ']') {        // 跳过数组开头的[后，如果立马再遇见],那么直接返回空数组[]
+            i++  // skip ]   当遇到]
+            return ary
+        }                                // 修改写法，如果遇到的不是结束符号]，那么就进入循环
+        while(str[i] !== ']') {          // 在数组中我们只会遇到逗号和反中括号，所以下面有两个if就行了。
+            var value = parseValue()
+            ary.push(value)    // 每次解析出一个value就要push进结果数组中去
+            if (str[i] == ',') {     // 如果遇到一个逗号，需要再走上一步value = parseValue
+                i++            // 遇到逗号，跳过它
+                continue                  // 因为数组里的每个值可能是任何形式的
+            }
+        }                
+        i++    // skip ']'        // 跳过数组结尾的], 数组扫描完毕，可以返回ary了
+        return ary
+    }
+
+    function parseArray2() {
+        var ary = []
+        i++  // skip [   跳过数组开头的[
+        if (str[i] == ']') {        // 跳过数组开头的[后，如果立马再遇见],那么直接返回空数组[]
+            i++  // skip ]   当遇到]
+            return ary
+        }                                // 修改写法，如果遇到的不是结束符号]，那么就进入循环
+        while(true) {          // 在数组中我们只会遇到逗号和反中括号，所以下面有两个if就行了。
+            var value = parseValue()
+            ary.push(value)    // 每次解析出一个value就要push进结果数组中去
+            if (str[i] == ',') {     // 如果遇到一个逗号，需要再走上一步value = parseValue
+                i++            // 遇到逗号，跳过它
+                continue                  // 因为数组里的每个值可能是任何形式的
+            }
+            if (str[i] !== ']') {
+                i++    // skip ']'        // 跳过数组结尾的], 数组扫描完毕，可以返回ary了
+                return ary
+            }
+        }                
+
+    }
+
+
+    // 此时i指向一个字符串的开始，
+    // 解析字符串，移动指针，返回解析出的字符串
+    function parseString() {
+        i++  // skip first " 跳过第一个引号
+        var start = i
+        while (str[i] !== '"') {
+            i++
+        }
+
+        // 此时i指向第二个 "
+        var s = str.slice(start, i)  // 解析两个“”中间的字符串
+        i++
+        return s
+    }
+
+    function parseNumber() {
+        var numStr = ''
+        while(str[i] >= '0' && str[i] <= '9') { // js中字符串可以做大小对比
+            numStr += str[i++]
+        }
+        return parseInt(numStr, 10)  // parseInt() 函数可解析一个字符串，并返回一个整数,这里是按十进制解析
+    }
+
+    function parseTrue() {
+        i += 4           // 这里直接这样就OK了？不需要if什么=T开头之类的吗？不懂
+        return true
+
+    }
+
+    function parseFalse() {
+        i += 5
+        return fasle
+    }
+
+    function parseNull() {
+        i += 4
+        return null
+    }
+
+}) ()
+
+
+
+
+
+
+
+
+       "|(&(t,f,t),!(t))"
+
+
+
+    {
+        fname: '|'
+        parameters: [ , true, ....]
+    }
+
+    {
+        fname: '!',
+        parameters: [false]
+    }
+
+
+    var str = "|(!(f),&(t,|(t,f)),t,t,t,t)"
+    var i = 0
+
+    function toJS(syntaxTree) {
+        if (typeof syntaxTree == 'object') {
+            if (syntaxTree.fname == '&') {
+                return syntaxTree.parameters.map(it => '(' + toJS(it) + ')').join('&&')
+            }
+            if (syntaxTree.fname == '|') {
+                return syntaxTree.parameters.map(it => '(' + toJS(it) + ')').join('||')
+            }
+            if (syntaxTree.fname == '!') {
+                return '!' + '(' + toJS(syntaxTree.parameters[0] + ')'
+            }
+        } else {
+            return String(syntaxTree)
+           }
+    }
+
+    function evaluate(syntaxTree) {
+        if (tpeof syntaxTree == 'object') {
+            if (syntaxTree.fname == '!') {
+                return !evaluate(syntaxTree.parameters[0])
+            }
+            if (syntaxTree.fname == '|') {
+                for (var parameters of syntaxTree.parameters) {
+                    if (evaluate(parameters) == true) {
+                        return true
+                    }
+                }
+                return false
+            }
+            if (syntaxTree.fname == '&') {
+                for (var parameters of syntaxTree.parameters) {
+                    if (evaluate(parameters) == false) {
+                        return false
+                    }
+                }
+                return false
+            }
+
+        } else {
+            return syntaxTree
+        }
+    }
+
+    function parseExpression() {
+        var obj = {
+            fname: str[i],
+            parameters: []
+        }
+        i++  // skip 函数名
+        i++  // skip 
+        if (str[i] == ')') {
+            i++
+            return obj
+        }
+        while(str[i] == ',') {
+
+        }
+    }
+
+    function parseFcall() {
+        var obj = {
+            fname: str[i],
+            parameters: []
+        }
+
+    }
+
+    function parseValue() {
+        if (str[i] == 't') {
+            return true
+        }
+        if (str[i] == 'f') {
+            return false
+        }
+
+    }
+
+
+
+语法树 syntax tree
+
+
+</script>

@@ -456,4 +456,343 @@ function filter(ary, test) {
    }
 
 
+
+function isMatch(p, s) {
+  if (p == '*') {
+    return true
+  }
+  if (p.length == 0) {
+    if (s.length == 0) {
+      return true
+    } else {
+      return false
+    } 
+  }
+  if (p[0] == '?') {
+    return isMatch(p.slice(1), s.slice(1))
+  } else if (p[0] == '*') {
+    // 当*匹配s中的i个字符
+    for (var i = 0; i <= s.length; i++) {
+      // 让*号匹配前i个字符
+      if (  isMatch( p.slice(1), s.slice(1) )  ) {
+        return true
+      }
+    }
+  } else {
+    if (p[0] == s[0]) {
+      return isMatch(s.slice(1), p.slice(1))
+    } else {
+      return false
+    }
+  }
+}
+
+
+<html>
+  <head>
+    <title>aaa</title>
+    <style>
+      table,td,th {
+        border-collapse: collapse;
+        border: 1px solid black;
+      }
+      .number, .boolean {
+        color: blue;
+        font-weight: bold;
+      }
+      .string {
+        color: red;
+      }
+      .nil {
+        color: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+
+      function table(ary) {
+        var table = elt('table')
+        var thead = elt('thead')
+        var tr = elt('tr')
+        thead.appendChild(tr)
+
+        var keys = []
+        for (var obj of ary) {
+          keys.push(...Object.keys(obj))
+        }
+        var keys = Array.from(new Set(keys))
+        var th = elt('th', '(index)')
+        tr.appendChild(th)
+        for (var key of keys) {
+          th = elt('th', key)
+          tr.appendChild(th)
+        }
+        table.appendChild(thead)
+
+
+        var tbody = elt('tbody')
+
+        var i = 0
+        for (var obj of ary) {
+          var tr = elt('tr')
+          tr.appendChild(elt('td', String(i++)))
+          for (var key of keys) {
+            if (obj.hasOwnProperty(key)) {
+              if (typeof obj[key] == 'number') {
+                var td = elt('td', String(obj[key]))
+                td.classList.add('number')
+                tr.appendChild(td)
+              } else if (typeof obj[key] == 'string') {
+                var td = elt('td', '"' + obj[key] + '"')
+                td.classList.add('string')
+                tr.appendChild(td)
+              } else if (typeof obj[key] == 'boolean') {
+                var td = elt('td', String(obj[key]))
+                td.classList.add('boolean')
+                tr.appendChild(td)
+              } else if (obj[key] == null) {
+                var td = elt('td', String(obj[key]))
+                td.classList.add('nil')
+                tr.appendChild(td)
+              } else {
+                var td = elt('td', String(obj[key]))
+                tr.appendChild(td)
+              }
+            } else {
+              tr.appendChild(elt('td'))
+            }
+          }
+          tbody.appendChild(tr)
+        }
+
+        table.appendChild(tbody)
+
+        document.body.appendChild(table)
+      }
+
+      table([ {name: 'wang', age: 18, isFinite: true},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {name: 'zhang', gender: 'male'},
+                  {gender: 'female', name: undefined}])
+
+
+
+      function elt(tagName, ...children) {
+        var node = document.createElement(tagName)
+        for (var child of children) {
+          if (typeof child == 'string') {
+            child = document.createTextNode(child)
+          }
+          node.appendChild(child)
+        }
+        return node
+      }
+
+
+
+    </script>
+
+  </body>
+</html>
+
+
+
+
+
+var svg = document.querySelector('svg')    // 先拿到svg元素
+    var gp = 10
+    
+
+    
+    function createCharacterGraph(node) {
+        var text = elt('text', {
+            'dominant-baseline': 'text-before-edge',
+            // dominant-baseline 属性指定主导基线？不懂
+            // text-before-edge 与父元素基线对准，即与g标签对齐，文字左上角与边框对齐
+            x: gp / 2,
+            y: gp / 2
+        }, node.value)
+
+        var textbox = text.getBBox()  //getBBox()允许我们确定对象适合的最小矩形的坐标。返回的坐标是相对于当前svg空间的
+        var rect = elt('rect', {
+            fill: 'dae9e5',
+            width: textBox.width + gp,
+            height: textBox.height + gp,
+            rx: '3'
+        })
+
+        var g = elt('g', {}, rect, text)
+        var box = g.getBBox()
+        
+        return {
+            g: g,
+            width: box.width,
+            height: box.height,
+        }
+    }
+</script>
+
+
+
+
+
+<script>
+
+function createCharacterClassGraph(node) {
+        var graphs = node.elements.map(createGraph)
+
+        var height = graphs.map(it => it.height).reduce(add) + (graphs.length + 1) * gp 
+        // 总高度等于每个graph的高度加上n+1个行间距
+        var width = graphs.map(it => it.width).reduce(max) + 2 * gp
+        // 最大宽度等于所有graph中最宽的那个加上2倍行间距
+
+        var fill = elt('rect', {           // 对所有graph外面套的这个大矩形，进行底色填充
+            width, height,
+            fill: '#cbcbba',
+            rx: '3',          // 设置边框圆角
+        })
+        var g = elt('g')
+
+        g.appendChild(fill)
+        
+        var y = gp
+        for (var graph of graphs) {   // 每个graph对应的g标签做相应的偏移
+            graph.g.setAttribute('transform', `translate(${(width - graph.width) / 2}, ${y})`) 
+            // 通过让每一个图片上的g标签偏移，来改变每一个子图片的位置
+            y += graph.height + gp  // y进行累加，可以做为下个图片的位置，即一开始垂直方向只偏移一个行间距,后面不断累加图片高度和行间距
+            g.appendChild(graph.g)           // 把每一个子图片的g标签都加到当前的g标签中去
+        }
+
+        var box = g.getBBox()            // 这个box是不是就是填充的那个box? 填充的不是rect吗？
+
+        return {
+            g: g,
+            width: box.width,
+            height: box.height,
+        }
+
+    }
+
+
+
+
+
+
+    a.addEventListener('click', function(e) {
+            if (!e.preventDefault()) {
+                window.open(this.href)
+            }
+        })
+        
+        var a = document.querySelector('a')
+        a.addEventListener('click', function(e) {
+            console.log('link clicked')
+            e.preventDefault()    // 阻止默认打开链接的事件发生
+            console.log(e)
+        })
+
+
+
+
+
+
+
+        var 标题栏 = e.target.closest('.win-title') // 找到离点击元素外层最近的最先匹配这个条件的元素
+
+        if (标题栏) { 
+            startX = e.clientX 
+            startY = e.clientY
+            movingNode = 标题栏.closest('.dragable')
+            nodeX = parseInt(movingNode.style.left)
+            nodeY = parseInt(movingNode.style.top)
+            window.addEventListener('mousemove', move)
+        }
+        
+        if (e.target.closest('.dragable')) {   // 只要最外层有符合条件的
+            e.target.closest('.dragable').style.zIndex = maxZindex++  // 图层的层号zIndex就++
+        }
+
+
+
+
+
+
+
+        function throttle(func, time) {
+            var event
+            var timeout
+            var scheduled = false
+
+            return function(e) {
+                event = e
+                if (!scheduled) {
+                    scheduled = true
+                    timeout = setTimeout(() => {
+                        func(event)
+                        scheduled = false
+                    }, time)
+                }
+            }
+
+        }
+
+
+        function debounce(func,time) {
+            let t = null
+            return function() {
+                if (t !== null) {
+                  clearTimeout(t)
+                }
+                t = setTimeout(() =>{
+                    func.call(this)
+                },time)
+            }
+        }
+
+        function debounce(func, time) {
+            var timeout
+            return function() {
+                clearTimeout(timeout)
+                timeout = setTimeout(func, time)
+            }
+        }
+
+        settimeout(() => {
+
+callback(result)
+}, 500 + Math.random() * 200)
+callback(result)
+
+
+        // 回调函数
+        function readFile(file, callback) {
+            var fr = new FileReader()
+            fr.addEventListener('load', function() {
+                callback(fr.result)
+            })
+            fr.readAsText(file)
+        }
+
+        var content = readFile(file)
+
+        readFile(file, function(content) {
+            content = content.replace('foo', 'FOO')
+        })
+
+
+
+
+
 </script>

@@ -1,0 +1,61 @@
+<html>
+<script>
+
+// 作用域链
+// 内部函数使用变量，先会在当前作用域找有没有需要的变量，如果没有就向上寻找，一直找到全局环境
+
+let a = 10
+let b = 20
+function fun() {
+    let a = 30
+    let c = 40
+    function fun() {
+        let a = 50
+        let d = 60
+    }
+}
+
+
+// 闭包：函数嵌套函数，内部函数就是闭包
+// 正常情况下，函数执行完成，内部变量就会销毁
+// （销毁：释放内存空间）
+// 闭包， 内部函数没有执行完成，外部函数变量不会被销毁
+// 应用：封装一段代码
+function outerFun() {
+    let a = 10
+    function innerFun() {
+        console.log(a)
+    }
+    return innerFun
+}
+let fun = outerFun()
+fun()
+
+
+
+// lodash写法
+let Jisoo = (function() {
+    let a = 10        // 私有变量，别人访问不了
+    let b = 20
+    function add() {
+        return a + b
+    }
+    function sub() {
+        return a - b
+    }
+    return {
+        add: add,      // 外界只能访问暴露出来的add,sub
+        sub: sub,
+    }
+})()
+
+// 利用闭包封装代码，实现模块化的功能
+let result1 = Jisoo.add()
+let result2 = Jisoo.sub()
+console.log(result1)
+console.log(result2)
+
+</script>
+</body>
+</html>
+<body>

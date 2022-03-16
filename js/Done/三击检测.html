@@ -1,0 +1,26 @@
+<script>
+
+    var lastClickTime = 0
+    var count = 1
+
+    window.addEventListener('click', function(e) {
+
+        var now = Date.now()
+        console.log('我老婆Jisoo点了一下鼠标', now, e)
+       
+        if (now - lastClickTime < 600) {
+            count++
+        } else {
+            count = 1
+        }
+
+        if (count == 2) {
+            console.log('我老婆Jisoo点了两下鼠标')
+        }
+        if (count == 3) {
+            console.log('我老婆Jisoo点了三下鼠标')
+        }
+
+        lastClickTime = now 
+    })
+</script>

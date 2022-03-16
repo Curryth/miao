@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <textarea name="" id="" cols="30" rows="10"></textarea>
+    <button onclick="send()"></button>
+
+    <script>
+        var textarea = document.querySelector('textarea')
+
+        textarea.addEventListener('keydown', function(e) {
+            console.log(e)
+            if (e.key == 'Q' || e.key == 'W' || e.key == 'X') {
+                e.preventDefault()
+            }
+        })
+
+       // 防止拖拽
+        textarea.addEventListener('dragover', function(e) {
+            console.log('dragover')
+            e.preventDefault()
+        })
+        
+
+        textarea.addEventListener('drop', function(e) {
+            e.preventDefault()
+        })
+
+        textarea.addEventListener('input', function(e) {
+            console.log(e)
+            e.preventDefault()
+
+        })
+                     不懂，草
+        var valueDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(textarea), 'value')
+
+        // 加一层包装，干啥的？
+        Object.defineProperty(textarea, 'value', {
+            get: function() {
+                return valueDescriptor.get.call(this)
+            },
+            set: function(val) {
+                val = val.toString().replace(/[QWX]/g, '*')
+                valueDescriptor.set.call(this, val)
+            }
+
+        })
+
+        textarea.addEventListener('paste', function(e) {
+            console.log(e)
+            e.preventDefault()
+            var text = e.clipboardData.getData('text')
+
+            text = text.replace(/[QWX]/g, '*')
+
+            var beforeSelection = this.value.slice(0, this.selectionStart)
+            var afterSelection = this.value.slice(this.selectionEnd)
+
+            this.value = beforeSelection + text + afterSelection
+            this.selectionStart = this.selectionEnd = beforeSelection.length + text.length
+
+
+            e.clipboardData.setData('text', 'aaaaaa')
+            console.log(a)
+        })
+
+        textarea.addEventListener('copy', function(e) {
+            var text = 'aaaaaaa'
+            text += '版权声明'
+            e.clipboardData.setData('text/plain', text)
+            e.preventDefault()
+        })
+    </script>
+</body>
+</html>

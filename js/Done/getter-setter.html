@@ -1,0 +1,109 @@
+<script>
+
+// 给对象添加不可枚举的伪属性
+
+// Object对象原型上具有__defineGetter__和__defineSetter__方法，通过这两种方法，可以为对象添加伪属性
+// Object.prototype.__defineGetter__()
+
+const obj1 = {
+    firstName: 'Jisoo',
+    lastName: 'King'
+}
+// 添加fullName属性，并将函数绑定在这个属性上
+obj1.__defineGetter__('fullName', function() {
+    return this.firstName + ' ' + this.lastName
+})
+
+console.log(obj1.fullName)     // 输出'Jisoo King'
+
+
+
+const obj2 = {
+    firstName: '',
+    lastName: '',
+}
+
+obj2.__defineSetter__('fullName', function(v) {
+    const names = v.split(' ')
+    this.firstName = names[0]
+    this.lastName = names[1]
+})
+
+obj2.fullName = 'Jennie King'
+
+console.log(obj2.firstName)        // 输出 ‘Jennie’
+console.log(obj2.lastName)         // 输出 ‘King’
+
+
+
+// 静态方法Object.defineProperty()和Object.defineProperties()
+
+
+const obj1 = {
+    firstName: '',
+    lastName: '',
+}
+
+    Object.defineProperties(obj1, {
+        fullName: {
+            get: function () {
+                return this.firstName + ' ' + this.lastName
+            },
+
+            set: function(v) {
+                const names = v.split(' ')
+                this.firstName = names[0]
+                this.lastName = names[1]
+            }
+        },
+
+        job: {
+            get: function() {
+                return this._job.toString().toUpperCase()
+            },
+
+            set: function(v) {
+                this._job = v
+            }
+        }
+
+    })
+
+
+
+    obj1.fullName = 'Jisoo King'
+    console.log(obj1.fullName)
+    console.log(obj1.firstName)
+    console.log(obj1.lastName)
+
+    obj1.job = 'black pink'
+    console.log(obj1.job)
+
+
+
+// Object.defineProperties()
+
+const obj1 = {
+    firstName: '',
+    lastName: '',
+    _job: ''
+}
+
+Object.defineProperties(obj1, 'fullName', {
+    get: function () {
+        return this.firstName + ' ' + this.lastName
+    },
+
+    set: function(v) {
+        const names = v.split(' ')
+        this.firstName = names[0]
+        this.lastName = names[1]
+    }
+})
+
+obj1.fullName = 'Jisoo King'
+console.log(obj1.fullName)
+console.log(obj1.firstName)
+console.log(obj1.lastName)
+
+</script>

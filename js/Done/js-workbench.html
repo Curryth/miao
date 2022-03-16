@@ -1,0 +1,25 @@
+<textarea name="" id="" cols="30" rows="10">
+    var a = 1
+    var b = 2
+    var c = a * b
+    console.log(c)
+    b * b
+</textarea>
+<button onclick="run()">Run</button>
+<pre></pre>
+
+<script>
+    var textarea = document.querySelector('textarea')
+    var pre = document.querySelector('pre')
+
+    function run() {
+        var code = textarea.value
+        try {
+            var result = eval(code)    // eval()计算字符串的运算结果
+            pre.textContent = String(result)
+        } catch(e) {
+            pre.textContent = e
+        }
+
+    }
+</script>

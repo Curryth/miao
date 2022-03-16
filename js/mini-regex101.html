@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Min Regex 101</title>
+    <style>
+        strong:nth-child(odd) {
+            background-color: #d5ebff;
+        }
+        strong:nth-child(even) {
+            background-color: #9fcfff;
+        }
+        strong:empty {  
+            display: inline-block;
+            width: 2px;
+            margin-left: -1px;
+            margin-right: -1px;
+            height: 1.2em;
+            vertical-align: bottom;
+            background-color: red;
+        }
+        #string {
+            width: 400px;
+            position: relative;
+
+        }
+        textarea, pre{
+            
+            top: 1;
+            margin: 0;
+            width: 100%;
+            height: 150px;
+            font-size: 24px;
+            font-family: consolas;
+            padding: 10px;
+            border: 1px solid;
+            overflow: auto;
+            background-color: transparent;
+            white-space: pre-wrap;
+            overflow: break-word;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div>REGULAR EXPRESSION</div>
+    <input type="text" id="reInput" value="\b|f.." oninput="run()">
+    <div>    
+    <label>g<input type="checkbox" checked id="reFlagGlobal"></label>
+    <label>m<input type="checkbox" id="reFlagMultiple"></label>
+    <label>i<input type="checkbox" id="reFlagsIgnoreCase"></label>
+    <label>y<input type="checkbox" id="reFlagSticky"></label>
+    <label>u<input type="checkbox" id="reFlagUnicode"></label>
+    <label>s<input type="checkbox" id="reFlagSingleLine"></label>
+    <label>d<input type="checkbox" id="reFlagDollarEndOnly"></label>
+    </div>
+    <div>TEST STRING</div>
+    <div id="'string">
+        <textarea onscroll="scrollSync()" spellcheck="true" id="testStringInput" cols="30" rows="5" oninput="run()">afss sdfgsg fdll ghsg hgff asf</textarea>
+        <pre id="resultShow"></pre>
+    </div>
+
+    
+    <script>
+      // 可以用元素的id做为变量名访问到这个元素
+      function run() {
+          var reStr = reInput.value
+          var flags = getFlags() 
+          var testString = testStringInput.value
+          if (reStr.length == 0) {   // 如果清空输入框，输出框高亮去除。
+              resultShow.innerHTML = testString
+              return 
+          }
+
+          try {
+              var re = new RegExp(reStr, flags)
+          } catch(e) {
+              if (e instanceof SyntaxError) {
+                  resultShow.innerHTML= testString // 如果报错了，直接就等于就行，不加高亮了
+                  return 
+              } else {
+                  throw e
+              }
+          }
+
+          var resultHTML = ''
+          var startIdx = 0
+          var match
+
+          while(match = re.exec(testString)) {
+              resultHTML += testString.slice(startIdx, match.index) // 上一次匹配到的东西
+              resultHTML += '<strong>' + match[0] + '</strong>'      // 这一次匹配到的东西,<em></em>字体倾斜
+              startIdx = re.lastIndex   // 每次循环需要更新lastIndex的值
+              if (match[0] == '') {  // 如果匹配到的是空白内容，则主动增加lastIndex的值，否则会陷入死循环
+                  re.lastIndex++
+              }
+              if (!re.global) {
+                  break
+              }
+          }
+          resultHTML += testString.slice(startIdx)
+          resultShow.innerHTML= resultHTML // 高亮没办法加到文本框内，暂时加到外面一行，因为是纯文本的形式，没有value，所有写成innerHTML
+
+      }
+
+      run()   // 页面刷新一次就先运行一次，这里直接加个run(),上面不需要run button了
+
+
+      function scrollSync() {
+          resultShow.scrollTop = testStringInput.scrollTop
+      }
+
+      function getFlags() {
+          var flags = ''
+          if (reFlagGlobal.checked) {
+              flags +='g'
+          }
+          if (reFlagMultiple.checked) {
+              flags +='m'
+          }
+          if (reFlagSticky.checked) {
+              flags +='y'
+          }          
+          if (reFlagUnicode.checked) {
+              flags +='u'
+          }          
+          if (reFlagSingleLine.checked) {
+              flags +='s'
+          }
+          if (reFlagDollarEndOnly.checked) {
+              flags +='d'
+          }
+          return flags
+      }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<script>
+
+  // throw new Error（error）
+  var a = 5
+  try {
+    if (a == 5) {
+           // 抛出错误
+             throw new Error("loopTerminates")
+    }
+  } catch(e) {
+    console.log(e)       // 打印出Error对象：Error：loopTerminates
+    console.log(e.message)  // 打印： loopTerminates
+  }
+
+  // throw error
+  var a = 5
+  try {
+    if (a == 5) {
+        // 抛出错误
+        throw "loopTerminates"
+    }
+  } catch(e) {
+    console.log(e)        // 打印： loopTerminates
+    console.log(e.message)   // 打印： undefined
+  }
+
+
+  // test
+  function Vector(x, y) {      // Vector构造函数
+    this.x = x
+    this.y = y
+  }
+  Vector.prototype.plus = function(other) {      // 为Vector添加一个plus属性 
+    return new Vector(this.x + other.x, this.y + other.y)
+  }
+  function testVector() {
+    var p1 = new Vector(10, 20)
+    var p2 = new Vector(-10, 5)
+    var p3 = p1.plus(p2)
+
+    if (p1.x !== 10) {
+      return "fail: x property"
+    }
+    if (p1.y !== 20) {
+      return "fail: y property"
+    }
+    if (p2.x !== -10) {
+      return "fail: nefgative x property"
+    }
+    if (p3.x !== 0) {
+      return "fail: x from plus"
+    }
+    if (p3.y !== 25) {
+      return "fail: y from plus"
+    }
+    return "everything ok"
+  }
+  console.log(testVector())
+  // everything is ok 
+
+
+
+  function promptDirection(question) {
+    var result = prompt(question) 
+      if (result.toLowerCase() == "left") {
+        return "L"
+      }
+      if (result.toLowerCase() == "right") {
+        return "R"
+      }
+      throw new Error("Invalid direction:" + result)
+  }
+
+  function look() {
+    if (promptDirection("Which way?") == "L") {
+      return "a house"
+    } else {
+      return "two angry bears"
+    }
+  }
+
+  try {
+    console.log("You see", look())  // 错误在promptDirection中产生，会越过look()函数，冒泡到try中来
+  } catch (error) {
+    console.log("Something went wrong:" + error)
+  }
+
+
+
+
+  堆栈展开
+
+  function f() {
+    g()
+  }
+  function g() {
+    h()
+  }
+  function h() {
+    2()
+  }
+
+
+  var context = null
+
+  function withContext(newContext, body) {
+    var oldContext = context
+    context = newContext
+    var result = body()  // 如果这里发生异常，堆栈崩溃，后面的语句将不会执行
+    context = oldContext
+    return result
+  }
+
+  function withContext(newContext, body) {
+    var oldContext = context
+    context = newContext
+    try {
+      return body()      // 这里出错的话，错误会抛出，但是不会影响finally里语句的执行
+    } finally {     // 无论如何都会执行这里的语句，复原context的值
+      context = oldContext
+    }
+  }
+
+  try {
+    withContext(5, function() {
+      if (context < 10) {
+        throw new Error("Not enough context")
+      }
+    })
+  } catch (e) {
+    console.log("Ignoring:" + e)
+  }
+  // Ignoring: Error: Not enough context!
+
+  console.log(context)    // 即使withContext爆炸了，这里的context最后仍然会还原为null
+
+
+
+
+  try {
+    xxx
+  } catch (e) {
+    if (e instanceof TypeError) {  // 判断e的错误类型
+
+    }
+    if (e instanceof ReferenceError) {  // e.message也行
+      
+    }
+    throw e  // 当e是未知类型的，需要把错误抛出去
+  }
+
+
+  // Java里的写法
+  try {
+    xxx
+  } catch (TypeError e) {
+
+  } catch (ReferenceError e) {
+
+  }
+
+  for (;;) {
+    try {
+      var dir = promtDirection("where?") // 这里的错误是拼写错误而不是预想中的方向错误
+      console.log("You chose", dir)
+      break
+    } catch (e) {
+      console.log("Not a valid direction. Try again.")
+    }
+  }
+
+
+// 分割线
+  function InputError(message) {
+    this.message = message
+    this.stack = (new Error()).stack        // 这里有大坑深坑
+  }
+  InputError.prototype = Object.create(Error.prototype)
+  InputError.prototype.name = "InputError"
+
+
+
+  function promptDirection(question) {
+    var result = prompt(question, "") 
+      if (result.toLowerCase() == "left") {
+        return "L"
+      }
+      if (result.toLowerCase() == "right") {
+        return "R"
+      }
+      throw new Error("Invalid direction:" + result)
+  }
+
+  for (;;) {
+    try {
+      var dir = promptDirection("where?") 
+      console.log("You chose", dir)
+      break
+    } catch (e) {
+      if (e instanceof InputError) {
+        console.log("Not a valid direction. Try again.")
+      } else {
+        throw e
+      }
+    }
+  }
+
+
+// 断言
+  function AssertionFailed(message) {
+    this.message = message
+  }
+  AssertionFailed.prototype = Object.create(Error.prototype)
+
+  function assert(test, message) {
+    if (!test) {
+      throw new AssertionFailed(message)
+    }
+  }
+  function lastElement(array) {
+    assert(array.length > 0, "empty array in lastElement")
+    return array[array.length - 1]
+  }
+
+  // 上面的assert即这样的用法，括号内前面是一个判定，后面是字符串
+  assert([1,2,3].indexOf(3) == 2, '抛出错误信息')
+  if ([1,2,3].indexOf(3) !== 2) {
+    throw '抛出错误信息'
+  }
+
+
+  等同于这样的用法
+  assert.deepEqual([1,2,3].slice(), [1,2,3])
+  assert.equal([1,2,3].indexOf(2), 1)
+
+
+
+// 课后习题
+
+题1重试
+
+  function MultiplicatorUnitFailure(msg) { }      // 因为下面要new一个对象实例，这里要先创造一个构造函数
+
+  function primitiveMultipy(a, b) {
+    if (Math.random() < 0.5) {
+      return a * b
+    } else {
+      throw new MultiplicatorUnitFailure('')           // 错误通常写成对象的形式
+    }
+  }
+
+// 递归写法
+  function mutiple(a, b) {
+    try {
+      var result = primitiveMultipy(a, b)   // 有50%的概率会出错
+      return result
+    } catch (e) {             // 出错就执行catch里面的语句
+      multiple(a,b)
+    }
+  }
+
+  // for (; ;) 无限循环写法
+  function mutiple(a, b) {
+    for (; ;) {               // 无限次数尝试，直到成功
+      try {
+        return primitiveMultipy(a, b)
+      } catch (e) {
+        if (e instanceof MultiplicatorUnitFailure) {
+          continue
+        } else {
+          throw e      // 如果是其他类型错误，则抛出去
+        }
+      }
+    }
+  }
+
+
+题2开盒子
+
+  var box = {
+    locked: true,
+    unlock: function() {this.locked = false},
+    lock: function() {this.locked = true},
+    _content: [],
+    get content() {
+      if (this.locked) {
+        throw new Error("Locked")
+      }
+      return this._content
+    }
+  }
+
+  function withBoxUnlocked(f) {
+    box.unlock()          // 打开箱子
+    f()                  // 执行函数
+    box.lock()          // 锁上箱子
+  }
+
+  function withBoxUnlocked(f) {
+    box.unlock()          // 打开箱子
+    try {
+      f()                  // 执行函数， 如果出错，堆栈崩溃，f()后面的box.lock不能执行，则进入catch锁上箱子
+      box.lock()          // 锁上箱子
+    } catch (e) {         // 这里忽略掉了错误，么有抛出
+      box.lock()
+      throw(e)             // 加个抛出
+    }
+  }
+
+  function withBoxUnlocked(f) {
+    box.unlock()          // 打开箱子
+    try {
+      f()
+    } finally {
+      box.lock()          // 无论如何最后锁上箱子，即使try中的f()执行出错
+    }
+  }
+
+</script>

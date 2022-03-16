@@ -1,0 +1,669 @@
+<style>
+    svg {
+        border: 2px solid black;
+    }
+</style>
+
+<svg width="5000px" height="5000px"></svg>
+
+<script>
+    var str = '[a-d\\d]\\d\\n\\w\\S(foo|bar)(?:foo)|((?<=foo)|(?<!foo)(?<name>...))'
+    var i = 0
+
+    function parseOnePart() {
+        if (str[i] == '[') {
+            return parseCharacterClass()    // 字符类分组
+        }
+        if (str[i] == '(') {
+            return parseCaptureGroup()   // 捕获分组
+        }
+        if (str[i] == '\\') {
+            return parseEscape()          // 转译符
+        }
+        if (str[i] == '?' || str[i] == '+' || str[i] == '*' || str[i] == '{') {
+            return parseQuantifier()          // 量词
+        }
+        return parseCharacter()
+    }
+
+    function parseCharacter() {
+        var node = {
+            type: 'Character',
+            start: i,
+            end: i + 1,
+            raw: str.slice(i, i+1),
+            value: str[i],
+        }
+        i++      // i跳过这个字符
+        return node
+    }
+    
+    function parseCharacterClass() {
+        var node = {
+            type: 'CharacterClass',
+            start: i,
+            end: 0,        // end这时还不知道，需要接着解析下去最后确定
+            raw: '',
+            revert: false,        // 预设为false
+            elements: [],          // 预设elements为空数组
+        }
+        i++   // skip [
+        if (str[i] == '^') {
+            node.revert = true
+            i++ // skip ^
+        }
+        while (str[i] !== ']') {
+            var character = parseCharacter()     // 先解析跳过[碰到的第一个字符
+            if (str[i] == '-') {              // 解析完i跳到下一个位置
+                i++ // skip -
+                if (str[i] == ']') {              // 如果碰到的是[2-]这种
+                    node.elements.push(character)  // 先把第一个字符2push进element里 
+                    i--                           // 前面skip了-, 现在再返回到-这个符号的位置上
+                    var character = parseCharacter()  // 把-符号解析出来，并push进element里
+                    node.elements.push(character)
+                } else {                         // 如果碰到的是[0-9]这种
+                    var character2 = parseCharacter()   // 把跳过-号碰到的第二个字符9解析出来
+                    var rangeNode = {          // 创建一个数值范围结点
+                        type: 'CharacterRange',
+                        start: character.start,
+                        end: character2.end,
+                        raw: str.slice(character.start, character2.end),
+                        startCharacter: character,
+                        endCharacter: character2,
+                    }
+                    node.elements.push(rangeNode)
+                }
+            } else {                 // 如果没有碰到-，则直接把字符push进element，不用管太多了
+                node.elements.push(character)
+            }
+        }
+        i++  // 如果下一个碰到的是], 则直接skip ]  
+        node.end = i       // 此时的i为end，截止的地方
+        node.raw = str.slice(node.start, node.end)
+        return node
+    }
+
+    function parseQuantifier() {
+        var node = {
+            type: 'Quantifier',
+            start: i,
+            end: 0,
+            raw: '',
+            element: null,
+            min: 0,
+            max: Infinity,
+            greedy: true,
+        }
+        if (str[i] == '?') {
+            node.max = 1
+            i++
+        } else if (str[i] == '+') {
+            node.min = 1
+            i++
+        } else if (str[i] == '*') {
+            i++
+        } else {    // str[i] is {         // 这里就是{2,5}可能有的几种情况，想清楚逻辑就很简单
+            i++     // skip }
+            skipSpace()    
+            node.min = parseInteger()
+            skipSpace()
+            if (str[i] == '}') {
+                node.max = node.min
+                i++
+            } else if (str[i] == ',') {
+                i++
+                skipSpace()
+                if (str[i] == '}') {
+                    i++
+                } else {
+                    node.max = parseInteger()
+                    skipSpace()
+                    i++     // skip }
+                }
+            }
+
+
+        }
+        if (str[i] == '?') {
+            node.greedy = false
+            i++    // skip ?
+        }
+
+        node.end = i 
+        node.raw = str.slice(node.start, node.end)
+        return node
+    }
+
+
+    function skipSpace() {
+        while(str[i] == '') {
+            i++
+        }
+    }
+
+    function parseInteger() {
+        var numStr = ''
+        while (str[i] >= '0' && str[i] <= '9') {  // 这个循环会解析相邻的一连串数字
+            numStr += str[i]   
+            i++
+        }
+        return parseInt(numStr)       // 将字符串形式的数字转换成number形式的
+    }
+
+    function parseBranch() {    // 不止这种算分支(~|~|~)， ab+[0-9]f+这样的也有4个分支，b+算一个分支
+        var node = {
+            type: 'Branch',
+            start: i,
+            end: 0,
+            raw: '',
+            elements: [],
+        }
+
+        while (str[i] !== '|' && str[i] !== ')' && i < str.length) {
+            var part = parseOnePart()
+            if (part.type == 'Quantifier') {
+                part.element = node.elements.pop()       // 比如上面b+，这个分支，要到+时才知道上一个b和+算一个分支
+                part.start = part.element.start          // 所以需要将node.element接收到最后一个元素pop出来给part
+                part.raw = str.slice(part.start, part.end)
+            }
+            node.elements.push(part)
+        }
+        node.end = i
+        node.raw = str.slice(node.start, node.end)
+        return node
+    }
+
+    function parseBranches() {
+        var nodes = []
+
+        while(true) {     // 也可以把循环条件终止写到这里来
+            var branch = parseBranch()
+            nodes.push(branch)
+            if (str[i] == '|') {
+                i++        // skip |
+                continue
+            }
+            if (str[i] == ')' | i >= str.length) { // 把终止条件写到这里来了，当i >= str.length就停止循环
+                break
+            }
+        }
+
+        return nodes
+    }
+
+    // （foo|bar)
+    // (?:foo)
+    // (?=foo) 正预测
+    // (?!foo) 负预测
+    // (?<=foo) 正回顾
+    // (?<!=foo) 负回顾
+    // (?<name>foo) 具名分组
+    
+    var groupIndex = 1
+    function parseCaptureGroup() {
+        var node = {
+            type: 'CaptureGroup',
+            start: i,
+            end: 0,
+            raw: '',
+            branches: null,
+            index: 0,    // 分组的编号
+            name: '',     // 分组的名称
+            assertion: false,    // 是否是零宽断言
+            lookahead: true,     // 预测断言，false则是回顾断言
+            positive: true,      // 断言类型，是正断言还是反断言
+        }
+        i++   // skip (
+        
+        if (str[i] == '?') {
+            i++         // skip ?
+            if (str[i] == ':') {
+                i++      // skip :
+            } else if (str[i] == '=') {    // 正预测断言
+                node.assertion = true,
+                node.lookahead = true,
+                node.positive = true,
+                i++       // skip =
+            } else if (str[i] == '!') {
+                node.assertion = true,
+                node.lookahead = true,
+                node.positive = false,
+                i++       // skip !
+            } else if (str[i] == '<') {
+                i++       // skip <
+                if (str[i] == '=') {
+                    node.assertion = true,
+                    node.lookahead = false,
+                    node.positive = true,
+                    i++       // skip =                    
+                } else if (str[i] == '!') {
+                    node.assertion = true,
+                    node.looahead = false,
+                    node.positive = false,
+                    i++       // skip =
+                } else {      // 具名分组
+                    node.name = parseGroupName()
+                    node.index = groupIndex++       // 断言部分都不需要编号，只有具名或者普通分组需要
+                    i++
+                }
+            }
+        } else {                        // 如果跳过'('，发现不是'？'，则直接记录分组编号
+            node.index = groupIndex++   // 记录分组编号
+        }
+        node.branches = parseBranches()
+
+        i++
+        node.end = i
+        node.raw = str.slice(node.start, node.end)
+        return node
+    }
+
+
+    function parseGroupName() {
+        var name = ''
+        while (str[i] !== '>') {
+            name += str[i]
+            i++
+        }
+        return name
+    }
+
+    function parseEscape() {      // 转译符 \a 这种，在字符串中应该是'\\a'，在正则中写成\a
+        var node = {
+            type: 'Escape',
+            start: i,
+            end: 0,
+            raw: '',
+            value: '',
+        }
+        i++      // skip '\',    这里不是在字符串中跳过吗？不应该跳过两个\?不是在正则中跳过啊？
+        node.value = str[i]
+        i++      // skip value
+
+        node.end = i
+        node.raw = str.slice(node.start, node.end)
+        return node
+    }
+
+    function parsePattern() {        //  正则表达式/dsfgdgf/, 其实//是没有的，只是为了让你区分正则，
+        var node = {                // 然后我们在这里用个对象把它包裹起来，？这里不懂啥意思啊。
+            type: 'RegularExpression',
+            branches: parseBranches()
+        }
+        return node
+    }
+
+    function parseRegularExpression(input) {
+        str = input
+        i = 0
+        groupIndex = 1
+        return parsePattern()
+    }
+
+
+    // 为正则语法树结点创建图形
+function createGraph(node) {
+    if (node.type == 'Character') {
+      return createCharacterGraph(node)
+    }
+    if (node.type == 'CharacterClass') {
+      return createCharacterClassGraph(node)
+    }
+    if (node.type == 'Branch') {
+      return createBranchGraph(node)
+    }
+    if (node.type == 'Branches') {
+      return createBranchesGraph(node)
+    }
+    if (node.type == 'CaptureGroup') {
+      return createCaptureGroupGraph(node)
+    }
+    if (node.type == 'Quantifier') {
+      return createQuantifierGraph(node)
+    }
+    if (node.type == 'Escape') {
+      return createEscapeGraph(node)
+    }
+}
+
+
+    var svg = document.querySelector('svg')
+    var gp = 10
+
+    // 这个函数用来创建svg元素
+    function elt(tagName, attrs = {} , ...children) {
+        var el = document.createElementNS("http://www.w3.org/2000/svg", tagName)
+        // 遇到svg标签，里面的内容如何读取就根据这个协议来的
+        
+        for (var key in attrs) {     // 遍历属性集合
+            var val = attrs[key]
+            el.setAttribute(key, val)
+        }
+        for (var child of children) {
+            if (typeof child == 'string') {
+                child = document.createTextNode(child)
+            }
+            el.appendChild(child)
+        }
+
+        svg.appendChild(el) 
+     // 把el标签在这个函数中就塞进svg中，不然后面构建的text和g标签就和不塞进原来document中一样无法显示
+
+        return el
+    }
+
+    function createCharacterGraph(node) {
+        var text = elt('text', {
+            'dominant-baseline': 'text-before-edge',
+            x: gp / 2,     // text所在的位置，相对于左上角的原点
+            y: gp / 2,
+        }, node.value)      // 创造svg标签内的text标签，属性为{}里面的内容，值为node的值
+
+        var textBox = text.getBBox()    //  getBBox()得到目标对象外层的最小矩形坐标
+                                     // 所以这里可以得到text外面套着的框
+
+        var rect = elt('rect', {     // 外面再包个矩形？外方框元素，外面的底色
+            fill: '#dae9e5',
+            width: textBox.width + gp,     // box外面再套个矩形
+            height: textBox.height + gp,
+            rx: '3',
+        })
+        var g = elt('g', {}, rect,text)   // 把文本塞进g标签内,属性写为空，
+        // 而且上面构建的elt函数自带自动把构建的标签添加进svg标签中，省了每次还要再添加进svg标签中
+        // rect,text的添加顺序决定了其在svg中的图层顺序
+        var box = g.getBBox()
+        
+        return {
+            g: g,
+            width: box.width,      // 返回宽高
+            height: box.height,
+        }
+
+    }
+
+    function add(a, b) {
+        return a + b
+    }
+
+    function max(a, b) {
+        return Math.max(a, b)
+    }
+
+
+
+    // 即[abcd],只要是其中任一字母即可，one of
+    function createCharacterClassGraph(node) {
+        var graphs = node.elements.map(createGraph)
+
+        var height = graphs.map(it => it.height).reduce(add) + (graphs.length + 1) * gp 
+        // 总高度等于每个graph的高度加上n+1个行间距
+        var width = graphs.map(it => it.width).reduce(max) + 2 * gp
+        // 最大宽度等于所有graph中最宽的那个加上2倍行间距
+
+        var fill = elt('rect', {           // 对所有graph外面套的这个大矩形，进行底色填充。rectangle矩形
+            width: width,
+            height: height,
+            fill: '#cbcbba',
+            rx: '3',          // 设置边框圆角
+        })
+        var g = elt('g')
+
+        g.appendChild(fill)
+        
+        var y = gp
+        for (var graph of graphs) {   // 每个graph对应的g标签做相应的偏移
+            graph.g.setAttribute('transform', `translate(${(width - graph.width) / 2}, ${y})`) 
+            // 通过让每一个图片上的g标签偏移，来改变每一个子图片的位置
+            y += graph.height + gp  // y进行累加，可以做为下个图片的位置，即一开始垂直方向只偏移一个行间距,后面不断累加图片高度和行间距
+            g.appendChild(graph.g)           // 把每一个子图片的g标签都加到当前的g标签中去
+        }
+
+        var box = g.getBBox()            // 这个box是不是就是填充的那个box? 填充的不是rect吗？
+
+        return {
+            g: g,
+            width: box.width,
+            height: box.height,
+        }
+
+    }
+
+    function createBranchGraph(node) {
+        var graphs = node.elements.map(createGraph)
+
+        var height = graphs.map(it => it.height).reduce(max) +  2 * gp 
+        var width = graphs.map(it => it.width).reduce(add) + (graphs.length + 1) * gp
+
+        var fill = elt('rect', {           // 对所有graph外面套的这个大矩形，进行底色填充
+            width: width,
+            height: height,
+            fill: 'none',
+            rx: '3',
+        })
+
+        var g = elt('g')
+
+        g.appendChild(fill)
+        
+        var x = gp
+        for (var graph of graphs) {   // 每个graph对应的g标签做相应的偏移
+            var line = elt('line', {         // 可以在mdn上自己查询line svg的用法
+                x1: x,                        // x1是从第一个图片的左边开始，即x1 = gp
+                y1: height / 2,               // y1是上面最大fill的height的一半
+                x2: x - gp,         // 连接每个图片的线条往回走一个gp的距离
+                y2: height / 2,
+                'stroke-width': 2,
+                stroke: 'black',
+            })
+            // 每个图片的g标签相对于更外一层的g标签进行偏移，所以下面还需要把graph.g加到g里面
+            graph.g.setAttribute('transform', `translate(${x}, ${(height - graph.height) / 2})`) 
+            // 通过让每一个图片上的g标签偏移，来改变每一个子图片的位置
+            x += graph.width + gp  // x进行累加，可以做为下个图片的位置，即一开始垂直方向只偏移一个行间距,后面不断累加图片高度和行间距
+            g.appendChild(graph.g)           // 把每一个子图片的g标签都加到当前的g标签中去
+            g.appendChild(line)
+        }
+        
+        // 循环结束后在branch的最后一个图片后面再加个线条
+        var line = elt('line', {
+            x1: x,
+            y1: height / 2,
+            x2: x - gp,
+            y2: height / 2,
+            'stroke-width': 2,
+            stroke: 'black',
+        })
+
+        g.appendChild(line)
+
+
+        var box = g.getBBox()     // 这个box是不是就是填充的那个box? 填充的不是rect吗？
+                                 // 是的两者是一样的，g的大小其实就是它里面最大那个元素的大小
+
+        return {
+            g: g,
+            width: box.width,
+            height: box.height,
+        }
+
+    }
+
+    function createBranchesGraph(branches) {   // branches不是结点，是一个数组，它的每一项是结点。
+        var graphs = branches.map(createGraph)
+
+        var height = graphs.map(it => it.height).reduce(add) + (graphs.length + 1) * gp 
+        var width = graphs.map(it => it.width).reduce(max) + 4 * gp 
+
+        var fill = elt('rect', {           // 对所有graph外面套的这个大矩形，进行底色填充
+            width, height,
+            fill: 'lightgreen',
+            rx: '3',
+        })
+
+        var g = elt('g')
+        g.appendChild(fill)            // 不把fill元素添加进g标签的话，g.getBBox()范围就会不够大
+
+        var y = gp
+        for (var graph of graphs) {   // 每个graph对应的g标签做相应的偏移
+            var x = (width - graph.width) / 2
+            graph.g.setAttribute('transform', `translate(${x}, ${y})`) 
+            
+            var railway = elt('path', {    // Move到某个位置，画圆弧arc。 y + graph.height / 2  下移每个子图片的一半高度。 H，水平直线再加20px的长度. 一个path可以画两条线
+                d:`
+                  M ${x} ${y + graph.height / 2}
+                  H ${gp * 2}
+                  C ${gp} ${y + graph.height / 2} ${gp} ${height / 2} 0 ${height / 2}
+
+                  M ${width - x} ${y + graph.height / 2}
+                  H ${width - gp * 2}
+                  C ${width - gp} ${y + graph.height / 2} ${width - gp} ${height / 2} ${width - 0} ${height / 2}
+
+                  `,
+                  fill: 'none',
+                  stroke: 'black',
+                  'stroke-width': 2,
+            })
+
+            g.appendChild(railway)
+
+            // 通过让每一个图片上的g标签偏移，来改变每一个子图片的位置
+            y += graph.height + gp  // y进行累加，可以做为下个图片的位置，即一开始垂直方向只偏移一个行间距,后面不断累加图片高度和行间距
+            g.appendChild(graph.g)           // 把每一个子图片的g标签都加到当前的g标签中去
+        }
+
+        var box = g.getBBox()            // 这个box是不是就是填充的那个box? 填充的不是rect吗？
+
+        return {
+            g: g,
+            width: box.width,
+            height: box.height,
+        }
+
+    }
+
+    function createCaptureGroupGraph(node) {
+        var branchesGraph = createBranchesGraph(node.branches)    // 捕获分组里含有有多个分支
+        
+        var dottedBorder = elt('rect', {                       // 在分组外面包个虚线框即可
+            width: branchesGraph.width,
+            height: branchesGraph.height,
+            'stroke-dasharray': '7 7',
+            fill: 'none',
+            stroke: 'grey',
+            'stroke-width': 2,
+            rx: 3,
+        })
+        var g = elt('g')
+
+        var groupDescText = 'Group'      // 对分组进行描述的文字 Desc即 Descript
+        if (node.name) {
+            groupDescText += '#' + node.name    // 具名分组
+        }
+        if (node.index) {
+            groupDescText += '#' + node.index     // 带编号分组
+        }
+        // 分组的描述文字
+        var desc = elt('text', {
+            'dominant-baseline': 'text-before-edge',
+            'font-size': '12px',
+        }, groupDescText)
+
+        g.appendChild(desc)
+
+        g.appendChild(branchesGraph.g)     // 把分支子图像上的g都加入刚刚创建的g标签,不能只写个branchGraph，因为这个事对象而不是标签？不懂
+        g.appendChild(dottedBorder)      // 把画出来的虚线框也加入g
+
+        var box = g.getBBox()
+
+        return {
+            g: g,
+            width: box.width,
+            height: box.height,
+        }
+
+    }
+
+    function createQuantifierGraph(node) {
+        var elementGraph = createGraph(node.element)
+
+        var width = elementGraph.width + 4 * gp    // 
+        var height = elementGraph.height + 4 * gp
+
+        var fill = elt('rect', {
+            width: width,
+            height: height,
+            fill: 'pink',
+            rx: 3,
+        })
+
+        var g = elt('g')
+        g.appendChild(fill)         // 添加fill 到g中只是为了撑大g, fill比子图片的长宽都加了4个行间距，后面底色可以改成无色的。
+
+        var line = elt('path', {
+            d: `
+              M 0 ${height / 2}
+              L ${gp * 2} ${height / 2}
+
+              M ${width} ${height / 2}
+              L ${width - gp * 2} ${height / 2}
+            `,
+            fill: 'none',
+            stroke: 'black',
+            'stroke-width': 2,
+        })
+        elementGraph.g.setAttribute('transform', `translate(${(width - elementGraph.width) / 2}, ${(height - elementGraph.height) / 2})`)
+        g.appendChild(elementGraph.g)
+        g.appendChild(line)
+        
+        if (node.min == 0) {
+            var skipLine = elt('path', { 
+                d: `
+                M 0 ${height / 2}
+                a ${gp} ${gp} 0 0 0 ${gp} ${-gp} 
+                V ${gp * 2} 
+                a ${gp} ${gp} 0 0 1 ${gp} ${-gp} 
+                H ${width - gp * 2}
+                a ${gp} ${gp} 0 0 1 ${gp} ${gp} 
+                V ${height / 2 - gp} 
+                a ${gp} ${gp} 0 0 0 ${gp} ${gp} 
+                `,
+                fill: 'none',
+                stroke: 'black',
+                'stroke-width': 2,
+            })
+
+            g.appendChild(skipLine)            
+        }
+
+        if (node.max > 1) {
+            var repeatLine = elt('path', { 
+                d: `
+                M ${gp * 2} ${height / 2}
+                a ${gp} ${gp} 0 0 0 ${-gp} ${gp} 
+                V ${height - gp * 2} 
+                a ${gp} ${gp} 0 0 0 ${gp} ${gp} 
+                H ${width - gp * 2}
+                a ${gp} ${gp} 0 0 0 ${gp} ${-gp} 
+                V ${height / 2 + gp} 
+                a ${gp} ${gp} 0 0 0 ${-gp} ${-gp} 
+                `,
+                fill: 'none',
+                stroke: 'black',
+                'stroke-width': 2,
+            })
+
+            g.appendChild(repeatLine)            
+        }
+
+
+        var box = g.getBBox()
+
+        return {
+            g: g,
+            width: box.width,
+            height: box.height
+        }
+    }
+
+
+
+</script>

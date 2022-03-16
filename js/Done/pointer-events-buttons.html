@@ -1,0 +1,18 @@
+<script>
+    var MOUSE_BUTTON_MIDDLE = 0b100
+    var MOUSE_BUTTON_LEFT = 0b001
+    var MOUSE_BUTTON_RIGHT = 0b010
+
+    window.addEventListener('mousedown', function(e) {
+        console.log('我老婆按了下鼠标')
+        if (e.buttons & MOUSE_BUTTON_MIDDLE) {
+            console.log('大老婆Jisoo按下了鼠标的中键')
+        }
+        if (e.buttons & MOUSE_BUTTON_LEFT) {
+            console.log('二老婆韩素希按下了鼠标的左键')
+        }
+        if (e.buttons & MOUSE_BUTTON_RIGHT) {
+            console.log('三老婆宣美李老师按下了鼠标的右键')
+        }
+    })
+</script>

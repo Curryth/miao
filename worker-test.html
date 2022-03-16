@@ -1,0 +1,27 @@
+<button>aaaa</button>
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam, culpa iste. Explicabo laborum sit, atque porro qui autem quos culpa reprehenderit ad totam. Sequi, incidunt suscipit ut debitis magni repellat.</p>
+<script>
+    var button = document.querySelector('button')
+
+    button.addEventListener('click', function(e) {
+      console.log('button clicked')
+    })
+
+    var worker = new Worker('./worker.js')
+
+    var obj = {a:1,b:2,c: function(){}}
+
+    worker.postMessage( obj )
+
+    // worker.addEventListener('message', function(e) {
+    //   var board = e.data
+    //   var html = board.map(it => it.join(' ')).map(it => '<div>' + it + '</div>')
+    //   document.write(html)
+    // })
+
+
+
+
+
+
+</script>

@@ -1,0 +1,46 @@
+<script>
+  var div = document.querySelector('div')
+
+  div.addEventListener(
+
+    'mousemove'
+    ,
+
+    debounce(function(e) {
+        console.log('111')
+    }, 500)
+
+  )
+
+
+  function debounce(func, time) {
+      var id 
+
+      return function (...args) {
+          clearTimeout(id)
+
+          id = setTimeout(() => {
+              func.call(this, ...args)
+          }, time)
+      }
+  }
+
+  function throttle(func, time) {
+    var scheduled = false
+    var lastestResults
+
+    return function(...args) {
+      lastestResults = args
+      if (!scheduled) {
+        scheduled = true
+        setTimeout(() => {
+          scheduled = false
+          func.call(this, ...args)
+        }, time)
+      }
+    }
+  }
+
+
+
+</script>

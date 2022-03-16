@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+  <p>
+
+    ----------
+    <img src="a.png" alt="AAA">
+    ----------
+    <img src="a.png" alt="BBB">
+    ----------
+    <img src="a.png" alt="CCC">
+    ----------
+
+  </p>
+  <button onclick="replaceImage()">replace</button>
+
+  <script>
+      function replaceImage() {
+          var imgs = document.getElementsByTagName('img')
+          for (  var i = imgs.length - 1; i >= 0; i--) {
+              var img = imgs[i]
+              var textNode = document.createTextNode(img.alt) // 用img.alt属性创造文本结点
+              img.parentNode.replaceChild(textNode, img)  // 用文本结点替换掉img的父元素的子结点，不就是img本身
+          }
+      }
+
+
+      function elt(tagName, attrs = {}, ...children) {
+          var el = document.createElement(tagName) // 以tagName构建元素结点
+          
+          if (attrs && typeof attrs == 'object') {  // 如果属性存在，且为对象
+              for (var key in attrs) {           // 遍历属性，把el属性key设置为对应的属性值
+                  el.setAttribute(key, attrs[key])
+              }
+          }
+          
+          for (var child of children) {
+              if (typeof child == 'string') { // 如果子结点是字符串，则构建为文本结点。文本结点没有子结点，即其为叶子结点。
+                  el.appendChild(document.createTextNode(child))
+              } else {
+                  el.appendChild(child)
+              }
+          }
+
+          return el
+
+      }
+
+                                  // 两个属性          // 属性为null
+      elt('div', {id: 'foo', class: 'bar baz'}, elt('a', null, 'aaa'))
+      // 把属性名和属性值增加到div里去
+
+      elt('span', elt('em'), 'sofiwkdj')
+
+
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            height: 200px;
+            background-color: beige;
+        }
+        .dot {
+            width: 80px;
+            height: 80px;
+            border-radius: 9999px;
+            background-color: pink;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        window.addEventListener('mousemove', function(e) {
+            var dot = document.createElement('span')  // 以span便签内的内容创造doc的元素为dot
+            dot.className = 'dot'   // 添加类名
+            dot.classList.add('dot')  // 把类名添加到类名清单中
+            dot.style.left = e.pageX - 40 + 'px'     // 画的点圆心向左回40个像素，不然的话鼠标点击的地方就不是点的圆心位置
+            dot.style.top = e.pageY - 40 + 'px'    // 画的点圆心向上回40个像素
+            document.body.append(dot)           // 最后把dot添加到doc的body中去
+        })
+
+        // d3.js
+        function mouse(node) {
+            var nodePos = node.getBoundingClientRect() // 鼠标相对于用户窗口的位置
+            return {
+                x: window.event.clientX - nodePos.x,  // 全局里的事件对象相对于用户窗口的位置 - 鼠标相对于用户窗口的位置
+                y: window.event.clientX - nodePos.y,  // 只有在坐标系相同的情况下才能这样相减得出相对位置
+            }
+        }
+    </script>
+
+</body>

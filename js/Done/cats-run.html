@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        span {
+            position: fixed;
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+  
+    <span style="left: 10px; top: 10px;">  Cat</span>
+
+  <script>
+ 
+    var cat = document.querySelector('span')
+
+    var lastTime = null
+    var angle = 0
+
+    // 当animate函数运行的时候，它会在内部调用requestAnimationFrame函数，两者递归互相循环调用
+    requestAnimationFrame(function animate(time) {
+        // console.log(time)
+        if (lastTime !== null) {    // 第一次运行，lastTime为空，所以没有动画，第二次运行的时候才会有。
+            angle += (time - lastTime) * 0.001
+        }
+        lastTime += time
+
+        //  angle += 16 * 0.001       刷新频率为60Hz的屏幕每16.7ms刷新一次
+        // time = Date.now()  用统一的格林尼治时间也可以
+    
+        var x = Math.cos(angle) * 100 + 400
+        var y = Math.sin(angle) *100 + 400
+        cat.style.top = y + 'px'
+        cat.style.left = x + 'px'
+
+        requestAnimationFrame(animate)
+    })
+
+    
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,910 @@
+<script>
+
+2022/02/14
+  
+第9章 Regular Expressions 正则表达式
+  
+正则表达式的两种写法，我们常用第二种：
+
+  var re1 = new RegExp("abc")  // RegExp构造函数Contractor function
+  var re2 = /abc/
+
+ab
+ab[xy]          遇到ab,然后遇到xy
+ab[^xy]         遇到ab,然后不要遇到xy,^脱字符
+  [0-9]         \d  digit                         \D 非数字
+[0-9 a-z/A-Z]   \w   word                         \W  非word
+ [    ]         \s   各种形式的空格                  \S  非格
+
+ab+c    b允许重复多次
+ab?     b允许重复0或者1次         即可以写成 ab{0,1}c
+ab*c    b允许重复多次或者0次       即可以写成 ab{0,}c
+
+a{3,5}     a允许重复3次到5次
+a{0,5}     a允许重复0次到5次
+a{2,}      a允许重复2次到无限次
+
+/foo(bar)/.exec('foobarsf')
+
+Backtracking 回溯
+
+正则表达式匹配一个二进制书后面接一个b或者一个10进制数没有后缀，或者16进制数后接一个h
+/\b([01]+b|\d+|[\da-f]+h)\b/
+   
+   
+
+[ ]               子表达式
+(abc|xyz|jkq)*    可以匹配abc或者xyz或者jkq，按顺序来匹配。后面也可以加个*，重复遇见
+
+/^foo{3,5}$/.exec('fooooo')    ^...$强制匹配字符串
+
+
+
+自定义零宽断言
+(?=expr)正预测先行断言 positive lookahead，即要求一个位置的右边的内容要满足expression
+(?!expr)负预测先行断言 negative lookahead，即要求一个位置的右边的内容不能满足expr
+(?<=exper)正预测后发断言 positive lookbehind，即要求一个位置的左边的内容要满足expr
+(?<!exper)负预测后发断言 negative lookbehind，即要求一个位置的左边的内容不能满足expr
+
+零宽断言可以连续使用，连续使用时断言的是同一个位置
+
+\b === (?<!\w)(?=\w)(?<=\w)(?!\w) (即左边不能有符号右边要有，或者左边要有符号右边没有)
+^ === (?<!.)   左边不能出现任何符号
+$ === (?!.) .不能匹配换行符，所以这个是匹配每行的结尾 或 (?![^])右边不能匹配任何东西，回车也不行， 即匹配字符串整体的结尾
+
+
+
+具名分组： 给每个括号都命名
+// match = (?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})).exec(xxxx)
+ 
+match.groups.year // (近来新浏览器版本才支持，旧版的还是要用\1或\2来表示第一个括号或第二个的内容)
+match.groups.month
+match.groups.day
+
+非捕获分组：
+使用“?:”表示。该分组不计数，也不捕获
+（?:foo)(bar)
+(?:) 不匹配任何东西，也不计数，当其不存在。
+
+前向/后向引用
+\1 \2 .. \9 表示重复第几对括号已经匹配到的具体内容
+.(.)\1 表示 ABB 形式的字符串
+(.)(.)\1 表示 ABA 形式的字符串
+(.)(.)\2\1 表示 ABBA 形式的字符串 （先重复第2个括号内的，再重复第1个括号内的）
+(foo|bar){2}
+(foo|bar)\2
+
+如：
+/.(.)\1  前向引用
+
+`高圆圆     
+
+李一一
+
+张三三
+
+范冰冰`.replace(/(.)(.)(\2)/g, '$2$3$1(原名$&)')
+(变成冰冰范， 一一李，三三张)
+
+
+正则的选项:
+/foo/igmysu
+new RegExp('foo', 'igmysud')
+第二个?后面的部分即为正则表达式的选项
+不同选项有不同的效果
+i ignoreCase  不区分大小写
+g global      全局匹配，即找到所有的匹配，而不是只找到一个匹配
+m multiline   多行匹配，有m的时候^$可以表示一行的开始和结束，没有m时表示整个字符串的开始和结束
+s dotAll      有s时，正则中的.符号可以代表任意符号
+u unicode     启用unicode,支持\u{xxxxx}
+d hasIndices  匹配结果中会包含每个捕获分组的开始和结束位置
+y sticky      每次匹配必须从首次开始的位置就成功
+
+
+
+
+
+/\b\w{7,}\b/
+
+
+// 通配符这里没太懂？先放一边吧还有好多上课视频没看，冲冲冲，奥力给！！！
+foo?b* 通配符,模糊匹配
+^foo.b.*$    加$，表示完整匹配，从开头匹配到结束。
+实现以下功能
+wildcardMatch('*', 'fooobar') // true
+wildcardMatch('??foo*', 'abfooccc') // true
+wildcardMatch('?foo*', 'abfooccc') // false
+wildcardMatch('?*foo*', 'abfooccc') // true
+wildcardMatch('??foo*', 'abfooccc') // true
+wildcardMatch('??foo*', 'abfooccc') // true
+
+function wildcardMatch(wildcard, str) {
+    var reStr = wildcard
+      .replace(/(?=[^\w\s?*])/g, '\\')         // 任意除\w\s?*之外的符号，换成\
+      // 写成这样也行(/([^\w\s?*])/g, '\\$1')
+      .replace(/\?/g, '.')                     // ?换成.
+      .replace(/\*/g, '.*')                   // *换成.*
+    var re = new RegExp('^' + reStr + '$', 'i') // ^$从开头匹配到结束
+    // 先声明一个reStr中间变量，再通过构造函数RegExp拷贝正则表达式到re上
+    return re.test(str)
+}
+
+
+
+2022/02/17
+
+/foo/.test('abcffoobar')
+
+RegExp.prototype.test2 = function (str) {
+  return Boolean(this.exec(str))   // 返回真假
+  // 也可以return !!this.exec(str)
+  //  !!,两个感叹号Converts Object to boolean. If it was falsey (e.g. 0, null, undefined, etc.) 
+}
+
+'sdfafd'.search(/fo./)   // search会从第0位开始搜寻，exec是从lastIndex开始，
+                        // 如果lastIndex结果不为0，则会出现问题，需要避免
+
+String.prototype.search2 = function (re) {
+  if (typeof re === 'string' ) {
+    return this.indexOf(re)    // 如果re是字符串，不是正则表达式，则直接返回indexOf(re)
+  }
+  var oldLastIndex = re.lastIndex     // 把lastIndex保存起来
+  re.lastIndex = 0        // 因为lastIndex可能不为零，所以将其置零，方便下一步用march来从头开始寻找
+  var match = re.exec(this)    // 用match来search整个字符串即this，如果lastIndex属性不置零，它就不会从头开始寻找
+  re.lastIndex = oldLastIndex  // 再把lastIndex还原
+  if (match == null) {       // 如果match不到就返回-1
+    return -1
+  } else {
+    return match.index    // 如果能match到，返回匹配到的下标位置
+  }
+  re.exec(this)
+}
+
+
+匹配和捕获
+/f(.)/整个匹配到前面字符串的那个位置,(.)括号的点捕获到的是什么
+'adsfasdf'.match(/f(.)/)    // 分两种情况，/f(.)/g,全局匹配，
+                            // 或者 /f(.)/, match到第一个匹配的值即返回
+
+String.prototype.match2 = function (re) {
+  var str = this               // 把this化成一个变量
+  if (typeof re === 'string') {
+    re = new RegExp('re')
+  }
+  if ( !re.global ) {
+    return re.exec(str)
+  }
+
+  var result = []
+  var oldLastIndex = re.lastIndex 
+  re.lastIndex = 0                 // exec()的lastIndex会不断变化，匹配一个又一个字符串，match的index也会变，
+                                   // 直到最后lastIndex会变为0
+  var match                       //这里exec()是怎么不断匹配，最后push很多个match[0]的?不懂
+  while (match = re.exec(str)) { // re.exec(str)返回的是一个数组
+    result.push(match[0])        // 且数组的第0项是匹配的完整的字符串
+  }
+  re.lastIndex = oldLastIndex   // 还原lastIndex
+  return result
+}
+
+
+String.prototype.matchAll2 = function (re) {
+  if (!re.global) {
+    throw new TypeError('String.prototype.matchAll called with a non-global RegExp argument')
+  // 如果re不带g，则报错
+  }
+  return this.match2(re)
+}
+
+
+
+String.prototype.split2 = function (spliter) {
+  if (typeof spliter == 'string') {  // 如果splitter是字符串
+    var result = []
+    if (spliter == '') {     // 如果以空字符串分割,则把每个字符一个个push进结果数组
+      for (var i = 0; i < this.length; i++) {
+        result.push(this[i])
+      }
+      return result
+    }
+    var startIdx = 0
+    while (true) {   // 直接while(true)就可以了
+      var idx = this.indexOf(spliter, startIdx) // 从startIdx开始找分割符
+      if (idx >= 0) {  // 如果能找到
+        result.push(this.slice(startIdx, idx))
+        startIdx = idx + spliter.length  // 下一次开始分割的位置
+      } else {    // 如果找不到
+        result.push(this.slice(startIdx))  // 找不到则把最后一次分割后面的所有字符放进去
+        break
+      }
+    }
+    return result
+  } else {    // 如果是正则表达式
+    var result = []
+    var re = new RegExp(spliter.source, spliter.global ? spliter.flags : spliter.flags + 'g')
+    // 如果正则表达式不带g标志，在flags属性上加上g
+    // flags属性是用来存放g和i标志的
+    // source属性则是用来存放原本的表达式的
+    // * 拷贝构造函数 ： 通过传入一个现有的对象给该类型的构造函数，构造函数能够返回一个相同的新对象
+      var startIdx = 0
+      var match
+      while (match = re.exec(this)) {
+        result.push(this.slice(startIdx, match.index))
+        startIdx = re.lastIndex  // 每次匹配成功，lastIndex都会自动后移
+      }
+      result.push(this.slice(startIdx))
+      return result
+    }
+}
+
+
+
+String.prototype.replace2 = function (replacer, replacement) {
+  // assert(type) // 断言类型的正确性（保证传参的正确性）如果不正确就不运行了
+  if (typeof replacer == 'string') {    // 如果需要替换的是字符串
+    var idx = this.indexOf(replacer)     // indexOf找到字符串下标
+    if (id >= 0) {                    // 大于等于0则说明可以找到
+      var p1 = this.slice(0, idx)       // 把idx之前的slice出来
+      var p3 = this.slice(idx + replacer.length)   //把idx加需要替换的字符串长度，这个位置之后的slice出来
+      var p2 
+      if (typeof replacement === 'function') {
+        p2 = replacement(replacer, idx, this)
+      } else {                                   // 如果是字符串
+        p2 = replacement.split2('$&').join('replacer') 
+        // $&就是被换掉的this，也就是b，而这里没有$1
+        // 这里具体去看备忘录，有前因后果。只为了替换掉全局的$&.
+      }
+      return p1 + p2 + p3    // 
+    }
+    return this
+  } else {    // 如果replacer是正则表达式
+    var result = ''
+    var match
+    var startIdx = 0
+    while (match  = replacer.exec(this)) {
+      result += this.slice(startIdx, match.index)
+      if (typeof replacement == 'string') {
+        replacement = replacement.split2('$1').join(match[1])
+        replacement = replacement.split2('$2').join(match[2])
+        replacement = replacement.split2('$3').join(match[3])
+        replacement = replacement.split2('$4').join(match[4])
+        replacement = replacement.split2('$5').join(match[5])
+        replacement = replacement.split2('$6').join(match[6])
+        replacement = replacement.split2('$7').join(match[7])
+        replacement = replacement.split2('$8').join(match[8])
+        replacement = replacement.split2('$9').join(match[9])
+        replacement = replacement.split2('$&').join(match[0])
+        result += replacement
+      } else {    // 如果replacement是函数
+      result += replacement(...match, match.index, this.toString())
+      // ...将match整个展开传入replacement函数， 再传入match的index
+      // match是数组形式的
+      //函数里的this，在非严格模式下，总是指向对象的，所以这里需要加个toString()来接收对象形式的字符串。
+      }
+      startIdx = replacer.lastIndex
+      if (!replacer.global) {     // 如果不带g标志，则while循环一次就停止
+        break
+      }
+    }
+    result += this.slice(startIdx)
+    return result 
+  }
+}
+
+
+
+
+tagged template string 模板调用
+
+function raw(ary, ...interplots) {
+  var result = ary[0]
+  for (var i = 0; i < ary.length; i++) {
+    result += interplots[i]
+    result += ary.raw[i + 1]
+  }
+  return result
+}
+
+r = String.raw
+
+r`woasgj\\idjsn`
+
+
+
+
+function run() {
+  console.log(1)
+  var reStr = reInput.value
+  var flags = getFlags()
+  var testString = testStringInput.value
+  if (reStr.length == 0) {
+    resultShow.innerHTML = testStringInput.value
+  }
+  try {
+  var re = new RegExp(reStr, flags)
+  }catch(e) {
+    if (e instanceof SyntaxError) {
+      resultShow.innerHTML = testString
+      return 
+    } else {
+      throw e
+    }
+  }
+  console.log(re)
+
+  var resultHTML = ''
+  var startIdx = 0
+  var match 
+
+  while (match = re.exec(testString)) {
+    resultHTML += testString.slice(startIdx, match,index)
+    resultHTML += '<strong>' + match[0] + '</strong>'
+    startidx = re.lastIndex
+    if (!re.global) {
+      break
+    }
+  }
+  resultHTML += testString.slice(startIdx)
+  resultShow.innerHTML = resultHTML
+} 
+
+function  getFlags() {
+  var flags = ''
+  if (reFlagsGlobal.checked) {
+    flag += 'g'
+  }
+  if (reFlagsMultiLine.checked) {
+    flag += 'm'
+  }
+  if (reFlagsIgnoreCase.checked) {
+    flag += 'i'
+  }
+}
+
+function  () {
+  var 
+}
+
+
+
+
+
+
+2022/02/18
+
+回溯算法
+
+leetcode 44
+// p: pattern
+// s: string
+
+function isMatch(p, s) {
+if (p == '*') {
+    return true
+}
+if (p.length == 0) {
+    if (s.length == 0) {
+    return true
+    } else {
+    return false
+    } 
+}
+if (p[0] == '?') {
+    return isMatch(p.slice(1), s.slice(1))
+} else if (p[0] == '*') {
+    // 当*匹配s中的i个字符
+    for (var i = 0; i <= s.length; i++) {
+    // 让*号匹配前i个字符
+    if (  isMatch( p.slice(1), s.slice(1) )  ) {
+        return true
+    }
+    }
+} else {
+    if (p[0] == s[0]) {
+    return isMatch(s.slice(1), p.slice(1))
+    } else {
+    return false
+    }
+}
+}
+
+
+leetcode 93
+
+var restoreIpAddresses = function(s) {
+var result = []
+
+// a表示第一个点的位置
+for (var a = 1; a <= 3; a++) {
+    var parta = s.slice(0,a)
+    if(isValidPart(parta)) {
+    for (var b = a + 1; b <= a + 3; b++) {
+        var partb = s.slice(a,b)
+        if (isValidPart(partb)) {
+        for (var c = b + 1; c <= b + 3; c++) {
+            var partc = s.slice(b, c)
+            var partd = s.slice(c)
+            if (isValidPart(partc)) {
+            if (isValidPart(parta) && isValidPart(parta) && isValidPart(parta)) {
+                result.push([parta,partb,partc,partd].join('.'))
+            }
+            }
+        }
+        }
+    }
+    }
+}
+return result
+}
+
+
+
+function bt(s) {
+var result = []
+var parts = []
+
+if (parts.length == 3) {
+    if (isValidPart(s)) {
+    result.push(   parts.join('.') + '.' + s)
+    }
+    return 
+}
+for (var a = 1; a <= 3; a++) {
+    var part = s.slice(0, a) {
+    if (isValidPart(part)) {
+        part.push(part)
+        bt(slice(a))
+        part.pop()
+    }
+    }
+}
+}
+
+
+
+
+function isValidPart(part) {
+if (part.legnth == 0) {
+    return false
+}
+var n = parseInt(part, 10)
+if (n > 255) {
+    return false
+}
+if (part.length > 1 && part[0] == '0') {
+    return false
+}
+return false
+}
+
+
+
+leetcode combination-sum
+
+
+var combinationSum = function(candidates, target) {
+
+var result = []
+
+var selected = []
+var selectedSum = 0
+
+function bt(sum = 0, selected = []) {
+    if (selectedSum == target) {
+    result.push(selected.slice)
+    return 
+    }
+    if (selectedSum > target) {
+    return 
+    }
+
+    for (var i = 0;i < candidates.length; i++) {
+    selected.push(candidates[i])
+    selectedSum += candidates[i]
+    bt(sum, [...selected, candidates])
+    selected.pop()
+    selectedSum -= candidates
+    }
+}
+}
+
+
+var combinationSum = function(candidates, target) {
+
+var result = []
+
+var selected = []
+var selectedSum = 0
+
+function bt(sum = 0, selected = []) {
+    if (sum == target) {
+    result.push(selected.slice)
+    return 
+    }
+    if (sum) > target) {
+    return 
+    }
+
+    for (var i = 0;i < candidates.length; i++) {
+    btoa(sum + candidates[i], [...selected, candidates[i]])
+    }
+}
+
+
+leetcode 
+
+generate-parentheses
+
+var generateParenthesis = function(n) {
+    var result = []
+
+    var chars = []
+    var left = 0
+    var right = 0 // 右括号的数量
+
+    function bt() {
+        if (left == n && right == n) {
+            result.push(   chars.join('')   )
+            return 
+        }
+        
+        if (left < n) {   // 当左括号的数量小于n时，可以增加左括号
+            char.push('(')
+            left++
+            bt()
+            chars.pop()
+            left--
+        }
+
+        if (right < left) {  // 当右括号的数量少于左括号数量时才能增加右括号
+            char.push('(')
+            right++
+            bt()
+            chars.pop()
+            right--
+        }
+    }
+    bt 
+}
+
+var generateParenthesis = function(n) {
+    var result = []
+
+    var chars = []
+    var left = 0
+    var right = 0 // 右括号的数量
+
+    function bt(s = ) {
+        if (left == n && right == n) {
+            result.push(   chars.join('')   )
+            return 
+        }
+        
+        if (left < n) {   // 当左括号的数量小于n时，可以增加左括号
+            char.push('(')
+            left++
+            bt()
+            chars.pop()
+            left--
+        }
+
+        if (right < left) {  // 当右括号的数量少于左括号数量时才能增加右括号
+            char.push('(')
+            right++
+            bt()
+            chars.pop()
+            right--
+        }
+    }
+    bt 
+}
+
+
+46.premutations
+
+var permute = function(nums) {
+    var used = Array(num.length).fill(false)
+
+    var selected = []
+
+    function bt() {
+        if (selected.length == nums.length) {
+            result.push([...selected])
+            return 
+        }
+        for (var i = 0; i< nums.length; i++) {
+            if (!used[i]) {
+                used[i] = true
+
+                selected.push(nums[i]) 
+                bt()
+                selected.pop()
+
+                used[i] = false
+            }
+        }
+    }
+    bt()
+    return result
+}
+
+ 
+
+leetcode coin-change
+
+function lcs(a,b) {
+
+}
+
+
+
+2022/02/22
+
+第13章 Document Object Model 文档对象模型
+
+
+  // 对比结点类型必须这样node.nodeType 是不是==某个类型
+  function getTextContent(node) {
+      if (node.nodeType == document.TEXT_NODE) {  // 如果是文本结点，则直接返回值
+        return node.nodeValue
+      } else if (node.nodeType == document.ELEMENT_NODE) { // 如果是元素结点，则开始对其子结点递归
+          var result = ''
+          for (var i = 0; i < node.childNodes.length; i++) {
+            result += getTextContent(node.childNodes[i]) // 拿到元素结点的每个子结点并拼接
+          }
+          return result
+      }
+  }
+
+  // 获取parent元素里的标签名称为tagname的所有标签并返回数组。
+  function getElementsByTagName(parent, tagName) {
+    var result = []
+    // 遍历子元素们
+    for (var i = 0; i < parent.children.length; i++) {
+      // 如果子元素是要找的标签，则push
+      if (parent.children[i].tagName == tagName) {
+        result.push(parent.children[i])  // 把子元素上所有包含tagname的都push到结果上
+      }
+      // 然后找出该子元素的后代中满足条件的元素，然后push到结果中
+        result.push(...getElementsByTagName(parent.children[i]), tagName)
+
+        // 对每个子结点都进行递归处理，因为子结点的子结点上可能有要找的tagName
+        // 递归函数前面需要加...展开符，因为这个函数返回的是数组
+    }
+    return result
+  }
+
+  // 如果不想getElementById接收第二个参数（改变node？）
+  // 那就将其封装在另外一个只接收一个参数的函数中
+  function getElementById2(id) {
+    return getElementById(id)
+  }
+
+  // 在node及后代中寻找特定id的元素，如果有就返回，没有就返回null
+  // document是多叉树，不是二叉树
+  function getElementById(id, node = document.documentElement) {
+    if (node.id == id) {
+      return node
+    }
+    for (var child of node.children) {  // 再在所有子结点中寻找
+      var result = getElementById(id, child)  // 递归继续找
+      if (result) {
+        return result
+      }
+    }
+    return null
+  }
+
+  // 遍历解法，和上面感觉本质上没区别啊==
+  function getElementById(id) {
+    var result = null
+    
+    traverse(document.documentElement, el => {  // 这个箭头函数即为下面traverse的参数action函数
+      if (el.id === id) {
+        result = el
+        return false   // 因为这里id是唯一的，找到了就停止遍历
+      }
+    })
+    return result
+  }
+
+  function traverse(node, action) {    // 如果action函数返回false，说明找到了目标id
+    if (action(node) === false) {      // 因为上面找到了唯一的id时加了一步返回false
+      return false                     // 所以这里也加一个return false，和上面对应，为啥要要这样对应，我也不太懂，记住再说吧。
+    }        
+    for(var child of node.children) {
+      if (traverse(child, action) === false) {
+        return false
+      }
+    }
+  }
+
+  // 遍历二叉树，action大概就是遍历操作的意思吧？先这么理解。
+  function traverse(node, action) {
+    action(node)
+    traverse(node.left, action)  // 对左子树继续进行递归遍历操作
+    traverse(node.left, action)
+  }
+
+  function traverse(node, action) {
+    action(node)
+    for (var child of node.children) {  // document是多叉树，这里用for of来遍历其子结点
+      traverse(child, action)    // 再对每一个子结点进行递归操作
+    }
+  }
+
+
+
+
+
+  Array.prototype.slice2 = function(start = 0, end = this.length) {
+    var result = []
+      for (var i = start; i < end; i++) {
+        result.push(this[i])
+      }
+      return result
+  }
+
+
+  Array.prototype.slice.call(arrayLike,0)
+
+  arrayLike.slice = Array.prototype.slice
+
+  arrayLike.slice(0)
+
+
+
+  function cloneNode(node) {
+
+    if (node.nodeType == document.ELEMENT_NODE) {
+      var el = document.createElement(node.tagName) 
+
+      var names = node.getAttributeNames()  // 枚举出属性名
+      for (var name of names) {
+        el.setAttribute(name, node.getAttribute(name))
+
+      }
+
+      for (var child of node.childNodes) {
+        el.appendChild(  cloneNode(child)  )
+      }
+      return el
+
+    } else if (node.nodeType == document.TEXT_NODE) {
+      return document.createTextNode(node.nodeValue)
+    } else if (node.nodeType == document.COMMENT_NODE) {
+      return document.createComment(node.nodeValue)
+    }
+  }
+
+
+   
+  2022/02/24
+
+  function getOuterHTML(node) {
+    if (node.nodeType == 1) {
+      return `<${node.tagName} ${Array.from(node.)}>${Array.from(node.childNodes).map(getOuterHTML)}
+  </${node.tagName}>`
+    } else if (node.nodeType == 3) {
+      return node.nodeValue
+    } else if (node.nodeType == 8) {
+      return '<!--' + node.nodeValue + '-->'
+    } else {
+      return ''
+    }
+  }
+
+
+  // 把node的连续文本子结点合并成一个
+  function normalize(node) {
+    var sum = ''
+    var childs = Array.from(node.childNodes)
+    for (var i = 0; i < node.childNotes.length; i++) {
+      var child = node.childNodes[i]
+      if (child.nodeType == document.TEXT_NODE) {
+        sum += child.nodeValue
+      }
+    }
+  }
+
+
+  2022/02/28
+
+  function explainCharacter(node) {
+    return `<div>'${node.value}',此部分匹配单个字符，内容为${}`
+  }
+
+  function explainRegularExpression(node) {
+
+  }
+
+  function explainBranch(node) {
+    var explain = node.elements.map(explainRegularExpression)
+
+    return `<div>
+      <h3>此分支按序匹配以下内容</h3>
+      ${explains.join('')}
+      </div>`
+  }
+
+  function explainBranches(branches) {
+    var explains = branches.map(explainRegularExpression)
+
+    return `<div>
+      <h3
+      `
+  }
+
+  
+
+
+  2022/03/02
+
+  // node.contains(target)
+  // 判断node是否包含target
+  function contains(node, target) {
+    while(target) {
+      if (target == node) {
+        return true
+      }
+     target = target.parentNode
+    return false 
+  }
+
+
+  2022/03/08
+
+  div.addEventListener(
+    'mousemove'
+    ,
+    debounce(function(e) {
+      console.log('111')
+    }, 500)
+  )
+
+
+  function debounce(func, time) {
+    var id 
+
+    return function(...args) {
+      clearTimeout(id)
+
+      id = setTimeout(() => {
+        func.call(this, ...args)
+      }, time)
+    }
+  }
+
+  dbc = debounce(f, 300)
+
+  debounce.cancel = () => {
+    clearTimeout(id)
+  }
+  debounce.flush = ()  => {
+    
+  }
+
+  flush
+
+  function throttle(func, time) {
+    var scheduled = false
+    var lastestResults
+
+    return function(...args) {
+      lastestResults = args
+      if (!scheduled) {
+        scheduled = true
+        setTimeout(() => {
+          scheduled = false
+          func.call(this, ...args)
+        }, time)
+      }
+    }
+  }
+
+
+
+
+  jQuery
+
+</script> 

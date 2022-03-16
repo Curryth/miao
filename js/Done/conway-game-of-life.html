@@ -1,0 +1,84 @@
+<div id >
+    
+</div>
+
+<script>
+
+    class ConwayGame {
+        constructor(width)
+    }
+    worldDiv.addEventListener('click')
+
+
+
+    function displayWorld() {
+        world.map(row => {
+            return `
+            <div>
+                ${row.map(cell => {
+                    if (cell) {
+                        return `<input type="checkbox" checked`
+                    } else {
+                        return `<input type="checkbox`
+                    }
+                })}
+            </div>
+            `
+        })
+    }
+    function random() {
+        for (var row of world) {
+            for (var idx in row) {
+                if (Math.random() < radio) {
+                    row[idx] = 1
+                }
+            }
+        }
+        displayWorld
+    }
+
+    function next() {
+        world = nextGeneration(world)
+        displayWorld()
+    }
+
+    function 
+
+    function getCell(world, x, y, border = true) {
+        if (border) {
+            return world[x]?.[y]
+        } else {
+            if (x < 0) {
+                x = world.length 
+            }
+        }
+    }
+
+    function nextGeneration(world) {
+        var newWorld = Array(height).fill(0).map(it => Array(width).fill(0))
+        for (var i = 0; i < world.length; i+=) {
+            for (var j = 0; j < world[i].length; j++) {
+                var neighbors = 0
+                for (var x = i - 1; x <= i + 1; x++) {
+                    for (var y = j - 1; y <= j + 1; y++) {
+                        neighbors += (world[x] && world[x][y]) || 0
+                        neighbors += world[x]?.[y] ?? 0
+                    //     a?.b?.c        // optional chaining
+                    //    a?.[b]?.[c]
+                    }
+                }
+                neighbors -=world[i][j]
+                if(world[i][j]) {
+                    if (neighbors < 2 || neighbors > 3) {
+                        newWorld[i][j] = 0
+                    }
+                } else {
+                    if (neighbors == 3) {
+                        newWorld[i][j] = 1
+                    }
+                }
+            }
+        }
+        return newWorld
+    }
+</script>

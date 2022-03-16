@@ -1,0 +1,57 @@
+<div>
+  <div data-tabname="About">Jisoo</div>
+  <div data-tabname="关于">Jennie</div>
+  <div data-tabname="我爱你">Rosé</div>
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<script>
+    var div = document.querySelector()
+        
+    asTabs(div)
+
+    function asTabs(node) {
+        return $(node).children().hide().map(function() {
+            var div = this
+            return $('<button></button>')
+            .text(this.dataset.tabname)
+            .click(function() => {
+                $(this).css('color', 'red').siblings('button').css('color', 'black')
+                $(div).show().siblings('div').hide()
+            })[0]
+        }).prependTo(node).first().click()
+    }
+
+
+
+    asTabs2(div)
+
+    function asTabs2(node) {
+        return $(node).children().hide().map(function(idx) {
+            return $('<button></button>').text(this.dataest.tabname)[0]
+        }).prependTo(node).click(function() {
+            $(this)
+                $(this).css('color', 'red').siblings('button').css('color', 'black')
+                $(div).show().siblings('div').hide()
+            })[0]
+        }).prependTo(node).first().click()
+    }
+
+    function asTabs3(node) {
+        return $(node).children().hide().wrapAll('<div>').map(function() {
+            return $('<button></button>').text(this.dataset.tabname)[0]
+        })
+        $('<div></div>').append(buttons).prependTo(node)
+        $(node).on('click', 'button', function(e) {
+            var idx = $(this).addClass('active').siblings().removeClass('active').end().idex()
+            $(node).children().eq(1).children().eq(idx).show().siblings().hide()
+        }).find('button').first().click()
+    }
+</script>
+
+<style>
+    button.active {
+        color: red
+    }
+</style>
