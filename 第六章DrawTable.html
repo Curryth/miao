@@ -1,0 +1,51 @@
+<script>
+
+  // 计算每行所需最大高度
+  function rowHeight(rows) {
+    return rows.map(function(row) {
+      return row.reduce(function(max,cell) {
+        return Math.max(max, cell.minHeight())   // 计算每个格子所需的最小高度，再与max对比，max初始值为0
+      }, 0)
+    })
+  }
+
+  // 计算每列所需最小宽度
+  function colWidth(rows) {
+    return rows[0].map(function(_, i) {  // 对第一列的每一个元素进行计算
+      return rows.reduce(function(max, row) { 
+        return Math.max(max, row[i].minWidth)
+      }, 0)
+    })
+  }
+
+  function colWidth(rows) {
+    return rows[0].map((_, i) => {       // 这里不是只选了第一行map吗？不懂
+      // i为列标
+
+      // 拿到第i列第单元格们
+      var col = rows.map(row => {
+        return row[i]
+      })
+      //取出其宽度，返回最大值
+      return Math.max(...col.map(it => it.minWidth()))
+    })
+  }
+
+  function drawTable(rows) {
+    var heights = rowHeight(rows) 
+    var width = colWidth(rows)
+
+    function drawRow(row, 行标) {
+      var blocks = row.map((cell, 列标) => {
+        cell.draw(width[列标], heights[行标])
+      })
+    }
+
+    return blocks[0].map((line, idx) => {
+      return blocks.map(block => block[idx]).join(' ')
+    }).join('\n')
+
+    return rows.map(drawRow).join('\n')
+  }
+
+</script>

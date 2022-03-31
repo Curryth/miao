@@ -23,7 +23,6 @@ var curryth = function() {
         var res = [false, null,0, "", undefined,  NaN ]
         var Array = []
 
-
         for (var i = 0; i < array.length; i++) {
             var isNone = false
 
@@ -259,14 +258,13 @@ var curryth = function() {
         return result
     }
 
-    function unionBy(...arys, predicate = identity) {
+    function unionBy(arys, predicate = identity) {
         predicate = iteratee(predicate)
 
         var result = []
         arys.forEach(ary => {
             ary.forEach(item => {
                 if ( !(result.includes( predicate(item) ) ) )  {
-                // 数组用includes， 对象才用 key in 
                     result.push( predicate(item) )
                 }
             })
@@ -1140,8 +1138,12 @@ var curryth = function() {
         pull: pull,
         pullAll: pullAll,
         reverse: reverse,
+        union: union,
+        unionBy: unionBy,
+        unionWith: unionWith,
         uniq: uniq,
         uniqBy: uniqBy,
+        uniqWith: uniqWith,
         without: without,
         zip: zip,
         countBy: countBy,
@@ -1207,8 +1209,6 @@ var curryth = function() {
         negate: negate,
         spread: spread,
         curry: curry,
-
-
     }
 }()
 

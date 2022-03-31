@@ -1,0 +1,71 @@
+<script>
+
+  // 向量
+  function Vector(x, y) {
+    this.x = x
+    this.y = y
+  }
+  
+  // 直接给构造函数Vector原型上添加属性
+  Vector.prototype.plus = function(v) {
+    var x = this.x + v.x
+    var y = this.y + v.y
+    return new Vector(x, y)
+  }
+
+  Vector.prototype.minus = function(v) {
+    var x = this.x - v.x
+    var y = this.y - v.y
+    return new Vector(x, y)
+  }
+
+  Vector.prototype.getLength = function() {
+    return Math.sqrt(this.x * this.x + this.y * this.y)
+  }
+
+
+  // 复数
+  function Complex(real, imag) {
+    // if (!(this instance of Complex))
+    if (this == window) {   // 如果this是window， 说明没加new
+      return new Complex(real, imag)
+    }
+    this.real = real
+    this.imag = imag
+  }
+
+  Complex.prototype.plus = function(c) {
+    var real = this.real + c.real
+    var imag = this.imag + c.imag
+    return new Complex(real, imag)
+  }
+
+  Complex.prototype.minus = function(c) {
+    var real = this.real - c.real
+    var imag = this.imag - c.imag
+    return new Complex(real, imag)
+  }
+
+  Complex.prototype.mul = function(c) {
+    var real = this.real * c.real - this.imag * c.imag
+    var imag = this.real * c.imag + this.imag * c.real
+    return new Complex(real, imag)
+  }
+
+  Complex.prototype.div = function(c) {
+    var helper = new Complex(c.real, -c.imag)
+    var fenzi = this.mul(helper)
+    var fenmu = c.mul(helper)
+
+    return new Complex(fenzi.real / fenmu.real, fenzi.imag / fenmu.real)      // 妙啊！
+  }
+  
+  Complex.prototype.toString = function() {
+    if (this.imag < 0) {
+      return '' + this.real + this.imag + 'i'   // 前面加个字符串，后面的运算就会转化成字符串拼接
+    }
+    return this.real + '+' + this.imag + 'i'
+  }
+
+
+</script>

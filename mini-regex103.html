@@ -1,47 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Min Regex 101</title>
-    <style>
-        strong:nth-child(odd) {
-            background-color: #d5ebff;
-        }
-        strong:nth-child(even) {
-            background-color: #9fcfff;
-        }
-        strong:empty {  
-            display: inline-block;
-            width: 2px;
-            margin-left: -1px;
-            margin-right: -1px;
-            height: 1.2em;
-            vertical-align: bottom;
-            background-color: red;
-        }
-        #string {
-            width: 400px;
-            position: relative;
-
-        }
-        textarea, pre{
-            
-            top: 1;
-            margin: 0;
-            width: 100%;
-            height: 150px;
-            font-size: 24px;
-            font-family: consolas;
-            padding: 10px;
-            border: 1px solid;
-            overflow: auto;
-            background-color: transparent;
-            white-space: pre-wrap;
-            overflow: break-word;
-            line-height: 1.5;
-        }
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Min Regex 101</title>
+<style>
+    strong:nth-child(odd) {
+        background-color: #d5ebff;
+    }
+    strong:nth-child(even) {
+        background-color: #9fcfff;
+    }
+    strong:empty {
+      display: inline-block;
+      width: 2px;
+      margin-left: -1px;
+      margin-right: -1px;
+      height: 1.3em;
+      vertical-align: bottom;
+      background-color: red;
+    }
+    #string {
+      width: 400px;
+      position: relative;
+    }
+    textarea, pre {
+        top: 0;
+        margin: 0;
+        width: 100%;
+        height: 150px;
+        font-size: 24px;
+        font-family: consolas;
+        padding: 10px;
+        border: 1px solid;
+        overflow: auto;
+        background-color: transparent;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+        line-height: 1.3;
+   }
+   pre {
+    position: absolute;
+   }
+   textarea {
+      position: relative;
+      z-index: 8;
+    }
     </style>
 </head>
 <body>
@@ -57,9 +62,9 @@
     <label>d<input type="checkbox" id="reFlagDollarEndOnly"></label>
     </div>
     <div>TEST STRING</div>
-    <div id="'string">
-        <textarea onscroll="scrollSync()" spellcheck="true" id="testStringInput" cols="30" rows="5" oninput="run()">afss sdfgsg fdll ghsg hgff asf</textarea>
+    <div id="string">
         <pre id="resultShow"></pre>
+        <textarea onscroll="scrollSync()" spellcheck="true" id="testStringInput" cols="30" rows="5" oninput="run()">afss sdfgsg fdll ghsg hgff asf</textarea>
     </div>
 
     
@@ -90,6 +95,7 @@
           var match
 
           while(match = re.exec(testString)) {
+              console.log(match)
               resultHTML += testString.slice(startIdx, match.index) // 上一次匹配到的东西
               resultHTML += '<strong>' + match[0] + '</strong>'      // 这一次匹配到的东西,<em></em>字体倾斜
               startIdx = re.lastIndex   // 每次循环需要更新lastIndex的值

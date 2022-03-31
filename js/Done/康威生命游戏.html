@@ -13,10 +13,10 @@
       this.height = height
       this.border = border
       this.world = Array(height).fill(0).map(it => Array(width).fill(0))
-   }
+    }
     setBorder(value) {
       this.border = value
-   }
+    }
     random(ratio = 0.1) {
       for (var row of this.world) {
         for (var idx in row) {   // 按顺序遍历每一行的每一个方框

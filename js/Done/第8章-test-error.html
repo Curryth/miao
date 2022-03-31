@@ -173,7 +173,7 @@
 // 分割线
   function InputError(message) {
     this.message = message
-    this.stack = (new Error()).stack        // 这里有大坑深坑
+    this.stack = (new Error()).stack  
   }
   InputError.prototype = Object.create(Error.prototype)
   InputError.prototype.name = "InputError"

@@ -1,0 +1,144 @@
+<body>
+  <pre>
+
+  </pre>
+</body>
+
+<script>
+  class SnakeGame {
+    constructor(width = 10, height = 10) {
+      this.width = width
+      this.height = height
+      this.world = null
+      this.snakeLength = 0
+      this.headpos = null
+      this.tailpos = null
+      this.isGameOver = false
+      this.initial()
+    }
+    // 初始化蛇的位置
+    initial() {
+      this.world = Array(this.height).fill(0).map(it => Array(this.width).fill('.'))
+      this.world[3][3] = '>'
+      this.snakeLength = 0
+
+      this.headpos = {row: 3, col: 3}
+      this.tailpos = {row: 3, col: 3}
+
+      this.placeApple()
+    }
+    placeApple() {
+      var row = Math.floor(this.height * Math.random())
+      var col = Math.floor(this.width * Math.random())
+      if (this.world[row][col] == '.') {
+        this.world[row][col] = ''
+      } else {
+        this.placeApple()
+      }
+
+    }
+    
+    // 返回某点的‘>’方向符号
+    getArrow(pos) {
+      return this.world[pos.row][pos.col]
+    }
+    
+    // 设置某点的方向
+    setArrow(pos, arrow) {
+      this.world[pos.row][pos.col] = arrow
+    }
+
+    getNextPos(pos) {
+      var currArrow = this.getArrow(pos)
+      if (currArrow == '>') {
+        return {row: pos.row, col: pos.col + 1}
+      }
+      if (currArrow == '<') {
+        return {row: pos.row, col: pos.col - 1}
+      }
+      if (currArrow == '^') {
+        return {row: pos.row - 1, col: pos.col}
+      }
+      if (currArrow == 'v') {
+        return {row: pos.row + 1, col: pos.col}
+      }
+    }
+
+    gameOver() {
+      this.isGameOver = true
+      setTimeout(() => {
+        alert('game over, score:' + this.snakeLength)
+      })
+    }
+
+    next() {
+      if (this.isGameOver) {
+        return 
+      }
+      var headArrow = this.getArrow(this.headpos)
+      var headNextPos = this.getNextPos(this.headpos)
+      var headNextArrow = this.getArrow(headNextPos)
+      if (headNextArrow == '.') {
+        this.setArrow(headNextPos, headArrow)
+        this.headpos = headNextPos       // 更新蛇头位置
+      } else if (headNextArrow == '') {
+        this.setArrow(headNextPos, headArrow)
+        this.headpos = headNextPos
+        this.snakeLength++ 
+        this.placeApple()              // 吃掉了才需要重新放🍎
+      } else {
+        this.gameOver()
+      }
+
+      if (headNextArrow == '.') {
+        var tailNextPos =  this.getNextPos(this.tailpos)  // 尾巴的下一个位置坐标
+        this.setArrow(this.tailpos, '.')                   // 清空还原尾巴走过的位置，
+        this.tailpos = tailNextPos
+      }
+
+      return this
+    }
+
+    changeDirection(direction) {
+      switch(direction) {
+        case 'up': return this.setArrow(this.headpos, '^');break;
+        case 'down': return this.setArrow(this.headpos, 'v');break;
+        case 'left': return this.setArrow(this.headpos, '<');break;
+        case 'right': return this.setArrow(this.headpos, '>');break;
+      }
+      this.setArrow(this.headpos, direction)
+    }
+
+    print() {
+      console.log(this.toString())
+    }
+    toString() {
+      return this.world.map(row => {
+        return row.join('')
+      }).join('\n')
+    }
+  }
+
+  var game = new SnakeGame()
+
+  var pre = document.querySelector('pre')
+
+  document.addEventListener('keydown', e => {
+    if (e.key.startsWith('Arrow')) {
+      var direction = e.key.slice(5).toLocaleLowerCase()
+      game.changeDirection(direction)
+      clearInterval(id)
+      tick()
+      id = setInterval(tick, 1000)
+    }
+  })
+
+  pre.textContent = game.toString()
+
+  function tick() {
+    game.next()
+    pre.textContent = game.toString()
+  }
+
+  var id = setInterval(tick, 1000)
+</script>

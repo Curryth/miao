@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>For Jisoo</title>
+  <style>
+
+    html,
+    body {
+      margin: 0;
+      background-color: black;
+    }
+    ul{
+      padding: 0;
+      list-style: none;
+    }
+    ul.menu {
+      color: white;
+      min-width: 550px;
+      font-size: 0;
+    }
+    .menu > li {
+        display: inline-block;
+    }
+    .menu li {
+      font-size: 16px;
+      white-space: nowrap;
+      position: relative;
+      margin: 0;
+      padding: 10px;
+    }
+    .menu li.code {
+      font-weight: bolder;
+    }
+    .menu ul {
+      display: none;
+      position: absolute;
+    }
+    ul ul {
+      min-width: 200px;
+      background-color: #e5e3e5;
+      font-weight: normal;
+      color: black;
+      border-radius: 5px;
+      left: 0;
+      top: 100%;
+    }
+    ul ul li:hover {
+      background-color: #6299f7;
+      border: 1px black;
+      border-radius: 5px;
+      color: white;
+    }
+    li:hover > ul {
+      display: block;
+    }
+    ul ul ul {
+      left: 95%;
+      top: 0;
+    }
+    em {
+      position: absolute;
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+<ul class="menu">
+  <li class="apple">
+    <ul>
+      <li>关于本机</li>
+      <li>系统偏好设置...</li>
+      <hr>
+      <li>App Store...</li>
+    </ul>
+  </li>
+  <li class="code">Code
+    <ul>
+      <li>关于Visual Studio Code</li>
+      <li>重新启动以更新</li>
+      <hr>
+      <li>首选项</li>
+      <li>服务</li>
+    </ul>
+  </li>
+  <li>文件
+    <ul>
+      <li>新建文件<em>⌘N</em></li>
+      <li>新建窗口<em>⇧⌘N</em></li>
+      <hr>
+      <li>打开...   <em>⇧⌘N</em></li>
+      <li>打开最近的文件
+         <ul>
+           <li>Blackpink.html
+             <ul>
+               <li>啊尼哈撒哟!</li>
+             </ul>
+           </li>
+           <li>Jisoo.js
+             <ul>
+               <li>擦浪嘿!</li>
+             </ul>
+           </li>
+           <li>Jennie.html
+             <ul>
+               <li>西叭!</li>
+             </ul>
+           </li>
+         </ul>
+      </li>
+      
+    </ul>
+  </li>
+  <li>编辑
+    <ul>
+      <li>撤消<em>⌘Z</em></li>
+      <li>恢复<em>⇧⌘Z</em></li>
+      <hr>
+      <li>剪切<em>⌘X</em></li>
+      <li>复制<em>⌘C</em></li>
+      <li>粘贴<em>⌘V</em></li>
+    </ul>
+  </li>
+  <li>选择
+    <ul>
+      <li>全选<em>⌘A</em></li>
+      <hr>
+      <li>扩大选区<em>⌃⇧⌘▶</em></li>
+      <li>缩小选区<em>⌃⇧⌘</em></li>
+    </ul>
+   </li>
+  <li>查看
+    <ul>
+      <li>命令面板<em>⇧⌘P</em></li>
+      <li>打开视图...<em>⟩</em></li>
+      <hr>
+      <li>外观<em>⟩</em></li>
+    </ul>
+    
+  </li>
+  <li>转到
+    <ul>
+      <li>返回<em>⌃-</em></li>
+      <li>前进<em>⌃⇧-</em></li>
+      <hr>
+      <li>上次编辑位置[⌘K ⌘Q]</li>
+    </ul>
+    
+  </li>
+  <li>运行
+    <ul>
+      <li>启动调试<em>F5</em></li>
+      <li>以非调试模式运行<em>⌃F5</em></li>
+      <hr>
+      <li>停止调试<em>⇧F5</em></li>
+    </ul>
+  </li>
+  <li>终端
+    <ul>
+      <li>新建终端<em>⌃⇧-`</em></li>
+      <li>拆分终端<em>⌘\</em></li>
+      <hr>
+      <li>运行任务...</li>
+    </ul>
+  </li>
+  <li>窗口
+    <ul>
+      <li>最小化<em>⌘M</em></li>
+      <li>缩放</li>
+      <hr>
+      <li>将窗口拼贴到屏幕左侧</li>
+    </ul>
+  </li>
+  <li>帮助
+    <ul>
+      <li>开始</li>
+      <li>显示所有命令<em>⇧⌘P</em></li>
+      <hr>
+      <li>编辑器操场</li>
+    </ul>
+  </li>
+</ul>
+</body>
+</html>

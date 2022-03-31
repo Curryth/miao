@@ -23,9 +23,9 @@ Notes: <select id="list"></select>
     if (e.key == notes) {
       notes = JSON.parse(localStorage.getItem("notes"))   // 页面切换的时候重新读出文本框内内容
       current.value = notes[list.value]
-    } else if (e.key == 'lastSelectedNote') {
-      list.value = e.newValue
-      current.value = notes[list.value]
+    } else if (e.key == 'lastSelectedNote') { //  切换option时，不同页面会同时切换，并切换文本框内容
+      // list.value = e.newValue
+      // current.value = notes[list.value]
     }
 
 
