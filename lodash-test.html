@@ -1,4 +1,4 @@
-var curryth = function() {
+<script>
 
     function chunk(array, size) {
         var len = array.length
@@ -412,6 +412,7 @@ var curryth = function() {
 
     }
 
+
     function countBy(collection, predicate) {
         var predicate = iteratee(predicate)
 
@@ -595,6 +596,14 @@ var curryth = function() {
         }
         return res
     }
+   
+    function range(start = 0, end, step = 1) {
+        let res = []
+        if (start < 0 )
+        for (var i = start; i < end; i += step) {
+            res.push(i)
+        }
+    }
 
     function shuffle(collection) {
         
@@ -670,6 +679,7 @@ var curryth = function() {
         return ary
         
     }
+
 
     /**
      * ==和===的区别,==会将两侧的数据进行类型转换再对比
@@ -792,6 +802,7 @@ var curryth = function() {
         return false
     }
 
+
     function isArray(val) {
        return val.__proto__ === Array.prototype
     }
@@ -799,7 +810,8 @@ var curryth = function() {
     function isMap(val) {
         return val instanceof Map
     }
-
+    
+    
     function isNaN(val) {
         if (typeof(val) == 'object') {
             val = val.valueOf()
@@ -822,6 +834,7 @@ var curryth = function() {
     function isString(val) {
         return val.__proto__ === String.prototype
     }
+    
 
     // 直接return function还是有点难想的
     // 返回一个函数，判断一个对象是否匹配另外一个对象
@@ -837,6 +850,7 @@ var curryth = function() {
         }
     }
 
+
     /**部分深度对比函数，src对比obj的一部分
      * 深层次对比，当对比的部分是对象中嵌套对象时，需要进去嵌套的对象中再继续对比
      * 所以，上面这步就需要用到递归，
@@ -846,6 +860,7 @@ var curryth = function() {
      * src[c] = {y:2},  obj[c] = {x:1,y:2}
      * 递归进去src[y] = 2, obj[y] = 2, 而且src[y]不是对象，递归到此终止。
      */
+
     function isMatch(obj, src) {
         for (var key in src) { 
             if (src[key] && typeof(src[key]) == 'object') {
@@ -860,6 +875,7 @@ var curryth = function() {
         }
         return true
     }
+    
 
     // 转化path为属性路径的数组
     // path可能为字符串形式的'a.b.c'，或者'a[0].b.c'，后者是展开obj = {a:[{b:{c:3}}]}
@@ -898,21 +914,17 @@ var curryth = function() {
         return result
     }
 
-
+    
     // 获取路径上的值？啥意思？ 不就是求对象，key上的value吗？
     // 路径可以是['a', 'b', 'c']数组形式，也以为‘a.b.c’字符串形式
 
-    function get(obj, path, defaultValue = "default") {
-        let res 
-        let names = toPath(path)
-        res = names.reduce((obj,name) =>{
+    function get(obj, path) {
+        var names = toPath(path)
+        return names.reduce((obj,name) =>{
             return obj && obj[name]
         },obj)
-        if (res == undefined) {
-          return defaultValue
-        }
-        return res
     }
+    
 
     // property即属性的意思，这个函数就是返回属性路径上的值
     // 加了get的加强版
@@ -921,14 +933,16 @@ var curryth = function() {
             return get(obj,path)
         }
     }
+
+    
     // 路径上值是不是val
     // 返回一个函数判定给定对象路径上的值是否等于val
-
     function matchesProperty(path, val) {
         return function(obj) {
             return isEqual(  get(obj,path), val )
         }
     }
+    
 
     // 转换函数
 
@@ -945,6 +959,13 @@ var curryth = function() {
         }
         return predicate
     }  
+    
+
+    // collection (Array|Object): 一个用来迭代的集合
+    // predicate: (Array|Function|Object|string): 每次迭代调用的函数
+    // 返回一个新的过滤后的数组
+    // predicate本身就包含一个条件，比如{ 'age': 36, 'active': true }
+    // 我们要把这个条件用iteratee转化成匹配这个条件的predicate函数
 
     function filter(collection, predicate) {
         predicate = iteratee(predicate)
@@ -1001,766 +1022,7 @@ var curryth = function() {
         predicate = iteratee(predicate)
         return ary.flattenDepth.map(it => perdicate(it))
     }
-    function toArray(val) {
-      let res = []
-      if (val === null || isNumber(val)) {
-        return res
-      }
-      if (isString(val)) {
-        for (let i = 0; i < val.length; i++) {
-          res.push(val[i])
-        }
-      }
-      if (typeof(val) == 'object' && !( Array.isArray(val) )) {
-          for (let key in val) {
-              res.push(val[key])
-          }
-      }
-      return res
-    }
-    function assign(obj, ...sources) {
-      for (let source of sources) {
-        for (let key in source) {
-          if (source.hasOwnProperty(key)) {
-            obj[key] = source[key]
-          } 
-        }
-      }
-      return obj
-    }
-    function ceil(number, precision = 0) {
-        let m = number * ( 10 ** (precision + 1) ) 
-        let remain = m % 10
-        let res
-        if (remain > 0) {
-          res = m - remain + 10
-        } else {
-            res = m - remain
-        }
-        res = res / ( 10 ** (precision + 1) ) 
-        return res 
-    }
-    function divide(dividend, divisor) {
-      return dividend / divisor
-    }
-    function floor(number, precision = 0) {
-        let m = number * ( 10 ** (precision + 1) ) 
-        let remain = m % 10
-        let res
-        res = m - remain
-        res = res / ( 10 ** (precision + 1) ) 
-        return res 
-    }
-    function maxBy(ary, predicate = identity) {
-        predicate = iteratee(predicate)
-        
-        var max = -Infinity
-        for (let val in ary) {
-            if (val > max) {
-                max = val
-            }
-        }
-        return max
-    }
-    function mean(ary) {
-      let m = ary.reduce((sum,item) => sum += item, 0)
-      let avg = m / ary.length
-      return avg
-    }
-    function meanBy(ary, predicate = identity) {
-      predicate = iteratee(predicate)
-      let sum = 0
-      for (let i = 0; i < ary.length; i++) {
-        sum += predicate(ary[i])
-      }
-      let avg = sum / ary.length
-      return avg
-    }
-    function min(ary) {
-      if (ary.length == 0) {
-          return undefined
-      }
-      let min = Infinity
-      for (let item of ary) {
-          if (item < min) {
-              min = item
-          } 
-      }
-      return min 
-    }
-    function minBy(ary, predicate = identity) {
-      if (ary.length == 0) {
-        return undefined
-      }
-      predicate = iteratee(predicate)
 
-      let min = ary[0]
-      for (let i = 1; i < ary.length; i++) {
-          if (predicate(ary[i]) < predicate(min)) {
-              min = ary[i] 
-          } 
-      }
-      return min
-    }
-    function mutiply(m , n) {
-      return m * n
-    }
-    function round(number, precision = 0) {
-      let m = number * ( 10 ** (precision + 1) ) 
-      let remain = m % 10
-      let res
-      if (remain > 5) {
-        res = m - remain + 10
-      } else {
-          res = m - remain
-      }
-      res = res / ( 10 ** (precision + 1) ) 
-      return res 
-    }
-    function subtract(m, n) {
-        return m - n
-    }
-    function sumBy(ary, predicate = identity) {
-        let res = 0
-        for (let i = 0; i < ary.length; i++) {
-            res += predicate(ary[i])
-        }
-        return res
-    }
-    function clamp(n, lower, upper) {
-        if (n < lower ) {
-            return lower
-        }
-        if (n > upper) {
-            return upper
-        }
-        return n
-    }
-    function inRange(n, start = 0, end) {
-        if (arguments.length < 3) {
-          start = 0
-        }
-        if (start > end) {
-            let temp = start
-            start = end
-            end = temp
-        }
-        if (n >= start) {
-            if (end) {
-                if (n < end) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-    function assignIn(obj, ...sources) {
-        for (let source of sources) {
-            for (let key in source) {
-                obj[key] = source[key]
-            }
-          }
-        return obj
-    }
-    function at(obj, ...paths) {
-        let res = []
-        for (let path of paths) {
-            let val = get(boj, path)
-            res.push(val)
-        }
-        return res
-    }
-    function defaults(obj, ...sources) {
-      for (let source of sources) {
-        for (let key in source) {
-          if ( !(obj[key]) ) {
-            obj[key] = source[key]
-          }
-        }
-      }
-      return obj
-    }
-    function defaultsDeep(obj, ...sources) {
-        for (let source of sources) {
-          for (let key in source) {
-            if (typeof source[key] === 'object') {
-                defaultsDeep(obj[key], source[key])
-            } else {
-                if ( !(obj[key]) ) {
-                    obj[key] = source[key]
-                }
-            }
-          }
-        }
-        return obj
-      }
-    function forIn(obj, predicate = identity) {
-        predicate = iteratee(identity)
-
-        for (let key in obj) {
-            if ( !(predicate(obj[key], key, obj)) ) {
-                break
-            }
-        }
-        return obj
-    }
-    function forInRight(obj, predicate = identity) {
-        predicate = iteratee(identity)
-        
-        let ary = []
-        for (let key in obj) {
-            ary.push[key]
-        }
-        for (var i = ary.length - 1; i >= 0; i--) {
-            if ( !(predicate(obj[i], i, obj)) ) {
-                break
-            }
-        }
-        return obj
-    }
-    function forOwn(obj, predicate = identity) {
-        predicate = iteratee(identity)
-        
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                if ( !(predicate(obj[key], key, obj)) ) {
-                    break
-                }
-            }
-        }
-        return obj
-    }
-
-    function forOwnRight(obj, predicate = identity) {
-        predicate = iteratee(identity)
-        
-        let ary = []
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              ary.push[key]
-            } 
-        }
-        for (var i = ary.length - 1; i >= 0; i--) {
-            if ( !(predicate(obj[i], i, obj)) ) {
-                break
-            }
-        }
-        return obj
-    }
-
-    function functions(obj) {
-      let res = []
-      for (let key in obj) {
-        if (obj.hasOwnProperty(key) && isFunction(obj[key])) {
-          res.push(key)
-        }
-      }
-      return res
-    }
-    function functionsIn(obj) {
-        let res = []
-        for (let key in obj) {
-          if (isFunction(obj[key])) {
-            res.push(key)
-          }
-        }
-        return res
-      }
-    function has(obj, path) {
-      path = toPath(path)
-      for (let i = 0; i < path.length; i++) {
-        if (obj.hasOwnProperty(path[i])) {
-          obj = obj[path[i]]
-        } else {
-          return false
-        }
-      }
-      return true
-    }
-    function hasIn(obj, path) {
-        path = toPath(path)
-        for (let i = 0; i < path.length; i++) {
-            if(obj[path[i]]) {
-                obj = obj[path[i]]
-            } else {
-               return false
-            }
-        }
-        return true
-    }
-    function invert(obj) {
-      let res = {}
-      for (let key in obj) {
-        let temp = obj[key]
-        res[temp] = key
-      }
-      return res
-    }
-    function invertBy(obj, predicate = identity) {
-        predicate = iteratee(predicate)
-
-        let res = {}
-        for (let key in obj) {
-            let temp = predicate(obj[key])
-            res[temp] = key
-        }
-        return res
-    }
-    function invoke(obj, path, ...args) {
-      path = toPath(path)
-      for (let i = 0; i < path.length - 1; i++) {
-        if(obj[path[i]]) {
-          obj = obj[path[i]]
-         }
-        obj[pathi].call(obj, ...args)
-       }
-    }
-    function keys(obj) {
-      let ary = []
-      for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          ary.push(key)
-        }
-      }
-      return ary
-    }
-    function keysIn(obj) {
-      let ary = []
-      for (let key in obj) {
-          ary.push(key)
-      }
-      return ary
-    }
-    function mapKeys(obj, predicate = identity) {
-      predicate = iteratee(predicate)
-
-      let res = {}
-      for (let key in obj) {
-          if (obj.hasOwnProperty(key)) {
-             let temp = predicate(val, key, obj)
-             res[temp] = obj[key]
-          }
-      }
-      return res
-    }
-    function mapValues(obj, predicate = identity) {
-      predicate = iteratee(predicate)
-      let res = {}
-      for (let key in obj) {
-        let temp = predicate(val, key, obj)
-        res[key] = temp
-      }
-      return res
-    }
-    function merge(obj, ...sources) {
-      for (let source of sources) {
-        for (let key in source) {
-          if ( typeof source[key] == 'object' || (Array.isArray(source[key])) ) {
-            merge(obj[key], source[key])
-          } else { 
-              if (!obj[key]) {
-                obj[key] = source[key]
-              }
-          }
-        }
-      }
-      return obj
-    }
-    function omit(obj, arys) {
-        let res = cloneDeep(obj)
-        arys.forEach((key) => {
-          delete res[key]
-        })
-        return res
-    }
-    function omitBy(obj, predicate = identity) {
-        predicate = iteratee(predicate)
-        let res = cloneDeep(obj)
-        for (let key in res) {
-            if (predicate(obj[key])) {
-                delete res[key]
-            }
-        }
-        return res
-    }
-    function pick(obj, arys) {
-      let res = {}
-      arys.forEach((key) => {
-        res[key] = obj[key]
-      })
-      return res
-    }
-    function pickBy(obj, predicate = identity) {
-      predicate = iteratee(predicate)
-      let res = {}
-      for (let key in obj) {
-          if (predicate(obj[key])) {
-              res[key] = obj[key]
-          }
-      }
-      return res
-    }
-
-    function result(obj, path, defaultValue) {
-      let res = get(obj, path)
-      if (res) {
-        if (typeof(res) == 'function') {
-          return res.bind(this)
-        }
-        return res
-      }  else if (res === undefined) {
-          return defaultValue
-       }
-    }
-
-    function toPairs(obj) {
-        let res = []
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                var temp = []
-                temp.push(key)
-                temp.push(obj[key])
-                res.push(temp)
-            }
-        }
-        return res
-    }
-    function toPairsIn(obj) {
-        let res = []
-        for (let key in obj) {
-            var temp = []
-            temp.push(key)
-            temp.push(obj[key])
-            res.push(temp)
-        }
-        return res
-    }
-    function unset(obj, path) {
-      return delete get(obj, path)
-    }
-
-    function camelCase(str) {
-        let ary = str.match(/[a-z]+|[A-Z]+[a-z]*/g)
-        let res = toLower(ary[0]) + ary.slice(1).map(it => toLower(it)).map(it => upperFirst(it)).join('')
-        return res
-    }
-    function capitalize(str) {
-      let res = upperFirst(toLower(str))
-      return str
-    }
-    function endsWith(str, target, pos = str.length) {
-      return str[pos - 1] == target
-    }
-    function escapeRegExp(str) {
-      let res = ''
-      for (let i = 0; i < str.length; i++) {
-        switch (str[i]) {
-          case('^') : res += '\\^';break;
-          case('$') : res += '\\$';break;
-          case('[') : res += '\\[';break;
-          case(']') : res += '\\]';break;
-          case('.') : res += '\\.';break;
-          case('*') : res += '\\*';break;
-          case('+') : res += '\\+';break;
-          case('?') : res += '\\?';break;
-          case('|') : res += '\\|';break;
-          case('{') : res += '\\{';break;
-          case('}') : res += '\\}';break;
-          case('(') : res += '\\(';break;
-          case(')') : res += '\\)';break;
-          default: res += str[i]
-        }
-      }
-      return res
-    }
-
-    function replace(string, pattern, replacement) {
-      var result = string.split(pattern)
-      result = result.join(replacement)
-      return result
-    }
-    function values(obj) {
-      let ary = []
-      for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-          ary.push(obj[key])
-        }
-      }
-      return ary
-    }
-
-    function valuesIn(obj){
-        let ary = []
-        for (var key in obj) {
-            ary.push(obj[key])
-        }
-        return ary
-    }
-    
-    function kebabCase(str) {
-      let res = str.match(/[a-z]+|[A-Z]+[a-z]*/g)
-      res = toLower(res.join('-'))
-      return res
-    }
-    function lowerCase(str) {
-        let res 
-        res = str.match(/[a-z]|[A-Z]+[a-z]*/g)
-        res = toLower(res.join(' '))
-        return res
-    }
-    function lowerFirst(str) {
-        let res = toLower(str[0]) + str.slice(1)
-        return res
-    }
-
-    function pad(str, len = 0, chars = ' ') {
-      let res = str
-      let flag = true
-      while (res.length < len) {
-        if (flag) {
-          res += chars
-          flag = false
-        } else {
-            res = chars + res
-            flag = true
-        }
-      }
-      return res.slice(0,len)
-    }
-    function padEnd(str, len = 0, chars = ' ') {
-        let res = str
-        while (res.length < len) {
-            res += chars
-        }
-        return res.slice(0,len)
-    }
-    function padStart(str, len = 0, chars = ' ') {
-        let res = str
-        let l = str.length
-        while (res.length < len) {
-            res = chars + res
-        }
-        let L = res.length
-        return res.slice(0, len - l).concat(res.slice(L - l))
-    }
-    function split(string, separator, limit = Infinity) {
-      let result = []
-      let str = ''
-      for (var i = 0; i < string.length; i++) {
-        if (string[i] !== separator) {
-            str += string[i]
-        } else {
-            if (str != '') {
-              result.push(str)
-              str = ''
-            }
-        }
-      }
-      if (str != '') {
-          result.push(str)
-      }
-      return result.slice(0,limit)
-    }
-    function escape(string) {
-        var result = ''
-        for (var i = 0; i < string.length; i++) {
-            switch(string[i]) {
-                case "&": result += "&amp;";break;
-                case "<": result += "&lt;";break;
-                case ">": result += "&gt;";break;
-                case "'": result += "&apos;";break;
-                case '"': result += "&quot;";break;
-                case "`": result += "&#96;";break;
-                default: result += string[i];break;
-            }
-        }
-        return result
-
-    }
-    function unescape(string) {
-      var obj =  {
-        "&amp;": "&",
-        "&lt;": "<",
-        "&gt;": ">",
-        "&apos;": "'",
-        '&quot;': '"',
-        "&#96;": "`",
-      }
-      for (var key in obj) {
-        if (string.includes(obj[key])) {
-            replace(string, key,obj[key])
-        }
-      }
-      return string
-    }
-    function toLower(str='') {
-      var res = ''
-      for(var i = 0; i < str.length; i++) {
-        let n = str[i].charCodeAt(0) 
-          if(n > 64 && n < 91) {
-            res += String.fromCharCode(n + 32)
-          } else {
-            res += str[i]
-          }
-      }
-      return res
-    }
-    function trim(str, char = ' ') {
-      let leftIdx = 0
-      let rightIdx = str.length - 1
-      while (leftIdx < str.length - 1 && char.includes(str[leftIdx])) {
-        leftIdx++
-      }
-      while (rightIdx >= 0 && char.includes(str[rightIdx])) {
-        rightIdx--
-      }
-      return str.slice(leftIdx, rightIdx + 1)
-    }
-    function trimEnd(str, char = ' ') {
-        let rightIdx = str.length - 1
-        while (rightIdx >= 0 && char.includes(str[rightIdx])) {
-          rightIdx--
-        }
-        return str.slice(0, rightIdx + 1)
-    }
-    function trimStart(str, char = ' ') {
-        let leftIdx = 0
-        while (leftIdx < str.length - 1 && char.includes(str[leftIdx])) {
-          leftIdx++
-        }
-        return str.slice(leftIdx)
-    }
-    function toUpper(str) {
-        var res = ''
-        for (var i = 0; i < str.length; i++) {
-          let n = str[i].charCodeAt(0) 
-            if(n > 96 && n < 123) {
-              res += String.fromCharCode(n - 32)
-            } else {
-              res += str[i]
-            }
-        }
-        return res
-    }
-    function upperCase(str) {
-        let res = ''
-        for (var i = 0; i < str.length; i++) {
-          let n = str[i].charCodeAt(0) 
-          if(n > 64 && n < 91) {
-            res += ' ' + str[i]
-          } else if(n > 96 && n < 123) {
-              res += str[i]
-          } else {
-              res += ' '
-          }
-        }
-        res = trim(toUpper(res))
-        return res
-    }
-    function upperFirst(str) {
-      let res = ''
-      res = toUpper(str[0]) + str.slice(1)
-      return res
-    }
-
-    function bindAll(object, methodNames) {
-    }
-    function range(start = 0, end, step = 1) {
-        var result = []
-        if (arguments.length == 1) {
-            end = start
-            start = 0
-            if (end < 0) {
-                step = -1
-            }
-        }
-        if(step) {
-          m = (end - start) / step 
-        } else {
-          m = end - start
-        }
-        for (var i = 0; i < m ; i++) {
-          result.push(start)
-          start = start + step
-        }
-        return result
-      }
-    function rangeRight(start = 0, end, step = 1) {
-          var result = []
-          if (arguments.length == 1) {
-              end = start
-              start = 0
-              if (end < 0) {
-                  step = -1
-              }
-          }
-          if(step) {
-            m = (end - start) / step 
-          } else {
-            m = end - start
-          }
-          for (var i = 0; i < m ; i++) {
-            end = end - step
-            result.push(end)
-          }
-          return result
-        }
-      
-    function times(n, predicate = identity) {
-        var result = []
-        for (var i = 0; i < n; i++) {
-            result.push(predicate(i))
-        }
-        return result
-      }
-  
-      window.count = 1
-    function uniqueId(prefix = '') {
-          return  prefix + (++window.count)
-      }
-
-    function cloneDeep(val) {
-      if (Array.isArray(val)) {
-          var result = []
-          for (var i of val ) {
-              if ( Object.prototype.toString.call(i) !== '[object Object]' && !(Array.isArray(i)) ) {
-                  result.push(i)
-              } else {
-                  i = cloneDeep(i)
-                  result.push(i)
-              }
-          }
-      } else if (Object.prototype.toString.call(val) == '[object Object]') {
-          var result = {}
-          for (var key in val) {
-            if ( Object.prototype.toString.call(val[key]) !== '[object Object]' && !(Array.isArray(val[key])) ) {
-                result[key] = val[key]
-            } else {
-                result[key] = cloneDeep(val[key])
-            }
-          }
-      } else {
-          return val
-      }
-      
-      return result
-    }
-
-    function identity(val) {
-        return arguments[0]
-    }
-    function concat(ary, ...vals) {
-      for (var val of vals) {
-          if (Array.isArray(val)) {
-              val.forEach((item) => {
-                  ary.push(item)
-              })
-          } else {
-              ary.push(val)
-          }
-      }
-      return ary
-    }
     // 创建一个调用func的函数。调用func时最多接受 n个参数，忽略多出的参数。
     function ary(func, n = func.length) {
         return function(...args) {
@@ -1789,16 +1051,22 @@ var curryth = function() {
             return result
         }
     }
-    function parseInt(str, radix = 10) {
+
+    function parseInt(stirng, radix = 10) {
         
-      }
+    }
+    
     // 创建一个函数，调用func时候接收翻转的参数
+
     function flip(func) {
         return function (...args) {
             return func(...args.reverse())
         }
     }
+
+
     // 记忆化函数，以后在react和Vue里面都会用到
+
     function memoize(func, resolver = it => it) {
         map = new Map()
         return function (...args) {
@@ -1811,6 +1079,7 @@ var curryth = function() {
             return result
         }
     }
+    
     // 创建一个针对断言函数 func 结果取反的函数。 
     //func 断言函数被调用的时候，this 绑定到创建的函数，并传入对应参数
     // 又是两个return function的叠加
@@ -1826,6 +1095,9 @@ var curryth = function() {
             return func.apply(this, ary)
         }
     }
+
+
+
     function curry(f, n = f.length) {  // n为需要的参数个数
         return function(...args) { // args为输入的参数个数
             if (args.length < n) {
@@ -1836,218 +1108,4 @@ var curryth = function() {
           }
         }
     }
-    function constant(val) {
-        return function() {
-            return val
-        }
-    }
-    function flow(...funcs) {
-      return function(...args) {
-        var result
-        var flag = false
-        for (var f of funcs) {
-          if(flag) {
-            result = f(result)
-          } else {
-            flag = true
-            result = f(...args)
-          }
-        }
-         return result
-      }
-    }
-    function property(path) {
-      return function(obj) {
-          return get(obj, path)
-      }
-    }
-    function propertyOf(obj) {
-        return function(path) {
-          return get(obj, path)
-        }
-    }
-    function method(path, ...args) {
-        return function(obj) {
-            for (var arg of args) {
-                return get(obj, path)(arg)
-            }
-        }
-    }
-
-
-    return {
-        chunk: chunk,
-        compact: compact,
-        drop: drop,
-        dropRight: dropRight,
-        dropRightWhile: dropRightWhile,
-        dropWhile: dropWhile,
-        fill: fill,
-        findIndex: findIndex,
-        findLastIndex: findLastIndex,
-        flatten: flatten,
-        flattenDeep: flattenDeep,
-        flattenDepth: flattenDepth,
-        toArray: toArray,
-        assign: assign,
-        ceil: ceil,
-        divide: divide,
-        floor: floor,
-        maxBy: maxBy,
-        mean: mean,
-        meanBy: meanBy,
-        min: min,
-        minBy: minBy,
-        mutiply: mutiply,
-        round: round,
-        subtract: subtract,
-        sumBy: sumBy,
-        clamp: clamp,
-        inRange: inRange,
-        fromPairs: fromPairs,
-        head: head,
-        indexOf: indexOf,
-        initial: initial,
-        intersection: intersection,
-        join: join,
-        last: last,
-        lastIndexOf: lastIndexOf,
-        pull: pull,
-        pullAll: pullAll,
-        reverse: reverse,
-        union: union,
-        unionBy: unionBy,
-        unionWith: unionWith,
-        uniq: uniq,
-        uniqBy: uniqBy,
-        uniqWith: uniqWith,
-        without: without,
-        zip: zip,
-        countBy: countBy,
-        flatMap: flatMap,
-        flatMapDeep: flatMapDeep,
-        flatMapDepth: flatMapDepth,
-        assignIn: assignIn,
-        at: at,
-        defaults: defaults,
-        defaultsDeep: defaultsDeep,
-        forIn: forIn,
-        forInRight: forInRight,
-        forOwn: forOwn,
-        forOwnRight: forOwnRight,
-        functions: functions,
-        functionsIn: functionsIn,
-        has: has,
-        hasIn: hasIn,
-        invert: invert,
-        invertBy: invertBy,
-        invoke: invoke,
-        keys: keys,
-        keysIn: keysIn,
-        mapKeys: mapKeys,
-        mapValues: mapValues,
-        merge: merge,
-        omit: omit,
-        omitBy: omitBy,
-        pick: pick,
-        pickBy: pickBy,
-        result: result,
-        toPairs: toPairs,
-        toPairsIn: toPairsIn,
-        unset: unset,
-        camelCase: camelCase,
-        capitalize: capitalize,
-        endsWith: endsWith,
-        escapeRegExp: escapeRegExp,
-        replace: replace,
-        values: values,
-        valuesIn: valuesIn,
-        kebabCase: kebabCase,
-        lowerCase: lowerCase,
-        lowerFirst: lowerFirst,
-        split: split,
-        escape: escape,
-        toLower: toLower,
-        toUpper: toUpper,
-        trim: trim,
-        trimEnd: trimEnd,
-        trimStart: trimStart,
-        upperCase: upperCase,
-        upperFirst: upperFirst,
-        unescape: unescape,
-        pad: pad,
-        padEnd: padEnd,
-        padStart: padStart, 
-        forEach: forEach,
-        forEachRight: forEachRight,
-        groupBy: groupBy,
-        keyBy: keyBy,
-        map: map,
-        partition: partition,
-        reduce: reduce,
-        reduceRight: reduceRight,
-        add: add,
-        max: max,
-        sum: sum,
-        repeat: repeat,
-        size: size,
-        shuffle: shuffle,
-        some: some,
-        every: every,
-        sortBy: sortBy,
-        isBoolean: isBoolean,
-        isArguments: isArguments,
-        isDate: isDate,
-        isElement: isElement,
-        isEmpty: isEmpty,
-        isEqual: isEqual,
-        isEqualWith: isEqualWith,
-        isError: isError,
-        isFinite: isFinite,
-        isFunction: isFunction,
-        isInteger: isInteger,
-        isLength: isLength,
-        isMatchWith: isMatchWith,
-        isArray: isArray,
-        isMap: isMap,
-        isNaN: isNaN,
-        isNil: isNil,
-        isNull: isNull,
-        isNumber: isNumber,
-        isString: isString,
-        matches: matches,
-        isMatch: isMatch,
-        toPath: toPath,
-        findKey: findKey,
-        findLastKey: findLastKey,
-        get: get,
-        property: property,
-        matchesProperty: matchesProperty,
-        iteratee: iteratee,
-        filter: filter,
-        find: find,
-        findLast: findLast,
-        range: range,
-        rangeRight: rangeRight,
-        times: times,
-        uniqueId: uniqueId,
-        cloneDeep: cloneDeep,
-        identity: identity,
-        concat: concat,
-        ary: ary,
-        unary: unary,
-        before: before,
-        parseInt: parseInt,
-        flip: flip,
-        memoize: memoize,
-        negate: negate,
-        spread: spread,
-        curry: curry,
-        constant: constant,
-        flow: flow,
-        property: property,
-        propertyOf: propertyOf,
-        method: method,
-    }
-}()
-
+    </script>
