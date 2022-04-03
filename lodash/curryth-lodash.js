@@ -415,7 +415,7 @@ var curryth = function() {
     function countBy(collection, predicate) {
         var predicate = iteratee(predicate)
 
-        collection.redcue( (obj,item) => {
+        collection.reduce( (obj,item) => {
             var key = predicate(item)
             if ( !(key in obj) ) {
                 obj[key] = 1
@@ -635,14 +635,14 @@ var curryth = function() {
         
         if ( Array.isArray(collection) ) {
             for (var i = 0; i < collection.length; i++) {
-                if ( !predicate(collection[i]) ) {
+                if ( !( predicate(collection[i]) )  ) {
                     return false
                 }
                 return true
             }
         } else {   // 如果collection是对象
             for (var key in collection) {
-                if ( !predicate(collection[key]) ) {
+                if ( !( predicate(collection[key]) )) {
                     return false
                 }
             }
@@ -688,7 +688,7 @@ var curryth = function() {
     }
 
     function isArguments(val) {
-        return Object.toString.call(val) === '[Object Arguments]'
+        return Object.prototype.toString.call(val) === '[Object Arguments]'
     }
 
     function isDate(val) {
@@ -764,7 +764,7 @@ var curryth = function() {
     }
 
     function isError(val) {
-        return Object.toString.call(val) === '[Object Error]'
+        return Object.prototype.toString.call(val) === '[Object Error]'
         // 或者 toString.call(val) === '[Object Error]'
         // 或者 val instanceof Error
     }
@@ -989,17 +989,17 @@ var curryth = function() {
 
     function flatMap(ary, predicate = identity) {
         predicate = iteratee(predicate)
-        return ary.flatten.map(it => perdicate(it))
+        return ary.flatten.map(it => predicate(it))
     }
 
     function flatMapDeep(ary, predicate = identity) {
         predicate = iteratee(predicate)
-        return ary.flattenDeep.map(it => perdicate(it))
+        return ary.flattenDeep.map(it => predicate(it))
     }
 
     function flatMapDepth(ary, predicate = identity) {
         predicate = iteratee(predicate)
-        return ary.flattenDepth.map(it => perdicate(it))
+        return ary.flattenDepth.map(it => predicate(it))
     }
     function toArray(val) {
       let res = []
@@ -1052,15 +1052,18 @@ var curryth = function() {
         return res 
     }
     function maxBy(ary, predicate = identity) {
-        predicate = iteratee(predicate)
-        
-        var max = -Infinity
-        for (let val in ary) {
-            if (val > max) {
-                max = val
-            }
-        }
-        return max
+        if (ary.length == 0) {
+            return undefined
+          }
+          predicate = iteratee(predicate)
+    
+          let max = ary[0]
+          for (let i = 1; i < ary.length; i++) {
+              if (predicate(ary[i]) < predicate(max)) {
+                  max = ary[i] 
+              } 
+          }
+          return max
     }
     function mean(ary) {
       let m = ary.reduce((sum,item) => sum += item, 0)
@@ -1102,7 +1105,7 @@ var curryth = function() {
       }
       return min
     }
-    function mutiply(m , n) {
+    function multiply(m , n) {
       return m * n
     }
     function round(number, precision = 0) {
@@ -1121,6 +1124,7 @@ var curryth = function() {
         return m - n
     }
     function sumBy(ary, predicate = identity) {
+        predicate = iteratee(predicate)
         let res = 0
         for (let i = 0; i < ary.length; i++) {
             res += predicate(ary[i])
@@ -1137,8 +1141,9 @@ var curryth = function() {
         return n
     }
     function inRange(n, start = 0, end) {
-        if (arguments.length < 3) {
-          start = 0
+        if (arguments.length == 2) {
+          end = start 
+          start = 0 
         }
         if (start > end) {
             let temp = start
@@ -1146,10 +1151,8 @@ var curryth = function() {
             end = temp
         }
         if (n >= start) {
-            if (end) {
-                if (n < end) {
-                    return true
-                }
+            if (n < end) {
+                return true
             }
         }
         return false
@@ -1165,7 +1168,7 @@ var curryth = function() {
     function at(obj, ...paths) {
         let res = []
         for (let path of paths) {
-            let val = get(boj, path)
+            let val = get(obj, path)
             res.push(val)
         }
         return res
@@ -1302,7 +1305,12 @@ var curryth = function() {
         let res = {}
         for (let key in obj) {
             let temp = predicate(obj[key])
-            res[temp] = key
+            if ( !(res[temp]) ) {
+                let ary = Array.from(key)
+                res[temp] = ary
+            } else {
+                res[temp].push(key)
+            }
         }
         return res
     }
@@ -1312,7 +1320,7 @@ var curryth = function() {
         if(obj[path[i]]) {
           obj = obj[path[i]]
          }
-        obj[pathi].call(obj, ...args)
+        obj[path[i]].call(obj, ...args)
        }
     }
     function keys(obj) {
@@ -1337,7 +1345,7 @@ var curryth = function() {
       let res = {}
       for (let key in obj) {
           if (obj.hasOwnProperty(key)) {
-             let temp = predicate(val, key, obj)
+             let temp = predicate(value, key, object)
              res[temp] = obj[key]
           }
       }
@@ -1347,7 +1355,7 @@ var curryth = function() {
       predicate = iteratee(predicate)
       let res = {}
       for (let key in obj) {
-        let temp = predicate(val, key, obj)
+        let temp = predicate(value, key, object)
         res[key] = temp
       }
       return res
@@ -1401,7 +1409,7 @@ var curryth = function() {
       return res
     }
 
-    function result(obj, path, defaultValue) {
+    function result(obj, path, defaultValue = 'defaults') {
       let res = get(obj, path)
       if (res) {
         if (typeof(res) == 'function') {
@@ -1446,7 +1454,7 @@ var curryth = function() {
     }
     function capitalize(str) {
       let res = upperFirst(toLower(str))
-      return str
+      return res
     }
     function endsWith(str, target, pos = str.length) {
       return str[pos - 1] == target
@@ -1502,9 +1510,22 @@ var curryth = function() {
       res = toLower(res.join('-'))
       return res
     }
+    function snakeCase(str) {
+        let res = str.match(/[a-z]+|[A-Z]+[a-z]*/g)
+        res = toLower(res.join('_'))
+        return res
+    }
+    function startCase(str) {
+        let res = str.match(/[a-z]+|[A-Z]+[a-z]*/g)
+        res = res.join(' ')
+        return res
+    }
+    function starsWith(str, target, position = 0) {
+      return str[position] == target
+    }
     function lowerCase(str) {
         let res 
-        res = str.match(/[a-z]|[A-Z]+[a-z]*/g)
+        res = str.match(/[a-z]+|[A-Z]+[a-z]*/g)
         res = toLower(res.join(' '))
         return res
     }
@@ -1575,10 +1596,9 @@ var curryth = function() {
             }
         }
         return result
-
     }
     function unescape(string) {
-      var obj =  {
+      var map =  {
         "&amp;": "&",
         "&lt;": "<",
         "&gt;": ">",
@@ -1586,12 +1606,7 @@ var curryth = function() {
         '&quot;': '"',
         "&#96;": "`",
       }
-      for (var key in obj) {
-        if (string.includes(obj[key])) {
-            replace(string, key,obj[key])
-        }
-      }
-      return string
+      return string.replace(/(&amp;)|(&lt;)|(&gt;)|(&apos;)|(&quot;)|(&#96;)/g, function(val) {return map[val]})
     }
     function toLower(str='') {
       var res = ''
@@ -1605,30 +1620,30 @@ var curryth = function() {
       }
       return res
     }
-    function trim(str, char = ' ') {
-      let leftIdx = 0
-      let rightIdx = str.length - 1
-      while (leftIdx < str.length - 1 && char.includes(str[leftIdx])) {
-        leftIdx++
+    function trim(str, chars = ' ') {
+      let left = 0
+      let right = str.length - 1
+      while (left < str.length && chars.includes(str[left])) {
+        left++
       }
-      while (rightIdx >= 0 && char.includes(str[rightIdx])) {
-        rightIdx--
+      while (right >= 0 && chars.includes(str[right])) {
+        right--
       }
-      return str.slice(leftIdx, rightIdx + 1)
+      return str.slice(left, right + 1)
     }
     function trimEnd(str, char = ' ') {
-        let rightIdx = str.length - 1
-        while (rightIdx >= 0 && char.includes(str[rightIdx])) {
-          rightIdx--
+        let right = str.length - 1
+        while (right >= 0 && char.includes(str[right])) {
+          right--
         }
         return str.slice(0, rightIdx + 1)
     }
     function trimStart(str, char = ' ') {
-        let leftIdx = 0
-        while (leftIdx < str.length - 1 && char.includes(str[leftIdx])) {
-          leftIdx++
+        let left = 0
+        while (left < str.length - 1 && char.includes(str[left])) {
+          left++
         }
-        return str.slice(leftIdx)
+        return str.slice(left)
     }
     function toUpper(str) {
         var res = ''
@@ -1843,14 +1858,14 @@ var curryth = function() {
     }
     function flow(...funcs) {
       return function(...args) {
-        var result
-        var flag = false
-        for (var f of funcs) {
+        let result
+        let flag = false
+        for (let func of funcs) {
           if(flag) {
-            result = f(result)
+            result = func(result)
           } else {
             flag = true
-            result = f(...args)
+            result = func(...args)
           }
         }
          return result
@@ -1872,6 +1887,29 @@ var curryth = function() {
                 return get(obj, path)(arg)
             }
         }
+    }
+    function once(func) {
+        let res 
+        let count = 1
+        return function(...args) {
+            if (n == 1) {
+                res = func.apply(this, args)
+            }
+            return res
+        }
+    }
+    function pullAt(ary, ...indexes) {
+      let res = []
+      let count = 0
+      for (let idx of indexes) {
+        idx = idx - count
+        res = res.concat(ary.splice(idx, 1))
+        count++
+      }
+      return res
+    }
+    function mixin(obj, src, option = true) {
+
     }
 
 
@@ -1898,7 +1936,7 @@ var curryth = function() {
         meanBy: meanBy,
         min: min,
         minBy: minBy,
-        mutiply: mutiply,
+        multiply: multiply,
         round: round,
         subtract: subtract,
         sumBy: sumBy,
@@ -1963,6 +2001,9 @@ var curryth = function() {
         values: values,
         valuesIn: valuesIn,
         kebabCase: kebabCase,
+        snakeCase: snakeCase,
+        startCase: startCase,
+        starsWith: starsWith,
         lowerCase: lowerCase,
         lowerFirst: lowerFirst,
         split: split,
@@ -2048,6 +2089,8 @@ var curryth = function() {
         property: property,
         propertyOf: propertyOf,
         method: method,
+        once: once,
+        pullAt: pullAt,
     }
 }()
 
